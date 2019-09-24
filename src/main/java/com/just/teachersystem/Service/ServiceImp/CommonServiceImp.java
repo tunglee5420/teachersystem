@@ -40,8 +40,8 @@ public class CommonServiceImp  implements CommonService {
      * @param userInfo
      * @return
      */
-    public int updateUserInfo(UserInfo userInfo){
+    public boolean updateUserInfo(UserInfo userInfo){
         int res= mapper.updateUserInfo(userInfo);
-        return res;
+        return res==1?true:false;
     }
 }

@@ -19,13 +19,71 @@
             <if test="eduBgd!=null">eduBgd=#{eduBgd},</if>
             <if test="degree!=null">degree=#{degree},</if>
             <if test="school!=null">school=#{school},</if>
-            <if test="doubleTeacher!=null">doubleTeacher=#{doubleTeacher},</if>
-            <if test="background!=null">background=#{background},</if>
+            <if test="doubleTeacher!=null and doubleTeacher!=''">doubleTeacher=#{doubleTeacher},</if>
+            <if test="background!=null and background!=''">background=#{background},</if>
             <if test="major!=null">major=#{major},</if>
-            <if test="tutor!=null">tutor=#{tutor},</if>
-            <if test="permission!=null">permission=#{permission}</if>
+            <if test="tutor!=null and tutor!=''">tutor=#{tutor},</if>
+            <if test="permission!=null and permission!=''">permission=#{permission}</if>
         </trim>
         WHERE worknum=#{worknum}
-
     </update>
+
+    <insert id="insertUserList" parameterType="java.util.List">
+        INSERT  into User
+        (dptId,name,worknum,password,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission,null1,null2,null3)
+        values
+        <foreach collection="list" item="item"  index= "index" separator =",">
+            (
+            <if test="item.dptname!=null">(select id from department where dptname=#{item.dptname}),</if>
+            <if test="item.name!=null">#{item.name},</if>
+            <if test="item.worknum!=null">#{item.worknum},</if>
+            <if test="item.password!=null">#{item.password},</if>
+            <if test="item.gender!=null">#{item.gender},</if>
+            <if test="item.birthday!=null">#{item.birthday},</if>
+            <if test="item.enterTime!=null">#{item.enterTime},</if>
+            <if test="item.phone!=null">#{item.phone},</if>
+            <if test="item.techTittle!=null">#{item.techTittle},</if>
+            <if test="item.eduBgd!=null">#{item.eduBgd},</if>
+            <if test="item.degree!=null">#{item.degree},</if>
+            <if test="item.school!=null">#{item.school},</if>
+            <if test="item.major!=null">#{item.major},</if>
+            <if test="item.doubleTeacher!=null and item.doubleTeacher!=''">#{item.doubleTeacher},</if>
+            <if test="item.background!=null and item.background!=''">#{item.background},</if>
+            <if test="item.tutor!=null and item.tutor!=''">#{item.tutor},</if>
+            <if test="item.permission!=null and item.permission!=''">#{item.permission},</if>
+            <if test="item.null1!=null">#{},</if>
+            <if test="item.null2!=null">#{},</if>
+            <if test="item.null3!=null">#{}</if>
+            )
+        </foreach>
+    </insert>
+    
+    
+    <insert id="insertUser" parameterType="com.just.teachersystem.VO.UserInfo">
+        INSERT  into User
+        (dptId,name,worknum,password,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission,null1,null2,null3)
+        values
+        (
+        <if test="item.dptname!=null">(select id from department where dptname=#{item.dptname}),</if>
+        <if test="item.name!=null">#{item.name},</if>
+        <if test="item.worknum!=null">#{item.worknum},</if>
+        <if test="item.password!=null">#{item.password},</if>
+        <if test="item.gender!=null">#{item.gender},</if>
+        <if test="item.birthday!=null">#{item.birthday},</if>
+        <if test="item.enterTime!=null">#{item.enterTime},</if>
+        <if test="item.phone!=null">#{item.phone},</if>
+        <if test="item.techTittle!=null">#{item.techTittle},</if>
+        <if test="item.eduBgd!=null">#{item.eduBgd},</if>
+        <if test="item.degree!=null">#{item.degree},</if>
+        <if test="item.school!=null">#{item.school},</if>
+        <if test="item.major!=null">#{item.major},</if>
+        <if test="item.doubleTeacher!=null and item.doubleTeacher!=''">#{item.doubleTeacher},</if>
+        <if test="item.background!=null and item.background!=''">#{item.background},</if>
+        <if test="item.tutor!=null and item.tutor!=''">#{item.tutor},</if>
+        <if test="item.permission!=null and item.permission!=''">#{item.permission},</if>
+        <if test="item.null1!=null">#{},</if>
+        <if test="item.null2!=null">#{},</if>
+        <if test="item.null3!=null">#{}</if>
+        )
+    </insert>
 </mapper>

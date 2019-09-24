@@ -8,7 +8,7 @@ import lombok.Setter;
 public class Level {
 
   private long id;
-  private String level;
+  private String level;//级别
 
 
 

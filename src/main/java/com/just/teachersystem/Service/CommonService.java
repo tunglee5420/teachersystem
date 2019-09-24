@@ -10,5 +10,5 @@ import	java.util.Map;
 @Service
 public interface CommonService {
     Map<String, Object> login(String worknum, String password);
-    int updateUserInfo(UserInfo userInfo);
+    boolean updateUserInfo(UserInfo userInfo);
 }

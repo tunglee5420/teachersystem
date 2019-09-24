@@ -20,7 +20,7 @@ public class UserInfo {
     private Date birthday;//出生日期
     private Date enterTime;//入校时间
     private String phone;//电话
-    private String techTitle;//专业技术职称
+    private String techTittle;//专业技术职称
     private String eduBgd;//最高学历
     private String degree;//最高学位
     private String school;//毕业学校
