@@ -16,8 +16,7 @@ public class Construction {
   private long principalId;//项目负责关联id
   private String teammate;//课题组成员
   private String startYear;//立项年度
-  private Date beginTime;//项目开始时间
-  private Date endTime;//项目结束时间
+  private String beginToEndTime;//项目起止年月
   private String sponsor;//主办单位
   private long kindId;//关联分类Id
   private String testimonial;//证明材料
