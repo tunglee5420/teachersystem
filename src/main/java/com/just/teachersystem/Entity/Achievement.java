@@ -1,4 +1,5 @@
 package com.just.teachersystem.Entity;
+import	java.io.Serializable;
 
 
 import lombok.Getter;
@@ -8,7 +9,7 @@ import java.util.Date;
 
 @Setter
 @Getter
-public class Achievement {
+public class Achievement implements Serializable {
 
   private long id;
   private long dptId;//关联部门编号

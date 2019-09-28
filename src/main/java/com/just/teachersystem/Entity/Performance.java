@@ -3,9 +3,11 @@ package com.just.teachersystem.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class Performance {
+public class Performance implements Serializable {
 
   private long id;
   private String department;

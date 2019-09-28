@@ -4,10 +4,11 @@ package com.just.teachersystem.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 @Getter
 @Setter
-public class Award {
+public class Award implements Serializable {
 
   private long id;
   private long dtpId;//关联部门Id

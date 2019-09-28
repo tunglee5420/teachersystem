@@ -5,12 +5,14 @@ import com.just.teachersystem.VO.UserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 /**
  * jwt工具类
  */
+@Component
 public class JwtUtils {
     public static final String SUBJECT="justTeacherSystem";
     public static final long Ex_Time=60*1000*60*24;//过期时间，毫秒

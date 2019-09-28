@@ -4,14 +4,15 @@ package com.just.teachersystem.VO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 @Setter
 @Getter
-public class AwardInfo {
+public class AwardInfo implements Serializable {
 
   private String dptname;
   private String worknum;
-  private String password;
+  private String name;
   private String teammate;
   private String awardUnit;
   private String content;

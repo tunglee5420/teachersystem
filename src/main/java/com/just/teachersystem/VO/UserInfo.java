@@ -3,13 +3,16 @@ package com.just.teachersystem.VO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
 @Getter
 @Setter
-public class UserInfo {
+@ToString
+public class UserInfo implements Serializable {
     private int dtpId;//单位号
     private String dptname;//院部名称
     private String name;//姓名

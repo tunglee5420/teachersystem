@@ -2,10 +2,14 @@ package com.just.teachersystem.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
-public class Kind {
+@ToString
+public class Kind implements Serializable {
 
   private long id;
   private String class1;//大类

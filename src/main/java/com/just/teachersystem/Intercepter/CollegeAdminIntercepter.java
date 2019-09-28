@@ -1,21 +1,15 @@
 package com.just.teachersystem.Intercepter;
-import	java.security.Permission;
 
-import com.alibaba.fastjson.JSON;
-import com.just.teachersystem.Utill.JsonData;
+
 import com.just.teachersystem.Utill.JwtUtils;
-import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 
 @Component
-public class CollegeAdminIntercepter implements HandlerInterceptor {
+public class CollegeAdminIntercepter extends OnlineIntercepter {
     /**
      * 进入controller 之前
      * @param request
@@ -26,17 +20,7 @@ public class CollegeAdminIntercepter implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         String token= request.getHeader("token");
-//        System.out.println(token);
-        if (!(handler instanceof HandlerMethod)) {
-            return true;
-        }
-        if(token==null||token.equals("")){
-            printJson(response,-1,"token 为空，请登陆！");
-            return false;
-        }
-//        System.out.println(JwtUtils.checkJWT(token).get("worknum"));
 
         if(JwtUtils.checkJWT(token)!=null){
             if((int)JwtUtils.checkJWT(token).get("permission")==1){
@@ -76,23 +60,5 @@ public class CollegeAdminIntercepter implements HandlerInterceptor {
 
     }
 
-    private static void printJson(HttpServletResponse response, int code, String message) {
-        JsonData responseResult = new JsonData(code,false,message);
-        String content = JSON.toJSONString(responseResult);
-        printContent(response, content);
-    }
-    private static void printContent(HttpServletResponse response, String content) {
-        try {
-            response.reset();
-            response.setContentType("application/json");
-            response.setHeader("Cache-Control", "no-store");
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter pw = response.getWriter();
-            pw.write(content);
-            pw.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 }

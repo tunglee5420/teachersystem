@@ -3,9 +3,11 @@ package com.just.teachersystem.VO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class ConstructionInfo {
+public class ConstructionInfo implements Serializable {
 
   private String projectNum;
   private String project;

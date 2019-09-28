@@ -3,11 +3,12 @@ package com.just.teachersystem.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Setter
-public class Construction {
+public class Construction implements Serializable {
 
   private long id;
   private long dptId;//关联作者所在部门编号

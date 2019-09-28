@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface UserService {
+    boolean check(String worknum,String password);
 }

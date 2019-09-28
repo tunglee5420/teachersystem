@@ -3,9 +3,11 @@ package com.just.teachersystem.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class Bonos {
+public class Bonos implements Serializable {
 
   private long id;
   private String department;//部门
