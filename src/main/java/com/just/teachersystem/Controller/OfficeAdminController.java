@@ -12,13 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/online/officeAdmin")
 public class OfficeAdminController {
-    @Autowired
-    CommonService service;
-    @PostMapping("/update")
-    public JsonData updateUserInfo( UserInfo userInfo){
 
-        boolean res=service.updateUserInfo(userInfo);
-        return JsonData.buildSuccess(res);
-    }
+
 
 }

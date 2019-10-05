@@ -9,7 +9,8 @@ import java.util.Date;
 @Getter
 @Setter
 public class AchievementInfo implements Serializable {
-  private String dptname;
+  private long aid;
+  private String department;
   private String worknum;
   private String name;
   private String teammate;

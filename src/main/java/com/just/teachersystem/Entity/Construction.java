@@ -20,6 +20,7 @@ public class Construction implements Serializable {
   private String beginToEndTime;//项目起止年月
   private String sponsor;//主办单位
   private long kindId;//关联分类Id
+  private long levelId;//关联级别Id
   private String testimonial;//证明材料
   private double expenditure;//建设经费
   private long point;//业绩分

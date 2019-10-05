@@ -9,8 +9,8 @@ import java.util.Date;
 @Setter
 @Getter
 public class AwardInfo implements Serializable {
-
-  private String dptname;
+  private long aid;
+  private String department;
   private String worknum;
   private String name;
   private String teammate;

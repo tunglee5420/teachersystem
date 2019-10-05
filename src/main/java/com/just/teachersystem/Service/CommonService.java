@@ -1,5 +1,6 @@
 package com.just.teachersystem.Service;
 import com.just.teachersystem.Entity.Department;
+import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,12 @@ import java.util.Set;
 public interface CommonService {
     Map<String, Object> login(String worknum, String password);
 
-    boolean updateUserInfo(UserInfo userInfo);
 
     Map<String, Map<String, List<String>>> getTypeList();
 
     Set<String> getLevelSet();
 
     Map<String ,Integer>  getDepartmentList();
+
+    boolean updateConstructionServ(ConstructionInfo construction);
 }

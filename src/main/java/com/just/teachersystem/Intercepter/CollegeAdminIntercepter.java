@@ -21,9 +21,9 @@ public class CollegeAdminIntercepter extends OnlineIntercepter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token= request.getHeader("token");
-
+        int permission =(int)JwtUtils.checkJWT(token).get("permission");
         if(JwtUtils.checkJWT(token)!=null){
-            if((int)JwtUtils.checkJWT(token).get("permission")==1){
+            if(permission==1&& permission ==3){
                 return true;
             }
             printJson(response,-1,"你没有操作权限");

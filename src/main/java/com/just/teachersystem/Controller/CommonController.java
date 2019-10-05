@@ -1,10 +1,13 @@
 package com.just.teachersystem.Controller;
-import	java.util.Map;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.time.Year;
+import java.util.*;
 
 import com.just.teachersystem.Service.CommonService;
-import com.just.teachersystem.Utill.JsonData;
-import com.just.teachersystem.Utill.RedisUtils;
+import com.just.teachersystem.Service.FileService;
+import com.just.teachersystem.Utill.*;
+import com.just.teachersystem.VO.FileInfo;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,8 @@ public class CommonController {
     @Autowired
     RedisUtils redisUtils;
 
+    @Autowired
+    FileService fileService;
     /**
      * 获取类型列表
      * @return
@@ -52,6 +57,10 @@ public class CommonController {
         return JsonData.buildSuccess(set);
     }
 
+    /**
+     * 获取部门列表
+     * @return
+     */
     @GetMapping("/getDepartmentList")
 
     public JsonData getDepartmentList(){
@@ -64,5 +73,36 @@ public class CommonController {
             return JsonData.buildError("错误");
         }
         return JsonData.buildSuccess(map);
+    }
+
+    @PostMapping("/getPanToken")
+    public JsonData getPanToken(FileInfo fileInfo ,@RequestHeader Map<String ,String>headers){
+        String url ="http://test.iskye.cn/api/alien/fetch/upload/token";
+        Claims claims =JwtUtils.checkJWT(headers.get("token"));
+        String worknum = (String) claims.get("worknum");
+        Map map= (Map) redisUtils.get("file:login");
+        if(map==null){
+            map= (Map) fileService.filePanLogin().getContent();
+        }
+        String cookie= (String) map.get("cookie");
+        Map<String ,String >header=new HashMap<> ();
+        Map<String,String> body =new HashMap<>();
+
+        header.put("Cookie", cookie);
+        body.put("filename", fileInfo.getFilename());
+        body.put("expireTime", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()+1000*120)));
+        body.put("privacy", String.valueOf(false));
+        body.put("size", String.valueOf(fileInfo.getSize()));
+        body.put("dirPath", "/"+worknum+"/"+Year.now()+"/");
+
+        try {
+            HttpClientResult h=HttpClientUtils.doPost(url, header, body);
+            if (h.getCode()==200){
+                return JsonData.buildSuccess(h.getContent());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return JsonData.buildError("请求出错");
     }
 }

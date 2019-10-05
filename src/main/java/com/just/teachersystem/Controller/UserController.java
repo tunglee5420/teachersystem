@@ -1,15 +1,20 @@
 package com.just.teachersystem.Controller;
 
+import com.just.teachersystem.Mapper.RootMapper;
 import com.just.teachersystem.Service.CommonService;
+import com.just.teachersystem.Service.RootService;
 import com.just.teachersystem.Service.UserService;
 import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
+import com.just.teachersystem.Utill.RedisUtils;
+import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,6 +22,10 @@ import java.util.Map;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    RootService rootService;
+    @Autowired
+    RedisUtils redisUtils;
     @Autowired
     CommonService commonService;
 
@@ -53,10 +62,73 @@ public class UserController {
         UserInfo userInfo=new UserInfo();
         userInfo.setWorknum(worknum);
         userInfo.setPassword( EncryptUtil.getInstance().MD5(password));
-        boolean res=commonService.updateUserInfo(userInfo);
+        boolean res=rootService.updateUserInfo(userInfo);
         if(res){
+            redisUtils.del("login:"+worknum);
             return JsonData.buildSuccess();
         }
         return JsonData.buildError("修改失败");
     }
+
+    /**
+     * 提交建设类信息
+     * @param info
+     * @return
+     */
+    @PostMapping("/addConstruction")
+    public JsonData addConstruction(@RequestHeader Map<String ,String> header,ConstructionInfo info){
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+        info.setWorknum(worknum);
+        info.setClass1("建设类");
+//        info.setDepartment("网络信息中心");
+        int res=userService.addConstruction(info);
+        if(res>0){
+            return JsonData.buildSuccess("提交成功");
+        }
+        return JsonData.buildError("提交失败");
+    }
+
+    /**
+     * 用户更新建设类信息
+     * @param header
+     * @param info
+     * @return
+     */
+    @PostMapping("/updateUserConstruction")
+    public JsonData updateUserConstruction(@RequestHeader Map<String ,String> header,ConstructionInfo info){
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+
+
+        info.setWorknum(worknum);
+        info.setClass1("建设类");
+        boolean res = commonService.updateConstructionServ(info);
+        if(res){
+            return  JsonData.buildSuccess("修改成功");
+        }
+        return JsonData.buildError("修改失败");
+
+    }
+
+    /**
+     * 获取用户建
+     * @param header
+     * @return
+     */
+    @PostMapping("/getMyConstructionInfo")
+    public JsonData  getMyConstructionInfo(@RequestHeader Map<String ,String> header) {
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+        System.out.println(worknum);
+        List list=userService.getMyConstructionInfo(worknum);
+        if(list==null){
+            return JsonData.buildSuccess("暂无数据");
+        }
+        return JsonData.buildSuccess(list);
+    }
+
 }

@@ -1,18 +1,13 @@
 package com.just.teachersystem.Intercepter;
 
-import com.alibaba.fastjson.JSON;
 
-import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
+
 
 @Component
 public class OfficeAdminIntercepter  extends OnlineIntercepter {
@@ -32,7 +27,8 @@ public class OfficeAdminIntercepter  extends OnlineIntercepter {
         String token= request.getHeader("token");
 
         if(JwtUtils.checkJWT(token)!=null){
-            if((int)JwtUtils.checkJWT(token).get("permission")==2){
+            int permission =(int)JwtUtils.checkJWT(token).get("permission");
+            if(permission==2||permission ==3){
                 return true;
             }
             printJson(response,-1,"你没有操作权限");

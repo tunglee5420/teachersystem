@@ -1,6 +1,7 @@
 package com.just.teachersystem.Service;
 
 import com.just.teachersystem.Entity.Kind;
+import com.just.teachersystem.VO.UserInfo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface RootService {
     boolean addType(Kind kind);
+
+    boolean updateUserInfo(UserInfo userInfo);
 }

@@ -5,6 +5,7 @@ import com.just.teachersystem.Entity.Kind;
 import com.just.teachersystem.Mapper.RootMapper;
 import com.just.teachersystem.Service.RootService;
 import com.just.teachersystem.Utill.RedisUtils;
+import com.just.teachersystem.VO.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,15 @@ public class RootServiceImp implements RootService {
             redisUtils.del("class:class");
         }
         return res;
+    }
+
+    /**
+     * 更新用户信息服务层
+     * @param userInfo
+     * @return
+     */
+    public boolean updateUserInfo(UserInfo userInfo){
+        int res= root.updateUserInfo(userInfo);
+        return res==1?true:false;
     }
 }

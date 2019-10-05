@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.just.teachersystem.Mapper.TeacherMapper">
+
+    <insert id="insertToConstruction" parameterType="com.just.teachersystem.VO.ConstructionInfo">
+        insert into construction(
+        dptId,projectNum,project,principalId,teammate,startYear,beginToEndTime,sponsor,kindId,levelId,
+        testimonial,expenditure,point,computeYear,bonus,fileNumber,isEnd,schoolyear,year,status,
+        reason,lastTime
+        )values
+        (
+            (select id from department where dptname=#{department}),
+            #{projectNum},
+            #{project},
+            (select id from user where worknum=#{worknum}),
+            #{teammate},
+            #{startYear},
+            #{beginToEndTime},
+            #{sponsor},
+            <if test="class1!=null and class2!=null and class3!=null">(select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),</if>
+            <if test="level!=null">(select id from level where level =#{level}),</if>
+            #{testimonial},
+            #{expenditure},
+            #{point},
+            #{computeYear},
+            #{bonus},
+            #{fileNumber},
+            #{isEnd},
+            #{schoolyear},
+            #{year},
+            #{status},
+            #{reason},
+            NOW()
+        )
+    </insert>
+
+
+    <select id="selectConstructionByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.ConstructionInfo">
+        select cid, department,worknum,projectNum, project, name, teammate,StartYear , beginToEndTime,sponsor, class1,class2,class3,
+        level, testimonial,schoolyear,year,status from constructionInfo where worknum=#{worknum}
+    </select>
+
+
+</mapper>

@@ -2,4 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.just.teachersystem.Mapper.RootMapper">
 
+
+    <update id="updateUserInfo" parameterType="com.just.teachersystem.VO.UserInfo">
+        update user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="dptname!=null">dptId=(select id from department where dptname=#{dptname}),</if>
+            <if test="name!=null">name=#{name},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="gender!=null">gender=#{gender},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="birthday!=null">birthday=#{birthday},</if>
+            <if test="enterTime!=null">enterTime=#{enterTime},</if>
+            <if test="techTittle!=null">techTittle=#{techTittle},</if>
+            <if test="eduBgd!=null">eduBgd=#{eduBgd},</if>
+            <if test="degree!=null">degree=#{degree},</if>
+            <if test="school!=null">school=#{school},</if>
+            <if test="doubleTeacher!=null and doubleTeacher!=''">doubleTeacher=#{doubleTeacher},</if>
+            <if test="background!=null and background!=''">background=#{background},</if>
+            <if test="major!=null">major=#{major},</if>
+            <if test="tutor!=null and tutor!=''">tutor=#{tutor},</if>
+            <if test="permission!=null and permission!=''">permission=#{permission}</if>
+        </trim>
+        WHERE worknum=#{worknum}
+    </update>
+
+
+    <insert id="insertUserList" parameterType="java.util.List">
+        INSERT  into User
+        (dptId,name,worknum,password,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission)
+        values
+        <foreach collection="list" item="item"  index= "index" separator =",">
+            (
+            (select id from department where dptname=#{item.dptname}),
+            #{item.name},
+            #{item.worknum},
+            #{item.password},
+            #{item.gender},
+            #{item.birthday},
+            #{item.enterTime},
+            #{item.phone},
+            #{item.techTittle},
+            #{item.eduBgd},
+            #{item.degree},
+            #{item.school},
+            #{item.major},
+            #{item.doubleTeacher},
+            #{item.background},
+            #{item.tutor},
+            #{item.permission}
+            )
+        </foreach>
+    </insert>
 </mapper>

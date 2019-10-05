@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.just.teachersystem.Entity.Department;
 import com.just.teachersystem.Entity.Kind;
+import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -43,4 +44,18 @@ public interface CommonMapper {
     //得到部门
     @Select(" select id ,dptname from department")
     Set<Department> getDepartmentList();
+
+    /**
+     * 更改建设类信息
+     * @param construction
+     * @return
+     */
+    int updateConstruction(ConstructionInfo construction);
+
+    /**
+     * 插入建设类信息列表
+     * @param list
+     * @return
+     */
+    int insertToConstructionList(List list);
 }

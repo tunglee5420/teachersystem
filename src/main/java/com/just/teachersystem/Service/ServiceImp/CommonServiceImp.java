@@ -8,6 +8,7 @@ import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Utill.JwtUtils;
 import com.just.teachersystem.Utill.MyException;
 import com.just.teachersystem.Utill.RedisUtils;
+import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -55,15 +56,7 @@ public class CommonServiceImp  implements CommonService {
         return null;
     }
 
-    /**
-     * 更新用户信息服务层
-     * @param userInfo
-     * @return
-     */
-    public boolean updateUserInfo(UserInfo userInfo){
-        int res= mapper.updateUserInfo(userInfo);
-        return res==1?true:false;
-    }
+
 
     /**
      * 获取类型
@@ -157,4 +150,17 @@ public class CommonServiceImp  implements CommonService {
         throw new MyException("缓存异常");
     }
 
+
+    /**
+     * 更新建设类的信息
+     * @param construction
+     * @return
+     */
+    public boolean updateConstructionServ(ConstructionInfo construction){
+       int res= mapper.updateConstruction(construction);
+       if(res>0){
+           return true;
+       }
+       return  false;
+    }
 }
