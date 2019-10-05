@@ -1,23 +1,26 @@
 package com.just.teachersystem.VO;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 
 @Getter
 @Setter
 @ToString
+
+@JsonIgnoreProperties(value={"password"})
 public class UserInfo implements Serializable {
     private int dtpId;//单位号
     private String dptname;//院部名称
     private String name;//姓名
     private String worknum;//工号
-    @JsonIgnoreProperties
+
     private String password;//密码
     private String gender;//性别
     private Date birthday;//出生日期

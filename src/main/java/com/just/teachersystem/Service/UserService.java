@@ -1,5 +1,6 @@
 package com.just.teachersystem.Service;
 
+import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,41 @@ import java.util.List;
  */
 @Service
 public interface UserService {
+    /**
+     * 验证密码
+     * @param worknum
+     * @param password
+     * @return
+     */
     boolean check(String worknum,String password);
+
+    /**
+     * 添加建设类信息
+     * @param info
+     * @return
+     */
     int addConstruction(ConstructionInfo info);
 
-
+    /**
+     * 获得用户个人建设类记录
+     * @param worknum
+     * @return
+     */
     List getMyConstructionInfo(String worknum);
+
+    /**
+     * 添加成果类信息
+     * @param info
+     * @return
+     */
+    boolean addAchievement(AchievementInfo info);
+
+    /**
+     * 获得用户个人成果类记录
+     * @param worknum
+     * @return
+     */
+    List getMyAchievementInfo(String worknum);
+
+
 }

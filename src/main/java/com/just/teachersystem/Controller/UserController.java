@@ -8,6 +8,7 @@ import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
 import com.just.teachersystem.Utill.RedisUtils;
+import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import io.jsonwebtoken.Claims;
@@ -114,7 +115,7 @@ public class UserController {
     }
 
     /**
-     * 获取用户建
+     * 获取用户建设类信息
      * @param header
      * @return
      */
@@ -131,4 +132,63 @@ public class UserController {
         return JsonData.buildSuccess(list);
     }
 
+    /**
+     * 添加成果类的信息
+     * @param header
+     * @param info
+     * @return
+     */
+    @PostMapping("/addAchievement")
+    public JsonData addAchievement(@RequestHeader Map<String ,String> header,AchievementInfo info){
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+        info.setWorknum(worknum);
+        boolean res=userService.addAchievement(info);
+        if (res){
+            return JsonData.buildSuccess("添加成功");
+        }
+        return JsonData.   buildError("添加失败");
+    }
+
+    /**
+     * 获取用户成果类信息
+     * @param header
+     * @return
+     */
+    @PostMapping("/getMyAchievementInfo")
+    public JsonData  getMyAchievementInfo(@RequestHeader Map<String ,String> header) {
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+        System.out.println(worknum);
+        List list=userService.getMyAchievementInfo(worknum);
+        if(list==null){
+            return JsonData.buildSuccess("暂无数据");
+        }
+        return JsonData.buildSuccess(list);
+    }
+
+
+    /**
+     * 用户更新成果类类信息
+     * @param header
+     * @param info
+     * @return
+     */
+    @PostMapping("/updateUserAchievement")
+    public JsonData updateUserAchievement(@RequestHeader Map<String ,String> header,AchievementInfo info){
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+
+        info.setWorknum(worknum);
+        info.setClass1("成果类");
+        boolean res = commonService.updateAchievementServ(info);
+        if(res){
+            return  JsonData.buildSuccess("修改成功");
+        }
+        return JsonData.buildError("修改失败");
+
+    }
 }

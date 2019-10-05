@@ -1,5 +1,8 @@
 package com.just.teachersystem.Service;
+import	java.util.List;
 
+
+import com.just.teachersystem.VO.UserInfo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -7,4 +10,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface CollegeAdminService {
+    /**
+     * 查询用户信息
+     * @param info
+     * @return
+     */
+    List getUserInfo(UserInfo info);
 }

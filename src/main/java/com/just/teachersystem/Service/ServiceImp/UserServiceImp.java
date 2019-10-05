@@ -6,11 +6,13 @@ import com.just.teachersystem.Mapper.TeacherMapper;
 import com.just.teachersystem.Service.UserService;
 import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.Utill.YearUtils;
+import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Year;
 import java.util.List;
 
 /**
@@ -46,7 +48,7 @@ public class UserServiceImp implements UserService {
         info.setSchoolyear(YearUtils.getSchoolYear());
         info.setIsEnd(0);
         info.setYear(YearUtils.getYears());
-        System.out.println(info);
+
         return teacherMapper.insertToConstruction(info);
     }
 
@@ -61,5 +63,38 @@ public class UserServiceImp implements UserService {
             return null;
         }
         return list;
+    }
+
+    /**
+     * 添加成果类信息
+     * @param info
+     * @return
+     */
+    public boolean addAchievement(AchievementInfo info){
+        info.setStatus(0);
+        info.setClass1("成果类");
+        info.setSchoolYear(YearUtils.getSchoolYear());
+        info.setYear(YearUtils.getYears());
+        System.out.println(info);
+        int res=teacherMapper.insertToAchievement(info);
+        if(res ==0){
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * 获得用户个人成果类记录
+     * @param worknum
+     * @return
+     */
+    public List getMyAchievementInfo(String worknum){
+        List list = teacherMapper.selectAchievementByWorknum(worknum);
+        if(list == null||list.size()==0){
+            return null;
+        }
+        return list;
+
     }
 }

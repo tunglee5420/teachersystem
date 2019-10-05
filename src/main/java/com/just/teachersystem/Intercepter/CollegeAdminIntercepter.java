@@ -23,7 +23,7 @@ public class CollegeAdminIntercepter extends OnlineIntercepter {
         String token= request.getHeader("token");
         int permission =(int)JwtUtils.checkJWT(token).get("permission");
         if(JwtUtils.checkJWT(token)!=null){
-            if(permission==1&& permission ==3){
+            if(permission==1|| permission ==3){
                 return true;
             }
             printJson(response,-1,"你没有操作权限");

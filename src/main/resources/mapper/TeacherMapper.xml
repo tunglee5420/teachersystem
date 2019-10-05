@@ -17,8 +17,8 @@
             #{startYear},
             #{beginToEndTime},
             #{sponsor},
-            <if test="class1!=null and class2!=null and class3!=null">(select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),</if>
-            <if test="level!=null">(select id from level where level =#{level}),</if>
+            (select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),
+            (select id from level where level =#{level}),
             #{testimonial},
             #{expenditure},
             #{point},
@@ -40,5 +40,32 @@
         level, testimonial,schoolyear,year,status from constructionInfo where worknum=#{worknum}
     </select>
 
+    
+    <insert id="insertToAchievement" parameterType="com.just.teachersystem.VO.AchievementInfo">
+        insert into achievement(
+        dptId, authorId, teammate, production, kindId, levelId, unit, publishTime, patent, certificate, schoolYear, year, lastTime, status, reason
+        )values (
+            (select id from department where dptname=#{department}),
+            (select id from user where worknum=#{worknum}),
+            #{teammate},
+            #{production},
+            (select id from kind where class1=#{class1} and class2=#{class2} and class3=#{class3}),
+            (select id from level where level =#{level}),
+            #{unit},
+            #{publishTime},
+            #{patent},
+            #{certificate},
+            #{schoolYear},
+            #{year},
+            NOW(),
+            #{status},
+            #{reason}
+        )
+    </insert>
 
+
+    <select id="selectAchievementByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.AchievementInfo">
+        select aid, department,worknum, name, teammate,production, class1,class2,class3,
+        level, unit,publishTime,patent,certificate,schoolYear,year,status from achievementInfo where worknum=#{worknum}
+    </select>
 </mapper>

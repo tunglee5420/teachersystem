@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.just.teachersystem.Entity.Department;
 import com.just.teachersystem.Entity.Kind;
+import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,11 +22,18 @@ import org.springframework.stereotype.Component;
 public interface CommonMapper {
 
 
-    //获取用户信息
+    //根据学号获取用户信息
+    @Select("select * from userInfo where worknum=#{worknum}")
     UserInfo getInfo(String worknum);
 
-    //更新用户信息
-    int updateUserInfo(UserInfo userInfo);
+    /**
+     * 根据条件查询用户信息
+     * @param userInfo
+     * @return
+     */
+
+    List getUserInfoList(UserInfo userInfo);
+
 
     //插入用户
     int insertUserList(List<UserInfo> userlist);
@@ -58,4 +66,18 @@ public interface CommonMapper {
      * @return
      */
     int insertToConstructionList(List list);
+
+    /**
+     * 插入成果类信息列表
+     * @param list
+     * @return
+     */
+    int insertToAchievementList(List list);
+
+    /**
+     * 更新成果类的信息
+     * @param info
+     * @return
+     */
+    int updateAchievement(AchievementInfo info);
 }

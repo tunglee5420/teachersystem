@@ -1,5 +1,6 @@
 package com.just.teachersystem.Service;
 import com.just.teachersystem.Entity.Department;
+import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.stereotype.Component;
@@ -25,4 +26,5 @@ public interface CommonService {
     Map<String ,Integer>  getDepartmentList();
 
     boolean updateConstructionServ(ConstructionInfo construction);
+    boolean updateAchievementServ(AchievementInfo info);
 }

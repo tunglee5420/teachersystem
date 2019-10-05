@@ -1,6 +1,7 @@
 package com.just.teachersystem.Mapper;
 import	java.util.List;
 
+import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,25 @@ public interface TeacherMapper {
      */
     int insertToConstruction(ConstructionInfo constructionInfo);
 
-
+    /**
+     * 根据学号查询建设类
+     * @param worknum
+     * @return
+     */
     List selectConstructionByWorknum(String worknum);
+
+    /**
+     * 添加成果类信息
+     * @param info
+     * @return
+     */
+    int insertToAchievement(AchievementInfo info);
+
+    /**
+     * 根据工号查询成果类
+     * @param worknum
+     * @return
+     */
+    List selectAchievementByWorknum(String worknum);
+
 }

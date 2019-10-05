@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.just.teachersystem.Mapper.CommonMapper">
-    <select id="getInfo" parameterType="String" resultType="com.just.teachersystem.VO.UserInfo">
-      select * from userInfo
-        where
-      worknum=#{worknum}
+
+
+    <select id="getUserInfoList" parameterType="com.just.teachersystem.VO.UserInfo" resultType="com.just.teachersystem.VO.UserInfo">
+        select
+        dptname,name,worknum,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission
+        from userInfo
+        <where>
+            <if test="name!=null and name!=''">
+                name = #{name} and
+            </if>
+            <if test="worknum!=null and worknum!=''">
+                worknum = #{worknum} and
+            </if>
+            <if test="dptname!=null and dptname!=''">
+                dptname = #{dptname}
+            </if>
+        </where>
     </select>
-
-
 
 
     
@@ -77,6 +88,7 @@
         <if test="department!=null">dptId=(select id from department where dptname=#{department}),</if>
         <if test="projectNum!=null">projectNum=#{projectNum},</if>
         <if test="project!=null">project=#{project},</if>
+        <if test="worknum!=null">principalId= (select id from user where worknum=#{worknum}),</if>
         <if test="teammate!=null">teammate=#{teammate},</if>
         <if test="startYear!=null">startYear=#{startYear},</if>
         <if test="beginToEndTime!=null">beginToEndTime=#{beginToEndTime},</if>
@@ -98,5 +110,53 @@
     </trim>
     WHERE id=#{cid}
 </update>
+
+
+    <insert id="insertToAchievementList" parameterType="java.util.List">
+        insert into achievement(
+        dptId, authorId, teammate, production, kindId, levelId, unit, publishTime, patent, certificate, schoolYear, year, lastTime, status, reason
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+            (select id from department where dptname=#{item.department}),
+            (select id from user where worknum=#{item.worknum}),
+            #{item.teammate},
+            #{item.production},
+            (select id from kind where class1=#{item.class1} and class2=#{item.class2} and  class3=#{item.class3}),
+            (select id from level where level =#{item.level}),
+            #{item.unit},
+            #{item.publishTime},
+            #{item.patent},
+            #{item.certificate},
+            #{item.schoolYear},
+            #{item.year},
+            NOW(),
+            #{item.status},
+            #{item.reason}
+        )
+        </foreach>
+    </insert>
+
+    <update id="updateAchievement" parameterType="com.just.teachersystem.VO.AchievementInfo">
+        update achievement
+        <trim prefix="set" suffixOverrides=",">
+            <if test="department!=null">dptId=(select id from department where dptname=#{department}),</if>
+            <if test="worknum!=null">authorId=(select id from user where worknum=#{worknum}),</if>
+            <if test="production!=null">production=#{production},</if>
+            <if test="teammate!=null">teammate=#{teammate},</if>
+            <if test="class1!=null and class2!=null and class3!=null">kindId=(select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),</if>
+            <if test="level!=null">levelId=(select id from level where level =#{level}),</if>
+            <if test="unit!=null">unit=#{unit},</if>
+            <if test="publishTime!=null ">publishTime=#{publishTime},</if>
+            <if test="patent!=null and patent!=''">patent=#{patent},</if>
+            <if test="certificate!=null">certificate=#{certificate},</if>
+            <if test="schoolYear!=null">schoolYear=#{schoolYear},</if>
+            <if test="year!=null">year=#{year},</if>
+            <if test="status!=null and status!=''">status=#{status},</if>
+            <if test="reason!=null">reason=#{reason},</if>
+            lastTime=NOW()
+        </trim>
+        WHERE id=#{aid}
+    </update>
 
 </mapper>
