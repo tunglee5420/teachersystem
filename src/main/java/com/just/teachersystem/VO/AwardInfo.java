@@ -3,11 +3,13 @@ package com.just.teachersystem.VO;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 @Setter
 @Getter
+@ToString
 public class AwardInfo implements Serializable {
   private long aid;
   private String department;

@@ -9,6 +9,7 @@ import com.just.teachersystem.Utill.JwtUtils;
 import com.just.teachersystem.Utill.MyException;
 import com.just.teachersystem.Utill.RedisUtils;
 import com.just.teachersystem.VO.AchievementInfo;
+import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,6 +173,19 @@ public class CommonServiceImp  implements CommonService {
      */
     public boolean updateAchievementServ(AchievementInfo info){
         int res= mapper.updateAchievement(info);
+        if(res>0){
+            return true;
+        }
+        return  false;
+    }
+
+    /**
+     * 更新获奖类
+     * @param info
+     * @return
+     */
+    public boolean updateAwardServ(AwardInfo info){
+        int res=mapper.updateAward(info);
         if(res>0){
             return true;
         }

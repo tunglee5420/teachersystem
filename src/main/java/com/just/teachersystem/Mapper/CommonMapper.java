@@ -7,6 +7,7 @@ import java.util.Set;
 import com.just.teachersystem.Entity.Department;
 import com.just.teachersystem.Entity.Kind;
 import com.just.teachersystem.VO.AchievementInfo;
+import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -80,4 +81,18 @@ public interface CommonMapper {
      * @return
      */
     int updateAchievement(AchievementInfo info);
+
+    /**
+     * 插入获奖类信息列表
+     * @param list
+     * @return
+     */
+    int insertToAwardList(List list);
+
+    /**
+     * 插入获奖类信息
+     * @param info
+     * @return
+     */
+    int updateAward(AwardInfo info);
 }

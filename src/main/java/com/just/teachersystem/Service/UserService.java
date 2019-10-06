@@ -1,6 +1,7 @@
 package com.just.teachersystem.Service;
 
 import com.just.teachersystem.VO.AchievementInfo;
+import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,20 @@ public interface UserService {
      * @return
      */
     List getMyAchievementInfo(String worknum);
+
+    /**
+     * 添加获奖类信息
+     * @param info
+     * @return
+     */
+    boolean addAward(AwardInfo info);
+
+    /**
+     * 获得用户个人获奖类记录
+     * @param worknum
+     * @return
+     */
+    List getMyAwardInfo(String worknum);
 
 
 }

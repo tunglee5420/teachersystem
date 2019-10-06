@@ -7,6 +7,7 @@ import com.just.teachersystem.Service.UserService;
 import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.Utill.YearUtils;
 import com.just.teachersystem.VO.AchievementInfo;
+import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class UserServiceImp implements UserService {
      */
     public int addConstruction(ConstructionInfo info){
         info.setStatus(0);
+        info.setClass1("建设类");
         info.setSchoolyear(YearUtils.getSchoolYear());
         info.setIsEnd(0);
         info.setYear(YearUtils.getYears());
@@ -96,5 +98,38 @@ public class UserServiceImp implements UserService {
         }
         return list;
 
+    }
+
+    /**
+     * 添加获奖类信息
+     * @param info
+     * @return
+     */
+    public boolean addAward(AwardInfo info){
+        info.setStatus(0);
+        info.setClass1("获奖类");
+        info.setAwardYear(info.getAwardTime().toString().substring(0,4));
+        info.setSchoolYear(YearUtils.getSchoolYear());
+        info.setYear(YearUtils.getYears());
+        System.out.println(info);
+        int res = teacherMapper.insertToAward(info);
+        if(res ==0){
+            return false;
+        }
+        return true;
+
+    }
+
+    /**
+     * 获得用户个人获奖类记录
+     * @param worknum
+     * @return
+     */
+    public List getMyAwardInfo(String worknum){
+        List list = teacherMapper.selectAwardByWorknum(worknum);
+        if(list == null||list.size()==0){
+            return null;
+        }
+        return list;
     }
 }

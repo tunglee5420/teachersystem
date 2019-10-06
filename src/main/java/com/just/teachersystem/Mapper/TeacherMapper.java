@@ -2,6 +2,7 @@ package com.just.teachersystem.Mapper;
 import	java.util.List;
 
 import com.just.teachersystem.VO.AchievementInfo;
+import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -39,5 +40,20 @@ public interface TeacherMapper {
      * @return
      */
     List selectAchievementByWorknum(String worknum);
+
+    /**
+     * 添加获奖类信息
+     * @param info
+     * @return
+     */
+    int insertToAward(AwardInfo info);
+
+    /**
+     * 根据工号查询获奖类
+     * @param worknum
+     * @return
+     */
+    List selectAwardByWorknum(String worknum);
+
 
 }

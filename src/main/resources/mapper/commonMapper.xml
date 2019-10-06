@@ -159,4 +159,54 @@
         WHERE id=#{aid}
     </update>
 
+
+    <insert id="insertToAwardList" parameterType="java.util.List">
+        insert into award
+        (dtpId, userId, teammate, awardUnit, content, kindId, level, prize, bonus, awardYear, certificate, awardTime, schoolYear,year, status, reason, lastTime)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+          (select id from department where dptname=#{department}),
+          (select id from user where worknum=#{worknum}),
+          #{teammate},
+          #{awardUnit},
+          #{content},
+          (select id from kind where class1=#{class1} and class2=#{class2} and class3=#{class3}),
+          (select id from level where level =#{level}),
+          #{prize},
+          #{bonus},
+          #{awardYear},
+          #{certificate},
+          #{awardTime},
+          #{schoolYear},
+          #{year},
+          #{status},
+          #{reason},
+          NOW()
+        )
+        </foreach>
+    </insert>
+
+    <update id="updateAward" parameterType="com.just.teachersystem.VO.AwardInfo">
+        update award
+        <trim prefix="set" suffixOverrides=",">
+            <if test="department!=null">dptId=(select id from department where dptname=#{department}),</if>
+            <if test="worknum!=null">userId=(select id from user where worknum=#{worknum}),</if>
+            <if test="teammate!=null">teammate=#{teammate},</if>
+            <if test="awardUnit!=null">awardUnit=#{awardUnit},</if>
+            <if test="class1!=null and class2!=null and class3!=null">kindId=(select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),</if>
+            <if test="level!=null">level=(select id from level where level =#{level}),</if>
+            <if test="prize!=null ">prize=#{prize},</if>
+            <if test="bonus!=null and bonus !=''">bonus=#{bonus},</if>
+            <if test="awardYear!=null">awardYear=#{awardYear},</if>
+            <if test="certificate!=null">certificate=#{certificate},</if>
+            <if test="awardTime!=null">awardTime=#{awardTime},</if>
+            <if test="schoolYear!=null">schoolYear=#{schoolYear},</if>
+            <if test="year!=null">year=#{year},</if>
+            <if test="status!=null and status!=''">status=#{status},</if>
+            <if test="reason!=null">reason=#{reason},</if>
+            lastTime=NOW()
+        </trim>
+        WHERE id=#{aid}
+    </update>
 </mapper>

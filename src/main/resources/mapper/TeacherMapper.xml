@@ -66,6 +66,36 @@
 
     <select id="selectAchievementByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.AchievementInfo">
         select aid, department,worknum, name, teammate,production, class1,class2,class3,
-        level, unit,publishTime,patent,certificate,schoolYear,year,status from achievementInfo where worknum=#{worknum}
+        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason from achievementInfo where worknum=#{worknum}
+    </select>
+
+    <insert id="insertToAward" parameterType="com.just.teachersystem.VO.AwardInfo">
+        insert into award
+        (dtpId, userId, teammate, awardUnit, content, kindId, level, prize, bonus, awardYear, certificate, awardTime, schoolYear,year, status, reason, lastTime)
+        values (
+          (select id from department where dptname=#{department}),
+          (select id from user where worknum=#{worknum}),
+          #{teammate},
+          #{awardUnit},
+          #{content},
+          (select id from kind where class1=#{class1} and class2=#{class2} and class3=#{class3}),
+          (select id from level where level =#{level}),
+          #{prize},
+          #{bonus},
+          #{awardYear},
+          #{certificate},
+          #{awardTime},
+          #{schoolYear},
+          #{year},
+          #{status},
+          #{reason},
+          NOW()
+        )
+    </insert>
+
+    <select id="selectAwardByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.AwardInfo">
+        select aid,department,worknum,name , teammate,awardUnit,content,class1,class2,class3,level,prize,bonus,awardYear ,certificate,awardTime,schoolYear,year,status,reason
+        from awardInfo
+        where worknum=#{worknum}
     </select>
 </mapper>

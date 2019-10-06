@@ -26,7 +26,7 @@ public class CommonController {
      * 获取类型列表
      * @return
      */
-    @PostMapping("/getTypeList")
+    @GetMapping("/getTypeList")
     public JsonData getTypeList(){
         System.out.println(111);
         Map map= (Map) redisUtils.get("class:class");

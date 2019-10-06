@@ -9,6 +9,7 @@ import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
 import com.just.teachersystem.Utill.RedisUtils;
 import com.just.teachersystem.VO.AchievementInfo;
+import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import io.jsonwebtoken.Claims;
@@ -65,7 +66,7 @@ public class UserController {
         userInfo.setPassword( EncryptUtil.getInstance().MD5(password));
         boolean res=rootService.updateUserInfo(userInfo);
         if(res){
-            redisUtils.del("login:"+worknum);
+            redisUtils.del("login:"+worknum);//更换密码后需要重新登陆，删除缓存中的数据
             return JsonData.buildSuccess();
         }
         return JsonData.buildError("修改失败");
@@ -181,9 +182,7 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-
         info.setWorknum(worknum);
-        info.setClass1("成果类");
         boolean res = commonService.updateAchievementServ(info);
         if(res){
             return  JsonData.buildSuccess("修改成功");
@@ -191,4 +190,57 @@ public class UserController {
         return JsonData.buildError("修改失败");
 
     }
+
+    @PostMapping("/addAward")
+    public JsonData addAward(@RequestHeader Map<String ,String> header,AwardInfo info){
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+        info.setWorknum(worknum);
+        boolean res = userService.addAward(info);
+        if (res){
+            return JsonData.buildSuccess("添加成功");
+        }
+        return JsonData.buildError("添加失败");
+    }
+
+    /**
+     * 获取用户提交的获奖类信息
+     * @param header
+     * @return
+     */
+    @PostMapping("/getMyAwardInfo")
+    public JsonData  getMyAwardInfo(@RequestHeader Map<String ,String> header) {
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+        List list=userService.getMyAwardInfo(worknum);
+        if(list==null){
+            return JsonData.buildSuccess("暂无数据");
+        }
+        return JsonData.buildSuccess(list);
+    }
+
+
+    /**
+     * 用户更新获奖类信息
+     * @param header
+     * @param info
+     * @return
+     */
+    @PostMapping("/updateUserAward")
+    public JsonData updateUserAward(@RequestHeader Map<String ,String> header,AwardInfo info){
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+        info.setWorknum(worknum);
+        boolean res = commonService.updateAwardServ(info);
+        if(res){
+            return  JsonData.buildSuccess("修改成功");
+        }
+        return JsonData.buildError("修改失败");
+
+    }
+
+
 }
