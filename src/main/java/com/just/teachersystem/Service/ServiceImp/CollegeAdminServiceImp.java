@@ -1,6 +1,6 @@
 package com.just.teachersystem.Service.ServiceImp;
 
-import com.just.teachersystem.Mapper.CommonMapper;
+import com.just.teachersystem.Mapper.TeacherMapper;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,9 @@ import java.util.List;
  */
 @Service
 public class CollegeAdminServiceImp implements CollegeAdminService {
+
     @Autowired
-    CommonMapper common;
+    TeacherMapper teacherMapper;
 
     /**
      * 查询用户信息
@@ -22,7 +23,7 @@ public class CollegeAdminServiceImp implements CollegeAdminService {
      * @return
      */
     public List getUserInfo(UserInfo info){
-        List list=common.getUserInfoList(info);
+        List list=teacherMapper.getUserInfoList(info);
         if(list == null||list.size()==0) return null;
         return list;
     }

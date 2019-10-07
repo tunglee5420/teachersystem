@@ -75,9 +75,15 @@ public class CommonController {
         return JsonData.buildSuccess(map);
     }
 
+    /**
+     * 获得上传文件的token
+     * @param fileInfo
+     * @param headers
+     * @return
+     */
     @PostMapping("/getPanToken")
     public JsonData getPanToken(FileInfo fileInfo ,@RequestHeader Map<String ,String>headers){
-        String url ="http://test.iskye.cn/api/alien/fetch/upload/token";
+
         Claims claims =JwtUtils.checkJWT(headers.get("token"));
         String worknum = (String) claims.get("worknum");
         Map map= (Map) redisUtils.get("file:login");
@@ -85,19 +91,10 @@ public class CommonController {
             map= (Map) fileService.filePanLogin().getContent();
         }
         String cookie= (String) map.get("cookie");
-        Map<String ,String >header=new HashMap<> ();
-        Map<String,String> body =new HashMap<>();
-
-        header.put("Cookie", cookie);
-        body.put("filename", fileInfo.getFilename());
-        body.put("expireTime", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()+1000*120)));
-        body.put("privacy", String.valueOf(false));
-        body.put("size", String.valueOf(fileInfo.getSize()));
-        body.put("dirPath", "/"+worknum+"/"+Year.now()+"/");
 
         try {
-            HttpClientResult h=HttpClientUtils.doPost(url, header, body);
-            if (h.getCode()==200){
+            HttpClientResult h=fileService.getTgetToken(cookie,fileInfo,worknum);
+            if (h!=null&&h.getCode()==200){
                 return JsonData.buildSuccess(h.getContent());
             }
         } catch (Exception e) {
@@ -105,4 +102,49 @@ public class CommonController {
         }
         return JsonData.buildError("请求出错");
     }
+
+    /**
+     * 证实文件上传状况
+     * @param uuid
+     * @return
+     */
+    @PostMapping("/confirmUploaded")
+    public JsonData confirmUploaded (@RequestParam("uuid") String uuid){
+
+        Map map= (Map) redisUtils.get("file:login");
+        if(map==null){
+            map= (Map) fileService.filePanLogin().getContent();
+        }
+        String cookie= (String) map.get("cookie");
+
+        HttpClientResult h=fileService.confirmed(cookie, uuid);
+        if(h != null && h.getCode()==200){
+            return  JsonData.buildSuccess(h.getContent());
+        }
+        return JsonData.buildError(h.getContent().toString());
+    }
+
+    /**
+     * 获取下载 Token
+     * @param uuid
+     * @return
+     */
+    @PostMapping("/getDownloadToken")
+    public JsonData getDownloadToken(@RequestParam("uuid") String uuid){
+        Map map= (Map) redisUtils.get("file:login");
+        if(map==null){
+            map= (Map) fileService.filePanLogin().getContent();
+        }
+        String cookie= (String) map.get("cookie");
+
+        HttpClientResult h=fileService.getDownloadToken(cookie, uuid);
+        if(h != null && h.getCode()==200){
+            return  JsonData.buildSuccess(h.getContent());
+        }
+        return JsonData.buildError(h.getContent().toString());
+    }
+
+
+
+
 }

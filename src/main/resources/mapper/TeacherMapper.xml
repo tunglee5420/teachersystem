@@ -2,100 +2,100 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.just.teachersystem.Mapper.TeacherMapper">
 
-    <insert id="insertToConstruction" parameterType="com.just.teachersystem.VO.ConstructionInfo">
-        insert into construction(
-        dptId,projectNum,project,principalId,teammate,startYear,beginToEndTime,sponsor,kindId,levelId,
-        testimonial,expenditure,point,computeYear,bonus,fileNumber,isEnd,schoolyear,year,status,
-        reason,lastTime
-        )values
+    <select id="getUserInfoList" parameterType="com.just.teachersystem.VO.UserInfo" resultType="com.just.teachersystem.VO.UserInfo">
+        select
+        dptname,name,worknum,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission
+        from userInfo
+        <where>
+            <if test="name!=null and name!=''">
+                name = #{name} and
+            </if>
+            <if test="worknum!=null and worknum!=''">
+                worknum = #{worknum} and
+            </if>
+            <if test="dptname!=null and dptname!=''">
+                dptname = #{dptname}
+            </if>
+        </where>
+    </select>
+
+
+
+
+    <insert id="insertUser" parameterType="com.just.teachersystem.VO.UserInfo">
+        INSERT  into User
+        (dptId,name,worknum,password,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission)
+        values
         (
-            (select id from department where dptname=#{department}),
-            #{projectNum},
-            #{project},
-            (select id from user where worknum=#{worknum}),
-            #{teammate},
-            #{startYear},
-            #{beginToEndTime},
-            #{sponsor},
-            (select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),
-            (select id from level where level =#{level}),
-            #{testimonial},
-            #{expenditure},
-            #{point},
-            #{computeYear},
-            #{bonus},
-            #{fileNumber},
-            #{isEnd},
-            #{schoolyear},
-            #{year},
-            #{status},
-            #{reason},
-            NOW()
+        (select id from department where dptname=#{item.dptname}),
+            #{item.name},
+            #{item.worknum},
+            #{item.password},
+            #{item.gender},
+            #{item.birthday},
+            #{item.enterTime},
+            #{item.phone},
+            #{item.techTittle},
+            #{item.eduBgd},
+            #{item.degree},
+            #{item.school},
+            #{item.major},
+            #{item.doubleTeacher},
+            #{item.background},
+            #{item.tutor},
+            #{item.permission}
         )
     </insert>
 
 
-    <select id="selectConstructionByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.ConstructionInfo">
-        select cid, department,worknum,projectNum, project, name, teammate,StartYear , beginToEndTime,sponsor, class1,class2,class3,
-        level, testimonial,schoolyear,year,status from constructionInfo where worknum=#{worknum}
-    </select>
+    <update id="updateUserInfo" parameterType="com.just.teachersystem.VO.UserInfo">
+        update user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="dptname!=null">dptId=(select id from department where dptname=#{dptname}),</if>
+            <if test="name!=null">name=#{name},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="gender!=null">gender=#{gender},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="birthday!=null">birthday=#{birthday},</if>
+            <if test="enterTime!=null">enterTime=#{enterTime},</if>
+            <if test="techTittle!=null">techTittle=#{techTittle},</if>
+            <if test="eduBgd!=null">eduBgd=#{eduBgd},</if>
+            <if test="degree!=null">degree=#{degree},</if>
+            <if test="school!=null">school=#{school},</if>
+            <if test="doubleTeacher!=null and doubleTeacher!=''">doubleTeacher=#{doubleTeacher},</if>
+            <if test="background!=null and background!=''">background=#{background},</if>
+            <if test="major!=null">major=#{major},</if>
+            <if test="tutor!=null and tutor!=''">tutor=#{tutor},</if>
+            <if test="permission!=null and permission!=''">permission=#{permission}</if>
+        </trim>
+        WHERE worknum=#{worknum}
+    </update>
 
-    
-    <insert id="insertToAchievement" parameterType="com.just.teachersystem.VO.AchievementInfo">
-        insert into achievement(
-        dptId, authorId, teammate, production, kindId, levelId, unit, publishTime, patent, certificate, schoolYear, year, lastTime, status, reason
-        )values (
-            (select id from department where dptname=#{department}),
-            (select id from user where worknum=#{worknum}),
-            #{teammate},
-            #{production},
-            (select id from kind where class1=#{class1} and class2=#{class2} and class3=#{class3}),
-            (select id from level where level =#{level}),
-            #{unit},
-            #{publishTime},
-            #{patent},
-            #{certificate},
-            #{schoolYear},
-            #{year},
-            NOW(),
-            #{status},
-            #{reason}
-        )
+
+    <insert id="insertUserList" parameterType="java.util.List">
+        INSERT  into User
+        (dptId,name,worknum,password,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission)
+        values
+        <foreach collection="list" item="item"  index= "index" separator =",">
+            (
+            (select id from department where dptname=#{item.dptname}),
+            #{item.name},
+            #{item.worknum},
+            #{item.password},
+            #{item.gender},
+            #{item.birthday},
+            #{item.enterTime},
+            #{item.phone},
+            #{item.techTittle},
+            #{item.eduBgd},
+            #{item.degree},
+            #{item.school},
+            #{item.major},
+            #{item.doubleTeacher},
+            #{item.background},
+            #{item.tutor},
+            #{item.permission}
+            )
+        </foreach>
     </insert>
-
-
-    <select id="selectAchievementByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.AchievementInfo">
-        select aid, department,worknum, name, teammate,production, class1,class2,class3,
-        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason from achievementInfo where worknum=#{worknum}
-    </select>
-
-    <insert id="insertToAward" parameterType="com.just.teachersystem.VO.AwardInfo">
-        insert into award
-        (dtpId, userId, teammate, awardUnit, content, kindId, level, prize, bonus, awardYear, certificate, awardTime, schoolYear,year, status, reason, lastTime)
-        values (
-          (select id from department where dptname=#{department}),
-          (select id from user where worknum=#{worknum}),
-          #{teammate},
-          #{awardUnit},
-          #{content},
-          (select id from kind where class1=#{class1} and class2=#{class2} and class3=#{class3}),
-          (select id from level where level =#{level}),
-          #{prize},
-          #{bonus},
-          #{awardYear},
-          #{certificate},
-          #{awardTime},
-          #{schoolYear},
-          #{year},
-          #{status},
-          #{reason},
-          NOW()
-        )
-    </insert>
-
-    <select id="selectAwardByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.AwardInfo">
-        select aid,department,worknum,name , teammate,awardUnit,content,class1,class2,class3,level,prize,bonus,awardYear ,certificate,awardTime,schoolYear,year,status,reason
-        from awardInfo
-        where worknum=#{worknum}
-    </select>
 </mapper>

@@ -1,4 +1,4 @@
-package com.just.teachersystem.Utill;
+package com.just.teachersystem.Exception;
 
 public class MyException extends RuntimeException {
     private static final long serialVersionUID = 1L;

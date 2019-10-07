@@ -15,14 +15,6 @@ import java.util.List;
 @Mapper
 public interface RootMapper {
 
-    @Insert("insert into kind (class1,class2,class3,computeDptId) values(#{class1},#{class2},#{class3},#{computeDptId}) ")
-    boolean addType(Kind kind);
-
-    //更新用户信息
-    int updateUserInfo(UserInfo userInfo);
-
-    //插入用户链表
-    int insertUserList(List<UserInfo> userlist);
 
 
 }

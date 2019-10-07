@@ -3,10 +3,10 @@ import java.util.*;
 
 import com.just.teachersystem.Entity.Department;
 import com.just.teachersystem.Entity.Kind;
-import com.just.teachersystem.Mapper.CommonMapper;
+import com.just.teachersystem.Mapper.*;
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Utill.JwtUtils;
-import com.just.teachersystem.Utill.MyException;
+import com.just.teachersystem.Exception.MyException;
 import com.just.teachersystem.Utill.RedisUtils;
 import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.AwardInfo;
@@ -28,6 +28,15 @@ public class CommonServiceImp  implements CommonService {
 
     @Autowired
     RedisUtils redisUtils;
+    @Autowired
+    ConstructionMapper constructionMapper;
+
+    @Autowired
+    AchievementMapper achievementMapper;
+    @Autowired
+    AwardMapper awardMapper;
+    @Autowired
+    TeacherMapper teacher;
 
 
     /**
@@ -41,7 +50,7 @@ public class CommonServiceImp  implements CommonService {
             return null;
         }
 //        System.out.println(worknum);
-        UserInfo user=mapper.getInfo(worknum);
+        UserInfo user=teacher.getInfo(worknum);
         //System.out.println(user);
         String token=JwtUtils.creatJwt(user);
 //        System.out.println(token);
@@ -159,7 +168,7 @@ public class CommonServiceImp  implements CommonService {
      * @return
      */
     public boolean updateConstructionServ(ConstructionInfo construction){
-       int res= mapper.updateConstruction(construction);
+       int res= constructionMapper.updateConstruction(construction);
        if(res>0){
            return true;
        }
@@ -172,7 +181,7 @@ public class CommonServiceImp  implements CommonService {
      * @return
      */
     public boolean updateAchievementServ(AchievementInfo info){
-        int res= mapper.updateAchievement(info);
+        int res= achievementMapper.updateAchievement(info);
         if(res>0){
             return true;
         }
@@ -185,7 +194,7 @@ public class CommonServiceImp  implements CommonService {
      * @return
      */
     public boolean updateAwardServ(AwardInfo info){
-        int res=mapper.updateAward(info);
+        int res=awardMapper.updateAward(info);
         if(res>0){
             return true;
         }

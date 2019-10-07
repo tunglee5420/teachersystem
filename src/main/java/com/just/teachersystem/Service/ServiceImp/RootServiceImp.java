@@ -2,7 +2,9 @@ package com.just.teachersystem.Service.ServiceImp;
 
 
 import com.just.teachersystem.Entity.Kind;
+import com.just.teachersystem.Mapper.CommonMapper;
 import com.just.teachersystem.Mapper.RootMapper;
+import com.just.teachersystem.Mapper.TeacherMapper;
 import com.just.teachersystem.Service.RootService;
 import com.just.teachersystem.Utill.RedisUtils;
 import com.just.teachersystem.VO.UserInfo;
@@ -15,11 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 @Component
 public class RootServiceImp implements RootService {
-    @Autowired
-    RootMapper root;
 
     @Autowired
     RedisUtils redisUtils;
+    @Autowired
+    TeacherMapper teacher;
+
+    @Autowired
+    CommonMapper common;
 
     /**
      * 超管添加类别
@@ -28,7 +33,7 @@ public class RootServiceImp implements RootService {
      */
     public boolean addType(Kind kind){
 //        System.out.println(kind.toString());
-        boolean res=root.addType(kind);
+        boolean res=common.addType(kind);
         if(res){
             redisUtils.del("class:class");
         }
@@ -41,7 +46,7 @@ public class RootServiceImp implements RootService {
      * @return
      */
     public boolean updateUserInfo(UserInfo userInfo){
-        int res= root.updateUserInfo(userInfo);
+        int res= teacher.updateUserInfo(userInfo);
         return res==1?true:false;
     }
 }

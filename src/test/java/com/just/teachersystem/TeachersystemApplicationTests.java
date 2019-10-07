@@ -27,7 +27,9 @@ public class TeachersystemApplicationTests {
     FileService fileService;
     @Test
     public void contextLoads() {
+        HttpClientResult h=fileService.confirmed("_ak=7136904b-40ad-400c-5564-1f5de5eb9a61; Path=/; Expires=Wed, 06 Nov 2019 07:12:23 GMT","a2657677-18f1-46a0-5fd0-8b0b050c3dcb");
 
+        System.out.println(h);
     }
     @Test
     public void Test1(){

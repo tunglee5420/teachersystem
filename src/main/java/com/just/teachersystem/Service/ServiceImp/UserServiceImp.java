@@ -1,8 +1,6 @@
 package com.just.teachersystem.Service.ServiceImp;
 
-import com.just.teachersystem.Mapper.CommonMapper;
-import com.just.teachersystem.Mapper.RootMapper;
-import com.just.teachersystem.Mapper.TeacherMapper;
+import com.just.teachersystem.Mapper.*;
 import com.just.teachersystem.Service.UserService;
 import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.Utill.YearUtils;
@@ -21,11 +19,17 @@ import java.util.List;
  */
 @Service
 public class UserServiceImp implements UserService {
-    @Autowired
-    CommonMapper commonMapper;
 
     @Autowired
     TeacherMapper teacherMapper;
+    @Autowired
+    ConstructionMapper construction;
+
+    @Autowired
+    AchievementMapper achievement;
+
+    @Autowired
+    AwardMapper award;
 
     /**
      * 验证身份
@@ -34,7 +38,7 @@ public class UserServiceImp implements UserService {
      * @return
      */
     public boolean check(String worknum,String password){
-        UserInfo userInfo=commonMapper.getInfo(worknum);
+        UserInfo userInfo=teacherMapper.getInfo(worknum);
         if(userInfo == null) return false;
         return EncryptUtil.getInstance().MD5(password).equals(userInfo.getPassword());
     }
@@ -51,7 +55,7 @@ public class UserServiceImp implements UserService {
         info.setIsEnd(0);
         info.setYear(YearUtils.getYears());
 
-        return teacherMapper.insertToConstruction(info);
+        return construction.insertToConstruction(info);
     }
 
     /**
@@ -60,7 +64,7 @@ public class UserServiceImp implements UserService {
      * @return
      */
     public List getMyConstructionInfo(String worknum){
-        List list=teacherMapper.selectConstructionByWorknum(worknum);
+        List list=construction.selectConstructionByWorknum(worknum);
         if(list == null||list.size()==0){
             return null;
         }
@@ -78,7 +82,7 @@ public class UserServiceImp implements UserService {
         info.setSchoolYear(YearUtils.getSchoolYear());
         info.setYear(YearUtils.getYears());
         System.out.println(info);
-        int res=teacherMapper.insertToAchievement(info);
+        int res=achievement.insertToAchievement(info);
         if(res ==0){
             return false;
         }
@@ -92,7 +96,7 @@ public class UserServiceImp implements UserService {
      * @return
      */
     public List getMyAchievementInfo(String worknum){
-        List list = teacherMapper.selectAchievementByWorknum(worknum);
+        List list = achievement.selectAchievementByWorknum(worknum);
         if(list == null||list.size()==0){
             return null;
         }
@@ -112,7 +116,7 @@ public class UserServiceImp implements UserService {
         info.setSchoolYear(YearUtils.getSchoolYear());
         info.setYear(YearUtils.getYears());
         System.out.println(info);
-        int res = teacherMapper.insertToAward(info);
+        int res = award.insertToAward(info);
         if(res ==0){
             return false;
         }
@@ -126,7 +130,7 @@ public class UserServiceImp implements UserService {
      * @return
      */
     public List getMyAwardInfo(String worknum){
-        List list = teacherMapper.selectAwardByWorknum(worknum);
+        List list = award.selectAwardByWorknum(worknum);
         if(list == null||list.size()==0){
             return null;
         }

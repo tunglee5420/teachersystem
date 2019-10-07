@@ -1,11 +1,11 @@
 package com.just.teachersystem.Mapper;
-import	java.util.List;
 
-import com.just.teachersystem.VO.AchievementInfo;
-import com.just.teachersystem.VO.AwardInfo;
-import com.just.teachersystem.VO.ConstructionInfo;
+import com.just.teachersystem.VO.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * 普通用户Mapper
@@ -13,47 +13,43 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 public interface TeacherMapper {
-    /**
-     * 添加建设类成就信息
-     * @param constructionInfo
-     * @return
-     */
-    int insertToConstruction(ConstructionInfo constructionInfo);
 
     /**
-     * 根据学号查询建设类
+     * 根据学号获取用户信息
      * @param worknum
      * @return
      */
-    List selectConstructionByWorknum(String worknum);
+    @Select("select * from userInfo where worknum=#{worknum}")
+    UserInfo getInfo(String worknum);
 
     /**
-     * 添加成果类信息
-     * @param info
+     * 根据条件查询用户信息
+     * @param userInfo
      * @return
      */
-    int insertToAchievement(AchievementInfo info);
+
+    List getUserInfoList(UserInfo userInfo);
+
 
     /**
-     * 根据工号查询成果类
-     * @param worknum
+     * 插入用户
+     * @param userInfo
      * @return
      */
-    List selectAchievementByWorknum(String worknum);
+    int insertUser(UserInfo userInfo);
+
 
     /**
-     * 添加获奖类信息
-     * @param info
+     * 更新用户信息
+     * @param userInfo
      * @return
      */
-    int insertToAward(AwardInfo info);
+    int updateUserInfo(UserInfo userInfo);
 
     /**
-     * 根据工号查询获奖类
-     * @param worknum
+     * 插入用户链表
+     * @param userlist
      * @return
      */
-    List selectAwardByWorknum(String worknum);
-
-
+    int insertUserList(List<UserInfo> userlist);
 }
