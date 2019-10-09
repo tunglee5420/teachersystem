@@ -24,6 +24,12 @@ public interface ConstructionMapper {
      */
     List selectConstructionByWorknum(String worknum);
 
+    /**
+     * 条件筛选建设类
+     * @param construction
+     * @return
+     */
+    List selectConstructions(ConstructionInfo construction);
 
     /**
      * 插入建设类信息列表

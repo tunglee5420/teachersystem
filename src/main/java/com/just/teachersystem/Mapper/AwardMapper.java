@@ -23,6 +23,12 @@ public interface AwardMapper {
      */
     List selectAwardByWorknum(String worknum);
 
+    /**
+     * 根据条件筛选获奖类
+     * @param info
+     * @return
+     */
+    List selectAwards(AwardInfo info);
 
     /**
      * 插入获奖类信息列表
@@ -37,5 +43,6 @@ public interface AwardMapper {
      * @return
      */
     int updateAward(AwardInfo info);
+
 
 }

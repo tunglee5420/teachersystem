@@ -1,5 +1,8 @@
 package com.just.teachersystem.Controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.just.teachersystem.Mapper.RootMapper;
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Service.RootService;
@@ -121,16 +124,20 @@ public class UserController {
      * @return
      */
     @PostMapping("/getMyConstructionInfo")
-    public JsonData  getMyConstructionInfo(@RequestHeader Map<String ,String> header) {
+    public JsonData  getMyConstructionInfo(@RequestHeader Map<String ,String> header,
+                                           @RequestParam(value = "page",defaultValue = "1") int page,
+                                           @RequestParam(value = "size",defaultValue = "30")int size) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        System.out.println(worknum);
         List list=userService.getMyConstructionInfo(worknum);
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
         }
-        return JsonData.buildSuccess(list);
+        PageHelper.startPage(page,size);
+        PageInfo<AchievementInfo> pageInfo=new PageInfo<> (list);
+        return JsonData.buildSuccess(pageInfo);
+
     }
 
     /**
@@ -158,16 +165,19 @@ public class UserController {
      * @return
      */
     @PostMapping("/getMyAchievementInfo")
-    public JsonData  getMyAchievementInfo(@RequestHeader Map<String ,String> header) {
+    public JsonData  getMyAchievementInfo(@RequestHeader Map<String ,String> header,
+                                          @RequestParam(value = "page",defaultValue = "1") int page,
+                                          @RequestParam(value = "size",defaultValue = "30")int size) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        System.out.println(worknum);
         List list=userService.getMyAchievementInfo(worknum);
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
         }
-        return JsonData.buildSuccess(list);
+        PageHelper.startPage(page,size);
+        PageInfo<AchievementInfo> pageInfo=new PageInfo<> (list);
+        return JsonData.buildSuccess(pageInfo);
     }
 
 
@@ -210,15 +220,21 @@ public class UserController {
      * @return
      */
     @PostMapping("/getMyAwardInfo")
-    public JsonData  getMyAwardInfo(@RequestHeader Map<String ,String> header) {
+    public JsonData  getMyAwardInfo(@RequestHeader Map<String ,String> header,
+                                    @RequestParam(value = "page",defaultValue = "1") int page,
+                                    @RequestParam(value = "size",defaultValue = "30")int size) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
         List list=userService.getMyAwardInfo(worknum);
+
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
         }
-        return JsonData.buildSuccess(list);
+        PageHelper.startPage(page,size);
+        PageInfo<AwardInfo> pageInfo=new PageInfo<> (list);
+
+        return JsonData.buildSuccess(pageInfo);
     }
 
 

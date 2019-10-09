@@ -39,6 +39,20 @@
         level, testimonial,schoolyear,year,status from constructionInfo where worknum=#{worknum}
     </select>
 
+    <select id="selectConstructions" resultType="com.just.teachersystem.VO.ConstructionInfo" parameterType="com.just.teachersystem.VO.ConstructionInfo">
+        select cid, department,worknum,projectNum, project, name, teammate,StartYear , beginToEndTime,sponsor, class1,class2,class3, level, testimonial,schoolyear,year,status
+        from constructionInfo
+        <where>
+            <if test="department!=null and department!=''"> department=#{department} </if>
+            <if test="class2!=null and class2!=''"> and class2=#{class2}  </if>
+            <if test="class3!=null and class3!=''"> and class3=#{class3}  </if>
+            <if test="level!=null and level!=''"> and level=#{level}  </if>
+            <if test="schoolyear!=null and schoolyear!=''"> and schoolyear=#{schoolyear}  </if>
+            <if test="year!=null and year!=''"> and year=#{year}  </if>
+            <if test="worknum!=null and worknum!=''"> and  worknum=#{worknum}</if>
+        </where>
+    </select>
+
 
     <insert id="insertToConstructionList" parameterType="java.util.List">
         insert into construction(

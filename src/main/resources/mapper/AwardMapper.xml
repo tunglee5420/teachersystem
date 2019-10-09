@@ -32,6 +32,22 @@
         where worknum=#{worknum}
     </select>
 
+    <select id="selectAwards" parameterType="com.just.teachersystem.VO.AwardInfo" resultType="com.just.teachersystem.VO.AwardInfo">
+        select aid,department,worknum,name , teammate,awardUnit,content,class1,class2,class3,level,prize,bonus,awardYear ,certificate,awardTime,schoolYear,year,status,reason
+        from awardInfo
+        <where>
+            <if test="department!=null and department!=''"> department=#{department} </if>
+            <if test="class2!=null and class2!=''"> and class2=#{class2}  </if>
+            <if test="class3!=null and class3!=''"> and class3=#{class3}  </if>
+            <if test="level!=null and level!=''"> and level=#{level}  </if>
+            <if test="prize!=null and prize!=''"> and prize=#{prize}</if>
+            <if test="schoolYear!=null and schoolYear!=''"> and schoolYear=#{schoolYear}  </if>
+            <if test="year!=null and year!=''"> and year=#{year}  </if>
+            <if test="worknum!=null and worknum!=''"> and  worknum=#{worknum}</if>
+        </where>
+
+
+    </select>
 
     <insert id="insertToAwardList" parameterType="java.util.List">
         insert into award

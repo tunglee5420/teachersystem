@@ -24,6 +24,13 @@ public interface AchievementMapper {
     List selectAchievementByWorknum(String worknum);
 
     /**
+     *条件筛选查询成果类
+     * @param info
+     * @return
+     */
+    List selectAchievements(AchievementInfo info);
+
+    /**
      * 插入成果类信息列表
      * @param list
      * @return
