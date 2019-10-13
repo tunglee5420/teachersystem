@@ -20,7 +20,7 @@ public class ConstructionInfo implements Serializable {
   private String class1;
   private String class2;
   private String class3;
-  private String startYear;
+  private String startTime;
   private String beginToEndTime;
   private String level;
   private String sponsor;

@@ -23,7 +23,7 @@ public class LoginController {
         EncryptUtil encryptUtil=EncryptUtil.getInstance();
         Map map=service.login(worknum,encryptUtil.MD5(password));
         if(map==null){
-            return JsonData.buildError("密码错误");
+            return JsonData.buildError("密码错误或者账户不存在");
         }
         return JsonData.buildSuccess(map);
     }

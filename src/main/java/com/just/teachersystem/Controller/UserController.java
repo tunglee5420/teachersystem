@@ -1,9 +1,8 @@
 package com.just.teachersystem.Controller;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.just.teachersystem.Mapper.RootMapper;
+
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Service.RootService;
 import com.just.teachersystem.Service.UserService;

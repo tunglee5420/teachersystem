@@ -2,7 +2,6 @@ package com.just.teachersystem.Controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.just.teachersystem.Entity.Award;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
@@ -225,6 +224,7 @@ public class CollegeAdminController {
         PageInfo pageInfo=new PageInfo<>(list);
         return JsonData.buildSuccess(pageInfo);
     }
+
 
 
 }

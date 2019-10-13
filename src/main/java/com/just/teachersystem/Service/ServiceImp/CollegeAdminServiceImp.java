@@ -116,4 +116,17 @@ public class CollegeAdminServiceImp implements CollegeAdminService {
         return list;
     }
 
+
+    /**
+     * 学院管理员核审建设类
+     * @param info
+     * @return
+     */
+    public int  ConstructionCheck(ConstructionInfo info){
+        if(info==null) return 0;
+        int res= construction.updateConstruction(info);
+        if(res>0) return 1;
+        return 0;
+    }
+
 }

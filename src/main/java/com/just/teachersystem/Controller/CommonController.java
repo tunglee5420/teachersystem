@@ -8,6 +8,7 @@ import com.just.teachersystem.Service.FileService;
 import com.just.teachersystem.Utill.*;
 import com.just.teachersystem.VO.FileInfo;
 import io.jsonwebtoken.Claims;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,17 +28,16 @@ public class CommonController {
      * @return
      */
     @GetMapping("/getTypeList")
-    public JsonData getTypeList(){
-        System.out.println(111);
-        Map map= (Map) redisUtils.get("class:class");
-        if(map==null){
+    public JsonData getTypeList(@RequestParam("class") String class1){
 
-            map=service.getTypeList();
+        List list= (List) redisUtils.get("class:"+class1);
+        if(list==null){
+            list=service.getTypeList(class1);
         }
-        if(map==null){
+        if(list==null){
             return JsonData.buildError("错误");
         }
-        return JsonData.buildSuccess(map);
+        return JsonData.buildSuccess(list);
     }
 
     /**
@@ -64,15 +64,15 @@ public class CommonController {
     @GetMapping("/getDepartmentList")
 
     public JsonData getDepartmentList(){
-        Map map= (Map) redisUtils.get("department");
-        if(map==null){
-            map=service.getDepartmentList();
+        List list= (List) redisUtils.get("department");
+        if(list==null){
+            list=service.getDepartmentList();
         }
 
-        if(map==null) {
+        if(list==null) {
             return JsonData.buildError("错误");
         }
-        return JsonData.buildSuccess(map);
+        return JsonData.buildSuccess(list);
     }
 
     /**

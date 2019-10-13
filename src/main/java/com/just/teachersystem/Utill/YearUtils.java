@@ -6,11 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class YearUtils {
-    public static String getSchoolYear(){
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM");
-        String date=sdf.format(new Date());
-        int year = Integer.parseInt(date.substring(0,4));
-        int month = Integer.parseInt(date.substring(5,7)) ;
+    public static String getSchoolYear(String startTime){
+
+        int year = Integer.parseInt(startTime.substring(0,4));
+        int month = Integer.parseInt(startTime.substring(5,7)) ;
         if(month<9){
             return (year-1) +"-"+year ;
         }else {
@@ -18,10 +17,8 @@ public class YearUtils {
         }
 
     }
-    public static String getYears(){
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY");
-        String date=sdf.format(new Date());
-        int year = Integer.parseInt(date);
+    public static String getYears(String startTime){
+        int year = Integer.parseInt(startTime.substring(0,4));
         return String.valueOf(year) ;
     }
 }

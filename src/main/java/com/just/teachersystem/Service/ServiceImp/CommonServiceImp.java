@@ -1,8 +1,10 @@
 package com.just.teachersystem.Service.ServiceImp;
+import	java.awt.Label;
 import java.util.*;
 
 import com.just.teachersystem.Entity.Department;
 import com.just.teachersystem.Entity.Kind;
+import com.just.teachersystem.Entity.Level;
 import com.just.teachersystem.Mapper.*;
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Utill.JwtUtils;
@@ -51,6 +53,7 @@ public class CommonServiceImp  implements CommonService {
         }
 //        System.out.println(worknum);
         UserInfo user=teacher.getInfo(worknum);
+        if(user==null) return null;
         //System.out.println(user);
         String token=JwtUtils.creatJwt(user);
 //        System.out.println(token);
@@ -73,8 +76,12 @@ public class CommonServiceImp  implements CommonService {
      * 获取类型
      * @return
      */
-    public Map<String, Map<String, List<String>>> getTypeList(){
+    public List getTypeList(String cl1){
         List<Kind>list=mapper.getTypeList();
+
+        int t,k;
+        t=k=0;
+
 
         Set<String> class1=new HashSet<> ();
         Set<String> class2=new HashSet<> ();
@@ -88,32 +95,45 @@ public class CommonServiceImp  implements CommonService {
                 class2.add(c2);
                 class3.add(c3);
         }
-        Map<String, Map < String, List<String> > > classMap1 =new HashMap<>();
-        Map < String, List < String> >classMap2;
-        List<String > list3;
 
-        for (String str1: class1) {
+//        System.out.println(cl1) ;
+        if(!class1.contains(cl1)){
+            return null;
+        }
+        List<Object>l=new ArrayList<> ();
+        Map < String, Object >classMap2=null;
+        List<Map > list3;
+        Map<String ,Object> dmap=null;
+        for (String str2: class2) {
             classMap2=new HashMap<>();
-            for (String str2: class2) {
-                list3=new ArrayList<>();
-                for (Kind kind:list) {
-                    if(str2.equals(kind.getClass2())&&str1.equals(kind.getClass1())){
-                        list3.add(kind.getClass3());
-                    }
+            list3=new ArrayList<>();
+            for (Kind kind:list) {
+                if(str2.equals(kind.getClass2())&&cl1.equals(kind.getClass1())){
+                    dmap=new HashMap<> ();
+                    dmap.put("label",kind.getClass3()) ;
+                    dmap.put("value",++k);
+                    list3.add(dmap);
                 }
-                if(!list3.isEmpty())
-                    classMap2.put(str2, list3);
+            }
+            k=0;
+
+            if(!list3.isEmpty()){
+                classMap2.put("label",str2);
+                classMap2.put("value", ++t);
+                classMap2.put("children", list3);
 
             }
-            if (!classMap2.isEmpty()){
-                classMap1.put(str1, classMap2);
+            if(!classMap2.isEmpty()){
+                l.add(classMap2);
             }
+
 
         }
-        boolean res=redisUtils.set("class"+":"+"class", classMap1,60*60*24*7);
+        System.out.println(l);
+        boolean res=  redisUtils.set("class:"+cl1, l,60*60*24*7);
 
         if(res)
-            return classMap1;
+            return l;
         else
             throw new MyException("缓存异常");
     }
@@ -122,16 +142,26 @@ public class CommonServiceImp  implements CommonService {
      * 获取级别服务
      * @return
      */
-    public Set<String> getLevelSet(){
-        Set set=mapper.getLevelSet();
+    public Set getLevelSet(){
+        Set<String> set=mapper.getLevelSet();
+
+        Set<Map < String, Object>>sets=new HashSet<> ();
         boolean res;
+        int k=1;
         if(set==null&&set.isEmpty()){
             return null;
         }else {
-            res=redisUtils.set("class:level",set,60*60*24*7);
+            for (String s : set) {
+                Map<String, Object> map = new HashMap<> ();
+                map.put("label",s);
+                map.put("value", k++);
+                sets.add(map);
+            }
+
+            res=redisUtils.set("class:level",sets,60*60*24*7);
         }
         if(res)
-            return set;
+            return sets;
         else
 
             throw new MyException("缓存异常");
@@ -142,21 +172,26 @@ public class CommonServiceImp  implements CommonService {
      * 获取部门
      * @return
      */
-    public Map<String ,Integer> getDepartmentList(){
+    public List getDepartmentList(){
         Set<Department> set = mapper.getDepartmentList();
-        Map<String ,Integer> map=new TreeMap<>();
+        List<Map> list = new LinkedList<> ();
+        Map<String, Object> map1 ;
         boolean res;
         if(set==null&&set.isEmpty()){
             return null;
         }else {
-            for (Department  dpt:set) {
-                map.put(dpt.getDptname(), (int) dpt.getId());
+            for (Department e:set) {
+                map1 = new TreeMap<> ();
+                map1.put("label",e.getDptname());
+                map1.put("value", e.getId());
+
+                list.add(map1);
             }
-            res=redisUtils.set("department", map, 60 * 60 * 24 * 7);
+            res=redisUtils.set("department", list, 60 * 60 * 24 * 7);
         }
 
         if(res){
-            return map;
+            return list;
         }
         throw new MyException("缓存异常");
     }

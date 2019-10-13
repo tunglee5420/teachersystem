@@ -28,17 +28,17 @@ public interface CommonService {
      * 获取类型
      * @return
      */
-    Map<String, Map<String, List<String>>> getTypeList();
+    List getTypeList(String cl1);
     /**
      * 获取级别服务
      * @return
      */
-    Set<String> getLevelSet();
+    Set getLevelSet();
     /**
      * 获取部门
      * @return
      */
-    Map<String ,Integer>  getDepartmentList();
+    List getDepartmentList();
     /**
      * 更新建设类的信息
      * @param construction

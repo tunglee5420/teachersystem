@@ -3,7 +3,7 @@
 <mapper namespace="com.just.teachersystem.Mapper.ConstructionMapper">
     <insert id="insertToConstruction" parameterType="com.just.teachersystem.VO.ConstructionInfo">
         insert into construction(
-        dptId,projectNum,project,principalId,teammate,startYear,beginToEndTime,sponsor,kindId,levelId,
+        dptId,projectNum,project,principalId,teammate,startTime,beginToEndTime,sponsor,kindId,levelId,
         testimonial,expenditure,point,computeYear,bonus,fileNumber,isEnd,schoolyear,year,status,
         reason,lastTime
         )values
@@ -13,7 +13,7 @@
             #{project},
             (select id from user where worknum=#{worknum}),
             #{teammate},
-            #{startYear},
+            #{startTime},
             #{beginToEndTime},
             #{sponsor},
             (select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),
@@ -35,12 +35,12 @@
 
 
     <select id="selectConstructionByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.ConstructionInfo">
-        select cid, department,worknum,projectNum, project, name, teammate,StartYear , beginToEndTime,sponsor, class1,class2,class3,
+        select cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3,
         level, testimonial,schoolyear,year,status from constructionInfo where worknum=#{worknum}
     </select>
 
     <select id="selectConstructions" resultType="com.just.teachersystem.VO.ConstructionInfo" parameterType="com.just.teachersystem.VO.ConstructionInfo">
-        select cid, department,worknum,projectNum, project, name, teammate,StartYear , beginToEndTime,sponsor, class1,class2,class3, level, testimonial,schoolyear,year,status
+        select cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3, level, testimonial,schoolyear,year,status
         from constructionInfo
         <where>
             <if test="department!=null and department!=''"> department=#{department} </if>
@@ -56,9 +56,10 @@
 
     <insert id="insertToConstructionList" parameterType="java.util.List">
         insert into construction(
-        dptId,projectNum,project,principalId,teammate,startYear,beginToEndTime,sponsor,kindId,levelId,
+        dptId,projectNum,project,principalId,teammate,startTime,beginToEndTime,sponsor,kindId,levelId,
         testimonial,expenditure,point,computeYear,bonus,fileNumber,isEnd,schoolyear,year,status,
-        reason,lastTime
+        reason,lastTime)
+        values
         <foreach collection="list" item="item" index="index" separator=",">
             (
             (select id from department where dptname=#{item.department}),
@@ -66,7 +67,7 @@
             #{item.project},
             (select id from user where worknum=#{item.worknum}),
             #{item.teammate},
-            #{item.startYear},
+            #{item.startTime},
             #{item.beginToEndTime},
             #{item.sponsor},
             <if test="item.class1!=null and item.class2!=null and item.class3!=null">(select id from kind where class1=#{item.class1} and class2=#{item.class2} and  class3=#{item.class3}),</if>
@@ -96,7 +97,7 @@
             <if test="project!=null">project=#{project},</if>
             <if test="worknum!=null">principalId= (select id from user where worknum=#{worknum}),</if>
             <if test="teammate!=null">teammate=#{teammate},</if>
-            <if test="startYear!=null">startYear=#{startYear},</if>
+            <if test="startTime!=null">startTime=#{startTime},</if>
             <if test="beginToEndTime!=null">beginToEndTime=#{beginToEndTime},</if>
             <if test="sponsor!=null">sponsor=#{sponsor},</if>
             <if test="class1!=null and class2!=null and class3!=null">kindId=(select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),</if>

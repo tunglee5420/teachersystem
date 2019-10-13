@@ -51,9 +51,9 @@ public class UserServiceImp implements UserService {
     public int addConstruction(ConstructionInfo info){
         info.setStatus(0);
         info.setClass1("建设类");
-        info.setSchoolyear(YearUtils.getSchoolYear());
+        info.setSchoolyear(YearUtils.getSchoolYear(info.getStartTime()));
         info.setIsEnd(0);
-        info.setYear(YearUtils.getYears());
+        info.setYear(YearUtils.getYears(info.getStartTime()));
 
         return construction.insertToConstruction(info);
     }
@@ -77,10 +77,12 @@ public class UserServiceImp implements UserService {
      * @return
      */
     public boolean addAchievement(AchievementInfo info){
+
+        String time=String.valueOf(info.getPublishTime());
         info.setStatus(0);
         info.setClass1("成果类");
-        info.setSchoolYear(YearUtils.getSchoolYear());
-        info.setYear(YearUtils.getYears());
+        info.setSchoolYear(YearUtils.getSchoolYear(time));
+        info.setYear(YearUtils.getYears(time));
         System.out.println(info);
         int res=achievement.insertToAchievement(info);
         if(res ==0){
@@ -110,11 +112,12 @@ public class UserServiceImp implements UserService {
      * @return
      */
     public boolean addAward(AwardInfo info){
+        String time = String.valueOf(info.getAwardTime());
         info.setStatus(0);
         info.setClass1("获奖类");
-        info.setAwardYear(info.getAwardTime().toString().substring(0,4));
-        info.setSchoolYear(YearUtils.getSchoolYear());
-        info.setYear(YearUtils.getYears());
+        info.setAwardYear(YearUtils.getYears(time));
+        info.setSchoolYear(YearUtils.getSchoolYear(time));
+        info.setYear(YearUtils.getYears(time));
         System.out.println(info);
         int res = award.insertToAward(info);
         if(res ==0){

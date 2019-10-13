@@ -56,4 +56,14 @@ public interface CollegeAdminService {
      * @return
      */
     List getDptAwards(AwardInfo info);
+
+    /**
+     * 学院管理员核审建设类
+     * @param info
+     * @return
+     */
+    int  ConstructionCheck(ConstructionInfo info);
+
+
+
 }
