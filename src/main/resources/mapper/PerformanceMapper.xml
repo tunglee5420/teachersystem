@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.just.teachersystem.Mapper.PerformanceMapper">
+    <select id="selectPerformanceList" parameterType="com.just.teachersystem.VO.PerformanceInfo" resultType="com.just.teachersystem.VO.PerformanceInfo">
+      select id ,department,computeoffice,type,year,project,master,points,status,lastTime
+      from performance
+      <where>
+        <if test="status!=null and status!=''">
+            status=#{status}
+        </if>
+        <if test="department!=null and department!=''">
+            and  department=#{department}
+        </if>
+        <if test="computeoffice!=null and computeoffice!=''">
+            and computeoffice=#{computeoffice}
+        </if>
+        <if test="year !=null and year!=''">
+            and year=#{year}
+        </if>
+        <if test="type !=null and type!=''">
+            and type =#{type}
+        </if>
+        <if test="project!=null and project!=''">
+            and project=#{project}
+        </if>
+        <if test="master!=null and master!=''">
+            and master=#{master}
+        </if>
+        <if test="points!=null and points!=''">
+            and points=#{points}
+        </if>
+      </where>
+    </select>
+    
+    
+    <update id="updatePerformance" parameterType="com.just.teachersystem.VO.PerformanceInfo">
+        update performance
+        <trim prefix="set" suffixOverrides=",">
+            <if test="status!=null and status!=''">
+                status=#{status}
+            </if>
+            <if test="department!=null and department!=''">
+                department=#{department}
+            </if>
+            <if test="computeoffice!=null and computeoffice!=''">
+                computeoffice=#{computeoffice}
+            </if>
+            <if test="year !=null and year!=''">
+                year=#{year}
+            </if>
+            <if test="type !=null and type!=''">
+                type =#{type}
+            </if>
+            <if test="project!=null and project!=''">
+                project=#{project}
+            </if>
+            <if test="master!=null and master!=''">
+                master=#{master}
+            </if>
+            <if test="points!=null and points!=''">
+                points=#{points}
+            </if>
+            lastTime=NOW()
+        </trim>
+        where id=#{id}
+    </update>
 
+    <insert id="insertToPerformanceList" parameterType="java.util.List">
+        insert into performance
+        (department, computeoffice, type, "year", project, master, points, lastTime) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item.depatemnt},
+            #{item.computeoffice},
+            #{item.type},
+            #{item.year},
+            #{item.project},
+            #{item.master},
+            #{item.points},
+            NOW()
+        </foreach>
+    </insert>
+    
+    <insert id="insertToPerformance" parameterType="com.just.teachersystem.VO.PerformanceInfo">
+        insert  into performance
+        (department, computeoffice, type, "year", project, master, points, lastTime)
+        values (
+            #{depatemnt},
+            #{computeoffice},
+            #{type},
+            #{year},
+            #{project},
+            #{master},
+            #{points},
+            NOW()
+        )
+    </insert>
 </mapper>

@@ -2,16 +2,10 @@ package com.just.teachersystem.Service.ServiceImp;
 import	java.util.ArrayList;
 
 import com.just.teachersystem.Entity.User;
-import com.just.teachersystem.Mapper.AchievementMapper;
-import com.just.teachersystem.Mapper.AwardMapper;
-import com.just.teachersystem.Mapper.ConstructionMapper;
-import com.just.teachersystem.Mapper.TeacherMapper;
+import com.just.teachersystem.Mapper.*;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Utill.EncryptUtil;
-import com.just.teachersystem.VO.AchievementInfo;
-import com.just.teachersystem.VO.AwardInfo;
-import com.just.teachersystem.VO.ConstructionInfo;
-import com.just.teachersystem.VO.UserInfo;
+import com.just.teachersystem.VO.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +25,10 @@ public class CollegeAdminServiceImp implements CollegeAdminService {
     AchievementMapper achievement;
     @Autowired
     AwardMapper award;
-
+    @Autowired
+    PerformanceMapper performance;
+    @Autowired
+    BonusMapper bonus;
 
 
 
@@ -127,6 +124,36 @@ public class CollegeAdminServiceImp implements CollegeAdminService {
         int res= construction.updateConstruction(info);
         if(res>0) return 1;
         return 0;
+    }
+
+    /**
+     * 获取确认业绩名单
+     * @param info
+     * @return
+     */
+    public List confirmPerformance(PerformanceInfo info){
+        if(info == null)
+            return null;
+        List list=performance.selectPerformanceList(info);
+        if (list==null){
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 获取确认津贴名单
+     * @param info
+     * @return
+     */
+    public List<BonusInfo> confirmBonus(BonusInfo info){
+        if(info == null)
+            return null;
+        List list=bonus.selectBonusList(info);
+        if (list==null){
+            return null;
+        }
+        return list;
     }
 
 }

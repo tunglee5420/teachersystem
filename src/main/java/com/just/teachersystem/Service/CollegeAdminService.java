@@ -2,10 +2,8 @@ package com.just.teachersystem.Service;
 import	java.util.List;
 
 
-import com.just.teachersystem.VO.AchievementInfo;
-import com.just.teachersystem.VO.AwardInfo;
-import com.just.teachersystem.VO.ConstructionInfo;
-import com.just.teachersystem.VO.UserInfo;
+import com.just.teachersystem.Entity.Bonus;
+import com.just.teachersystem.VO.*;
 import org.springframework.stereotype.Service;
 
 /**
@@ -64,6 +62,18 @@ public interface CollegeAdminService {
      */
     int  ConstructionCheck(ConstructionInfo info);
 
+    /**
+     * 获取确认业绩名单
+     * @param info
+     * @return
+     */
+    List confirmPerformance(PerformanceInfo info);
 
+    /**
+     * 获取确认津贴名单
+     * @param info
+     * @return
+     */
+    List<BonusInfo> confirmBonus(BonusInfo info);
 
 }

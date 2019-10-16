@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -17,8 +18,8 @@ public class Performance implements Serializable {
   private String project;
   private String master;
   private long points;
-  private String null1;
-  private String null2;
+  private int status;
+  private Date lastTime;
   private String null3;
 
 
