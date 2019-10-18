@@ -49,7 +49,8 @@
             <if test="class3!=null and class3!=''"> and class3=#{class3}  </if>
             <if test="level!=null and level!=''"> and level=#{level}  </if>
             <if test="schoolyear!=null and schoolyear!=''"> and schoolyear=#{schoolyear}  </if>
-
+            <if test="isEnd!=null and isEnd!='' "> and isEnd=#{isEnd}</if>
+            <if test="status!=null and status=''">and status=#{status}</if>
             <if test="worknum!=null and worknum!=''"> and  worknum=#{worknum}</if>
         </where>
     </select>

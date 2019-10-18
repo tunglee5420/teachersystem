@@ -84,9 +84,12 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
+        if(!info.getWorknum().equals(worknum)){
+            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
+        }
+
         info.setWorknum(worknum);
         info.setClass1("建设类");
-//        info.setDepartment("网络信息中心");
         int res=userService.addConstruction(info);
         if(res>0){
             return JsonData.buildSuccess("提交成功");
@@ -105,7 +108,9 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-
+        if(!info.getWorknum().equals(worknum)){
+            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
+        }
 
         info.setWorknum(worknum);
         info.setClass1("建设类");
@@ -150,6 +155,9 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
+        if(!info.getWorknum().equals(worknum)){
+            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
+        }
         info.setWorknum(worknum);
         boolean res=userService.addAchievement(info);
         if (res){
@@ -191,6 +199,9 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
+        if(!info.getWorknum().equals(worknum)){
+            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
+        }
         info.setWorknum(worknum);
         boolean res = commonService.updateAchievementServ(info);
         if(res){
@@ -205,6 +216,10 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
+
+        if(!info.getWorknum().equals(worknum)){
+            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
+        }
         info.setWorknum(worknum);
         boolean res = userService.addAward(info);
         if (res){
@@ -248,6 +263,9 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
+        if(!info.getWorknum().equals(worknum)){
+            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
+        }
         info.setWorknum(worknum);
         boolean res = commonService.updateAwardServ(info);
         if(res){
