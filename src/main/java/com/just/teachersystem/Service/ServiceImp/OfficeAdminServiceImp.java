@@ -1,10 +1,7 @@
 package com.just.teachersystem.Service.ServiceImp;
 import	java.util.ArrayList;
 
-import com.just.teachersystem.Mapper.AchievementMapper;
-import com.just.teachersystem.Mapper.AwardMapper;
-import com.just.teachersystem.Mapper.ConstructionMapper;
-import com.just.teachersystem.Mapper.PerformanceMapper;
+import com.just.teachersystem.Mapper.*;
 import com.just.teachersystem.Service.OfficeAdminService;
 import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.AwardInfo;
@@ -28,6 +25,8 @@ public class OfficeAdminServiceImp implements OfficeAdminService {
     AwardMapper award;
     @Autowired
     PerformanceMapper performance;
+    @Autowired
+    BonusMapper bonus;
 
     /**
      * 科室管理员获取建设类核审信息
@@ -67,6 +66,11 @@ public class OfficeAdminServiceImp implements OfficeAdminService {
         return list;
     }
 
+    /**
+     * 插入到业绩分汇总表
+     * @param list
+     * @return
+     */
     public boolean insertToPerformanceList(List list){
         if(list==null) return false;
         int res=performance.insertToPerformanceList(list);
@@ -75,7 +79,18 @@ public class OfficeAdminServiceImp implements OfficeAdminService {
         return false;
     }
 
-
+    /**
+     * 插入到奖金汇总表
+     * @param list
+     * @return
+     */
+    public boolean insertToBonusList(List list){
+        if(list==null) return false;
+        int res=bonus.insertToBonusList(list);
+        if(res>0)
+            return true;
+        return false;
+    }
 
 
 }

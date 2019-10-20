@@ -87,11 +87,12 @@ public class CommonController {
         Claims claims =JwtUtils.checkJWT(headers.get("token"));
         String worknum = (String) claims.get("worknum");
         Map map= (Map) redisUtils.get("file:login");
+        System.out.println(map);
         if(map==null){
             map= (Map) fileService.filePanLogin().getContent();
         }
         String cookie= (String) map.get("cookie");
-
+//
         try {
             HttpClientResult h=fileService.getTgetToken(cookie,fileInfo,worknum);
             if (h!=null&&h.getCode()==200){

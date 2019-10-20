@@ -50,8 +50,6 @@ public class FileServiceImp implements FileService {
         try {
             HttpClientResult h1=HttpClientUtils.doPost(this.loginUrl,map);
             if(h1.getContent()!=null){
-
-
                 redisUtils.set("file:login",h1.getContent(),60*60*24*30);
             }
             return h1;
@@ -75,13 +73,16 @@ public class FileServiceImp implements FileService {
         Map<String,String> body =new HashMap<>();
 
         header.put("Cookie", cookie);
+//        System.out.println(cookie);
         body.put("filename", fileInfo.getFilename());
         body.put("expireTime", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()+1000*120)));
         body.put("privacy", String.valueOf(false));
         body.put("size", String.valueOf(fileInfo.getSize()));
         body.put("dirPath", "/"+worknum+"/"+Year.now()+"/");
+//        System.out.println(body);
         try {
             HttpClientResult h1 = HttpClientUtils.doPost(getTokenUrl,header,body);
+
             return h1;
         } catch (Exception e) {
             e.printStackTrace();

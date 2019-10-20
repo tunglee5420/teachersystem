@@ -67,9 +67,11 @@
 
     <insert id="insertToPerformanceList" parameterType="java.util.List">
         insert into performance
-        (department, computeoffice, type, "year", project, master, points, lastTime) values
+        (department, computeoffice, type, year, project, master, points, lastTime)
+        values
         <foreach collection="list" item="item" index="index" separator=",">
-            #{item.depatemnt},
+            (
+            #{item.department},
             #{item.computeoffice},
             #{item.type},
             #{item.year},
@@ -77,14 +79,15 @@
             #{item.master},
             #{item.points},
             NOW()
+            )
         </foreach>
     </insert>
     
     <insert id="insertToPerformance" parameterType="com.just.teachersystem.VO.PerformanceInfo">
         insert  into performance
-        (department, computeoffice, type, "year", project, master, points, lastTime)
+        (department, computeoffice, type, year, project, master, points, lastTime)
         values (
-            #{depatemnt},
+            #{department},
             #{computeoffice},
             #{type},
             #{year},

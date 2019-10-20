@@ -1,7 +1,12 @@
 package com.just.teachersystem.Controller;
-import java.time.Year;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
+import ch.qos.logback.core.util.FileUtil;
 import com.github.andyczy.java.excel.ExcelUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -10,16 +15,16 @@ import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Service.OfficeAdminService;
 import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
-import com.just.teachersystem.VO.AchievementInfo;
-import com.just.teachersystem.VO.AwardInfo;
-import com.just.teachersystem.VO.ConstructionInfo;
-import com.just.teachersystem.VO.PerformanceInfo;
+import com.just.teachersystem.VO.*;
 import io.jsonwebtoken.Claims;
-import org.apache.poi.ss.usermodel.Row;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.util.annotation.Nullable;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -67,7 +72,7 @@ public class OfficeAdminController {
     @PostMapping("/getConstructionExcel")
     public void getConstructionExcel(@RequestHeader Map<String, String> header,
                                      @RequestParam("year") String year,
-                                     @RequestParam("schoolYear")String schoolYear,
+                                     @RequestParam(value = "schoolYear")String schoolYear,
                                      HttpServletResponse response) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
@@ -94,7 +99,7 @@ public class OfficeAdminController {
         excelUtils.setLabelName(labels);
         List<String[]> a=new ArrayList<> ();
         a.add(params);
-        data.add(a);
+
         String []values=null;
         for (ConstructionInfo p:list) {
 
@@ -105,6 +110,8 @@ public class OfficeAdminController {
 
             a.add(values);
         }
+        data.add(a);
+        excelUtils.setDataLists(data);
 
         //设置excel 名称
         excelUtils.setSheetName(labels);
@@ -195,7 +202,7 @@ public class OfficeAdminController {
         excelUtils.setLabelName(labels);
         List<String[]> a=new ArrayList<> ();
         a.add(params);
-        data.add(a);
+
         String []values=null;
         for (AchievementInfo p:list) {
 
@@ -205,7 +212,8 @@ public class OfficeAdminController {
 
             a.add(values);
         }
-
+        data.add(a);
+        excelUtils.setDataLists(data);
         //设置excel 名称
         excelUtils.setSheetName(labels);
         excelUtils.setFileName(labels[0]);
@@ -244,7 +252,7 @@ public class OfficeAdminController {
      * @param awardInfo
      * @return
      */
-    @PostMapping("/getUserAchievement")
+    @PostMapping("/getUserAward")
     public JsonData getUserAward(@RequestHeader Map<String ,String> header, AwardInfo awardInfo,
                                        @RequestParam(value = "page",defaultValue = "1") int page,
                                        @RequestParam(value = "size",defaultValue = "30")int size) {
@@ -283,6 +291,13 @@ public class OfficeAdminController {
         return JsonData.buildError("操作失败");
     }
 
+    /**
+     * 获取获奖类excel
+     * @param header
+     * @param year
+     * @param schoolYear
+     * @param response
+     */
     @PostMapping("/getAwardExcel")
     public void getAwardExcel(@RequestHeader Map<String ,String> header,
                               @RequestParam("year") String year,
@@ -311,7 +326,7 @@ public class OfficeAdminController {
         excelUtils.setLabelName(labels);
         List<String[]> a=new ArrayList<> ();
         a.add(params);
-        data.add(a);
+
         String []values=null;
 
         for (AwardInfo p:list) {
@@ -323,6 +338,8 @@ public class OfficeAdminController {
             a.add(values);
         }
 
+        data.add(a);
+        excelUtils.setDataLists(data);
         excelUtils.setSheetName(labels);
         excelUtils.setFileName(labels[0]);
 
@@ -333,33 +350,75 @@ public class OfficeAdminController {
     }
 
 
+    /**
+     * 科室管理员按照模板来导入业绩分数据
+     * @param file
+     * @param index
+     * @return
+     */
     @PostMapping("/excelImportPerformance")
-    public JsonData excelImportPerformance(@RequestParam("file") MultipartFile file,@RequestParam("sheetIndex") int index){
+    public JsonData excelImportPerformance(@RequestParam("file") MultipartFile file,@RequestParam(value = "sheetIndex",defaultValue="1") int index){
         ExcelUtils excelUtils=ExcelUtils.initialization();
-        Workbook workbook= (Workbook) file;
-        int num=workbook.getNumberOfSheets();
-        if(index>=num||index<0) return JsonData.buildError("你选择的表有误");
+        Workbook wb = null;
+        String extName = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));
+        InputStream ins = null;
+
+        if(file.equals("")||file.getSize()<=0) return JsonData.buildError("文件为空");
+        else {
+
+            try {
+                ins = file.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // 根据后缀名称判断excel的版本
+        }
+        try {
+            if (".xls".equals(extName)) {
+                wb = new HSSFWorkbook(ins);
+            } else if (".xlsx".equals(extName)) {
+                wb = new XSSFWorkbook(ins);
+            } else {
+                // 无效后缀名称，这里之能保证excel的后缀名称，不能保证文件类型正确，不过没关系，在创建Workbook的时候会校验文件格式
+                throw new IllegalArgumentException("Invalid excel version");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int num=wb.getNumberOfSheets();
+//        System.out.println(num);
+        if(index>num||index<0) return JsonData.buildError("你选择的表有误");
         String[] sheets = new String [num];
-        for (int i=0;i<num;i++) {
-            sheets [i]= workbook.getSheetName(i);
+        for (int i=0;i<num; i++){
+            sheets[i]=wb.getSheetName(i);
         }
         excelUtils.setExpectDateFormatStr("yyyy-MM-dd");
         HashMap<Integer,Integer> hashMap = new HashMap<> ();
-        hashMap.put(index,2);//从第一张表第二行
-        List<List<LinkedHashMap<String, String>>> sheetList= ExcelUtils.importForExcelData(workbook,sheets,hashMap,null);
+        hashMap.put(index,0);//从第一张表第一行
+        List<List<LinkedHashMap<String, String>>> sheetList= ExcelUtils.importForExcelData(wb,sheets,hashMap,null);
+        List<LinkedHashMap<String, String>> rowList =sheetList.get(index-1);
+        LinkedHashMap<String,String>rows=rowList.get(0);
+        System.out.println(rows);
+        if(!(rows.get("0").equals("院部")&&rows.get("1").equals("业绩分计算科室")&&rows.get("2").equals("分类—类别")
+                &&rows.get("3").equals("立项年度")&&rows.get("4").equals("项目名称")&&rows.get("5").equals("负责人")
+                &&rows.get("6").equals("业绩分（分）"))){
 
-        List<LinkedHashMap<String, String>> rowList =sheetList.get(index);
+            return JsonData.buildError("请严格按照表模板导入");
+        }
         List<PerformanceInfo> performanceInfoList=new ArrayList<>();
         PerformanceInfo p=null;
-        for (int i=0;i<rowList.size(); i++) {
+        for (int i=1;i<rowList.size(); i++) {
+            int k=0;
             p=new PerformanceInfo();
-            p.setDepartment(rowList.get(i).get(0));
-            p.setComputeoffice(rowList.get(i).get(1));
-            p.setType(rowList.get(i).get(2));
-            p.setYear(rowList.get(i).get(3));
-            p.setProject(rowList.get(i).get(4));
-            p.setMaster(rowList.get(i).get(5));
-            p.setPoints(Integer.parseInt(rowList.get(i).get(6)));
+            p.setDepartment(rowList.get(i).get(String.valueOf(k++)));
+            p.setComputeoffice(rowList.get(i).get(String.valueOf(k++)));
+            p.setType(rowList.get(i).get(String.valueOf(k++)));
+            p.setYear(rowList.get(i).get(String.valueOf(k++)));
+            p.setProject(rowList.get(i).get(String.valueOf(k++)));
+            p.setMaster(rowList.get(i).get(String.valueOf(k++)));
+            p.setPoints(Integer.parseInt(rowList.get(i).get(String.valueOf(k++))));
             performanceInfoList.add(p);
         }
         boolean res=officeAdminService.insertToPerformanceList(performanceInfoList);
@@ -367,13 +426,137 @@ public class OfficeAdminController {
             return JsonData.buildSuccess("导入成功");
         }
         return JsonData.buildError("导入失败");
-
-
     }
 
 
+    /**
+     * 科室管理员获取模板
+     * @param response
+     */
+    @PostMapping("/getPerformanceTemplate")
+    public void getPerformanceTemplate(HttpServletResponse response){
+        List<List<String[]>> data=new ArrayList<>();
+        ExcelUtils excelUtils=ExcelUtils.initialization();
+        //设置表头/表名
+        String[]labels ={"校区、苏理工教学业绩分汇总表模板"};
+        //设置字段
+        String []params=new String [] {"院部","业绩分计算科室","分类-类别","立项年度","项目名称","负责人","业绩分（分）"};
+        String []demo = new String[] {"xx学院/处","xx科","xx类别","2019","xxxxx","xxx","100"};
+        String []tips = new String [] {"提示：请严格按照报个薄板填写，以免造成数据混乱出错!"};
+        List<String[]> a=new ArrayList<> ();
+        a.add(params);
+        a.add(demo);
+        data.add(a);
+        excelUtils.setDataLists(data);
+        excelUtils.setSheetName(labels);
+        excelUtils.setFileName(labels[0]);
+        excelUtils.setResponse( response);
+        excelUtils.exportForExcelsOptimize();
+    }
+
+    /**
+     * 科室管理员获取模板
+     * @param response
+     */
+    @PostMapping("/getBonusTemplate")
+    public void getBonusTemplate(HttpServletResponse response){
+        List<List<String[]>> data=new ArrayList<>();
+        ExcelUtils excelUtils=ExcelUtils.initialization();
+        //设置表头/表名
+        String[]labels ={"校区、苏理工教学奖金汇总表模板"};
+        //设置字段
+        String []params=new String [] {"院部","奖金计算科室（内置）","分类-类别","立项年度","项目名称","负责人","奖金（元）"};
+        String []demo = new String[] {"xx学院/处","xx科","xx类别","2019","xxxxx","xxx","100.0"};
+        String[]null1=new String[]{""};
+        String[]office=new String [] {"内置科室：","教务科", "实验室与设备管理科","团委","质量建设与评估办公室","实践教学科","学籍科"};
+        String[]null2=new String[]{"提示：请严格按照报个薄板填写，以免造成数据混乱出错,计算科室请按本模提供的科室来填写"};
+        List<String[]> a=new ArrayList<> ();
+        a.add(params);
+        a.add(demo);
+        a.add(null1);
+        a.add(office);
+        a.add(null2);
+
+        data.add(a);
+        excelUtils.setDataLists(data);
+        excelUtils.setSheetName(labels);
+        excelUtils.setFileName(labels[0]);
+        excelUtils.setResponse( response);
+        excelUtils.exportForExcelsOptimize();
+    }
 
 
+    /**
+     * 科室管理员按照模板来导入业绩分数据
+     * @param file
+     * @param index
+     * @return
+     */
+    @PostMapping("/excelImportBonus")
+    public JsonData excelImportBonus(@RequestParam("file") MultipartFile file,@RequestParam(value = "sheetIndex",defaultValue="1") int index){
+        ExcelUtils excelUtils=ExcelUtils.initialization();
+        Workbook wb = null;
+        String extName = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));
+        InputStream ins1 = null;
+        if(file.equals("")||file.getSize()<=0){
+            return JsonData.buildError("文件为空");
+        }else {
+            try {
+                ins1 = file.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // 根据后缀名称判断excel的版本
+        }
+        try {
+            if (".xls".equals(extName)) {
+                wb = new HSSFWorkbook(ins1);
+            } else if (".xlsx".equals(extName)) {
+                wb = new XSSFWorkbook(ins1);
+            } else {
+                // 无效后缀名称，这里之能保证excel的后缀名称，不能保证文件类型正确，不过没关系，在创建Workbook的时候会校验文件格式
+                throw new IllegalArgumentException("Invalid excel version");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int num=wb.getNumberOfSheets();
+        if(index>num||index<0) return JsonData.buildError("你选择的表有误");
+        String[] sheets = new String [num];
+
+        excelUtils.setExpectDateFormatStr("yyyy-MM-dd");
+        HashMap<Integer,Integer> hashMap = new HashMap<> ();
+        hashMap.put(index,0);//从第一张表第一行
+        List<List<LinkedHashMap<String, String>>> sheetList= ExcelUtils.importForExcelData(wb,sheets,hashMap,null);
+        List<LinkedHashMap<String, String>> rowList =sheetList.get(index-1);
+        LinkedHashMap<String, String>rows=rowList.get(0);
+        System.out.println(rows);
+        if(!(rows.get("0").trim().equals("院部")&&rows.get("1").trim().equals("奖金计算科室（内置）")&&rows.get("2").trim().equals("分类—类别")
+                &&rows.get("3").trim().equals("立项年度")&&rows.get("4").trim().equals("项目名称")&&rows.get("5").trim().equals("负责人")
+                &&rows.get("6").trim().equals("奖金（元）"))){
+            return JsonData.buildError("请严格按照表表模板导入");
+        }
+        List<BonusInfo> bonusInfoList=new ArrayList<>();
+        BonusInfo p=null;
+        for (int i=1;i<rowList.size(); i++) {
+            int k=0;
+            p=new BonusInfo();
+            p.setDepartment(rowList.get(i).get(String.valueOf(k++)));
+            p.setComputeoffice(rowList.get(i).get(String.valueOf(k++)));
+            p.setType(rowList.get(i).get(String.valueOf(k++)));
+            p.setYear(rowList.get(i).get(String.valueOf(k++)));
+            p.setProject(rowList.get(i).get(String.valueOf(k++)));
+            p.setMaster(rowList.get(i).get(String.valueOf(k++)));
+            p.setBonus(Integer.parseInt(rowList.get(i).get(String.valueOf(k++))));
+            bonusInfoList.add(p);
+        }
+        boolean res=officeAdminService.insertToBonusList(bonusInfoList);
+        if(res){
+            return JsonData.buildSuccess("导入成功");
+        }
+        return JsonData.buildError("导入失败");
+    }
 
 
 

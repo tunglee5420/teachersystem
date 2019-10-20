@@ -39,4 +39,11 @@ public interface OfficeAdminService {
      */
     boolean insertToPerformanceList(List list);
 
+    /**
+     * 插入到奖金汇总表
+     * @param list
+     * @return
+     */
+     boolean insertToBonusList(List list);
+
 }
