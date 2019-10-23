@@ -23,27 +23,27 @@
 
 
     <insert id="insertUser" parameterType="com.just.teachersystem.VO.UserInfo">
-        INSERT  into User
+        INSERT  into user
         (dptId,name,worknum,password,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission)
         values
         (
-        (select id from department where dptname=#{item.dptname}),
-            #{item.name},
-            #{item.worknum},
-            #{item.password},
-            #{item.gender},
-            #{item.birthday},
-            #{item.enterTime},
-            #{item.phone},
-            #{item.techTittle},
-            #{item.eduBgd},
-            #{item.degree},
-            #{item.school},
-            #{item.major},
-            #{item.doubleTeacher},
-            #{item.background},
-            #{item.tutor},
-            #{item.permission}
+        (select id from department where dptname=#{dptname}),
+            #{name},
+            #{worknum},
+            #{password},
+            #{gender},
+            #{birthday},
+            #{enterTime},
+            #{phone},
+            #{techTittle},
+            #{eduBgd},
+            #{degree},
+            #{school},
+            #{major},
+            #{doubleTeacher},
+            #{background},
+            #{tutor},
+            #{permission}
         )
     </insert>
 

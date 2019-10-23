@@ -129,7 +129,6 @@ public class CommonServiceImp  implements CommonService {
 
 
         }
-        System.out.println(l);
         boolean res=  redisUtils.set("class:"+cl1, l,60*60*24*7);
 
         if(res)

@@ -4,6 +4,8 @@ import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +39,7 @@ public interface OfficeAdminService {
      * @param list
      * @return
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     boolean insertToPerformanceList(List list);
 
     /**
@@ -44,6 +47,7 @@ public interface OfficeAdminService {
      * @param list
      * @return
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
      boolean insertToBonusList(List list);
 
 }

@@ -17,6 +17,12 @@ public class LoginController {
     @Autowired
     private CommonService service;
 
+    /**
+     * 登陆
+     * @param worknum
+     * @param password
+     * @return
+     */
 
     @PostMapping("/login")
     public JsonData login(@RequestParam("worknum") String worknum, @RequestParam("password") String password){

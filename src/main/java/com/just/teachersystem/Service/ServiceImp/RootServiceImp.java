@@ -1,13 +1,13 @@
 package com.just.teachersystem.Service.ServiceImp;
 
-
 import com.just.teachersystem.Entity.Kind;
 import com.just.teachersystem.Mapper.CommonMapper;
-import com.just.teachersystem.Mapper.RootMapper;
 import com.just.teachersystem.Mapper.TeacherMapper;
 import com.just.teachersystem.Service.RootService;
+import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.Utill.RedisUtils;
 import com.just.teachersystem.VO.UserInfo;
+import org.omg.CORBA.UnknownUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,8 @@ public class RootServiceImp implements RootService {
      * @return
      */
     public boolean addType(Kind kind){
-//        System.out.println(kind.toString());
+        if(kind==null ||kind.getClass1()== null||kind.getClass1().equals("")||kind.getClass2()==null||kind.getClass2().equals(""))
+            return false;
         boolean res=common.addType(kind);
         if(res){
             redisUtils.del("class:class");
@@ -41,12 +42,87 @@ public class RootServiceImp implements RootService {
     }
 
     /**
-     * 更新用户信息服务层
+     * 超管删除类别(仅限class3)
+     * @param class3
+     * @return
+     */
+    public boolean deleteType(String class3) {
+        if(class3.equals("")||class3==null)
+            return false;
+        boolean res = common.deleteType(class3);
+        if(res)
+            redisUtils.del("class:class");
+        return res;
+    }
+
+
+    /**
+     * 添加级别
+     * @param level
+     * @return
+     */
+    public boolean addLevel(String level){
+        if(level==null || level.equals(""))
+            return false;
+        boolean res=common.addLevel(level);
+        if(res){
+            redisUtils.del("class:level");
+        }
+        return res;
+    }
+
+    /**
+     * 删除级别
+     * @param level
+     * @return
+     */
+    public boolean deleteLevel(String level){
+        if(level==null || level.equals(""))
+            return false;
+        boolean res = common.deleteLevel(level);
+        if(res){
+            redisUtils.del("class:level");
+        }
+        return res;
+    }
+
+    /**
+     *添加新的用户成员
+     * @param user
+     * @return
+     */
+    public boolean addUser(UserInfo user){
+        user.setPassword(EncryptUtil.getInstance().MD5(user.getPassword()));
+        if(user==null)
+            return false;
+        int res = teacher.insertUser(user);
+        return res<0?false:true;
+    }
+
+    /**
+     * 更新用户信息(包括修改用户权限和密码)
      * @param userInfo
      * @return
      */
     public boolean updateUserInfo(UserInfo userInfo){
+        if (userInfo==null) return false;
+        if(userInfo.getPassword()!=null )  userInfo.setPassword(EncryptUtil.getInstance().MD5(userInfo.getPassword()));
         int res= teacher.updateUserInfo(userInfo);
         return res==1?true:false;
     }
+
+    /**
+     * 根据工号删除用户
+     * @param worknum
+     * @return
+     */
+    public boolean deleteUser(String worknum){
+        if(worknum.equals("")||worknum==null ){
+            return false;
+        }
+        int res=teacher.deleteByWorknum(worknum);
+        return res==1?true:false;
+    }
+
+
 }

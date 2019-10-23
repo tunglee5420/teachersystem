@@ -52,4 +52,11 @@ public interface TeacherMapper {
      * @return
      */
     int insertUserList(List<UserInfo> userlist);
+
+    /**
+     * 删除用户的信息
+     * @param worknum
+     * @return
+     */
+    int deleteByWorknum(String worknum);
 }

@@ -29,21 +29,35 @@ public class CollegeAdminController {
     RedisUtils redisUtils;
 
     /**
+     * 学院管理员获取确认表权限
+     * @return
+     */
+    @PostMapping("/getAdminEnterPermission")
+    public JsonData getAdminPermission() {
+        Map<Object,Object> map=redisUtils.hmget("Entrance:admin");
+        if (map!=null){
+            return JsonData.buildSuccess(map);
+        }
+        return JsonData.buildError("获取出错");
+    }
+
+
+    /**
      * 获取部门用户
      * @param header
      * @param worknum
      * @param name
      * @param page
      * @param size
-     * @return
+     * @return JsonData
      */
     @PostMapping("/getDptUserInfo")
     public JsonData getDptUserInfo(@RequestHeader Map<String ,String> header,
                                    @RequestParam("worknum") String worknum ,
                                    @RequestParam("name") String name,
                                    @RequestParam(value = "page",defaultValue = "1") int page,
-                                   @RequestParam(value = "size",defaultValue = "30")int size
-                                   ){
+                                   @RequestParam(value = "size",defaultValue = "30")int size){
+
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=(String) claims.get("department");
@@ -58,6 +72,7 @@ public class CollegeAdminController {
         PageInfo<UserInfo> pageInfo = new PageInfo<> (list);
         return JsonData.buildSuccess(pageInfo);
     }
+
 
     /**
      * 修改部门成员密码
@@ -263,12 +278,14 @@ public class CollegeAdminController {
     @PostMapping("/getConfirmPerformanceExcel")
     public void getConfirmPerformanceExcel(@RequestHeader Map<String, String> header,
                                                @RequestParam("year") String year,
+
                                                HttpServletResponse response) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=( String) claims.get("department");
         PerformanceInfo performanceInfo=new PerformanceInfo();
         performanceInfo.setYear(year);
+
         performanceInfo.setDepartment(department);
         performanceInfo.setStatus(1);
         List<PerformanceInfo>list=collegeAdminService.confirmPerformance(performanceInfo);

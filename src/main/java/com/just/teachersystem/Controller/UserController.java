@@ -275,5 +275,19 @@ public class UserController {
 
     }
 
+    /**
+     * 获取入口开放权限
+     * @return
+     */
+    @PostMapping("/getEntrancePermission")
+    public JsonData getEntrancePermission() {
+        Map<Object,Object> map=redisUtils.hmget("Entrance:user");
+        if (map!=null){
+            return JsonData.buildSuccess(map);
+        }
+        return JsonData.buildError("获取出错");
+    }
+
+
 
 }

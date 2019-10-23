@@ -8,6 +8,8 @@ import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -71,6 +73,7 @@ public class OfficeAdminServiceImp implements OfficeAdminService {
      * @param list
      * @return
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public boolean insertToPerformanceList(List list){
         if(list==null) return false;
         int res=performance.insertToPerformanceList(list);
@@ -84,6 +87,7 @@ public class OfficeAdminServiceImp implements OfficeAdminService {
      * @param list
      * @return
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public boolean insertToBonusList(List list){
         if(list==null) return false;
         int res=bonus.insertToBonusList(list);

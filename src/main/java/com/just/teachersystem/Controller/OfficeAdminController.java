@@ -1,12 +1,9 @@
 package com.just.teachersystem.Controller;
 
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-
-import ch.qos.logback.core.util.FileUtil;
 import com.github.andyczy.java.excel.ExcelUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,9 +21,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.util.annotation.Nullable;
+
 
 import javax.servlet.http.HttpServletResponse;
+
 
 
 @RestController
@@ -40,20 +38,38 @@ public class OfficeAdminController {
     /**
      * 获取用户提交的建设类信息
      * @param header
-     * @param construction
+     * @param department
+     * @param class3
+     * @param level
+     * @param year
+     * @param schoolYear
+     * @param page
+     * @param size
      * @return
      */
     @PostMapping("/getUserConstruction")
-    public JsonData getUserConstruction(@RequestHeader Map<String ,String> header, ConstructionInfo construction,
+    public JsonData getUserConstruction(@RequestHeader Map<String ,String> header,
+                                        @RequestParam(value = "department")String department,
+                                        @RequestParam("class3")String class3,
+                                        @RequestParam("level") String level,
+                                        @RequestParam("year") String year,
+                                        @RequestParam("schoolYear")String schoolYear,
                                         @RequestParam(value = "page",defaultValue = "1") int page,
                                         @RequestParam(value = "size",defaultValue = "30")int size
                                         ){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
-        String department=(String) claims.get("department");
-        if(!department.equals("质量建设与评估办公室")){
+        String dpt=(String) claims.get("department");
+        if(!dpt.equals("质量建设与评估办公室")){
             return JsonData.buildError("你没有权限");
         }
+        ConstructionInfo construction=new ConstructionInfo();
+        construction.setSchoolyear(schoolYear);
+        construction.setYear(year);
+        construction.setLevel(level);
+        construction.setClass3(class3);
+        construction.setDepartment(department);
+
         List<ConstructionInfo> list=officeAdminService.getUserConstruction(construction);
         PageHelper.startPage(page,size);
         PageInfo<ConstructionInfo> pageInfo=new PageInfo<> (list);
@@ -121,7 +137,7 @@ public class OfficeAdminController {
         excelUtils.exportForExcelsOptimize();
     }
     /**
-     * 补充建设信息并核审
+     * 补充修改建设信息并核审
      * @param header
      * @param construction
      * @return
@@ -145,19 +161,33 @@ public class OfficeAdminController {
     /**
      * 获取用户提交的成果类信息
      * @param header
-     * @param achievement
+     * @param department
+     * @param class3
+     * @param year
+     * @param schoolYear
+     * @param page
+     * @param size
      * @return
      */
     @PostMapping("/getUserAchievement")
-    public JsonData getUserAchievement(@RequestHeader Map<String ,String> header, AchievementInfo achievement,
+    public JsonData getUserAchievement(@RequestHeader Map<String ,String> header,
+                                       @RequestParam(value = "department")String department,
+                                       @RequestParam("class3")String class3,
+                                       @RequestParam("year") String year,
+                                       @RequestParam("schoolYear")String schoolYear,
                                        @RequestParam(value = "page",defaultValue = "1") int page,
                                        @RequestParam(value = "size",defaultValue = "30")int size) {
         String token = header.get("token");
         Claims claims = JwtUtils.checkJWT(token);
-        String department = (String) claims.get("department");
-        if (!department.equals("质量建设与评估办公室")) {
+        String dpt = (String) claims.get("department");
+        if (!dpt.equals("质量建设与评估办公室")) {
             return JsonData.buildError("你没有权限");
         }
+        AchievementInfo achievement=new AchievementInfo();
+        achievement.setYear(year);
+        achievement.setClass3(class3);
+        achievement.setSchoolYear(schoolYear);
+        achievement.setDepartment(department);
         List<AchievementInfo> list=officeAdminService.getUserAchievement(achievement);
         PageHelper.startPage(page,size);
         PageInfo<AchievementInfo> pageInfo=new PageInfo<> (list);
@@ -224,7 +254,7 @@ public class OfficeAdminController {
     }
 
     /**
-     * 补充成果信息并核审
+     * 补充修改成果信息并核审
      * @param header
      * @param info
      * @return
@@ -245,23 +275,42 @@ public class OfficeAdminController {
     }
 
 
-
     /**
      * 获取用户提交的获奖类信息
      * @param header
-     * @param awardInfo
+     * @param department
+     * @param class3
+     * @param level
+     * @param year
+     * @param prize
+     * @param schoolYear
+     * @param page
+     * @param size
      * @return
      */
     @PostMapping("/getUserAward")
-    public JsonData getUserAward(@RequestHeader Map<String ,String> header, AwardInfo awardInfo,
-                                       @RequestParam(value = "page",defaultValue = "1") int page,
-                                       @RequestParam(value = "size",defaultValue = "30")int size) {
+    public JsonData getUserAward(@RequestHeader Map<String ,String> header,
+                                 @RequestParam(value = "department")String department,
+                                 @RequestParam("class3")String class3,
+                                 @RequestParam("level") String level,
+                                 @RequestParam("year") String year,
+                                 @RequestParam("prize") String prize,
+                                 @RequestParam("schoolYear")String schoolYear,
+                                 @RequestParam(value = "page",defaultValue = "1") int page,
+                                 @RequestParam(value = "size",defaultValue = "30") int size ){
         String token = header.get("token");
         Claims claims = JwtUtils.checkJWT(token);
-        String department = (String) claims.get("department");
-        if (!department.equals("质量建设与评估办公室")) {
+        String dpt = (String) claims.get("department");
+        if (!dpt.equals("质量建设与评估办公室")) {
             return JsonData.buildError("你没有权限");
         }
+        AwardInfo awardInfo=new AwardInfo();
+        awardInfo.setSchoolYear(schoolYear);
+        awardInfo.setYear(year);
+        awardInfo.setPrize(prize);
+        awardInfo.setClass3(class3);
+        awardInfo.setDepartment(department);
+        awardInfo.setLevel(level);
         List<AwardInfo> list=officeAdminService.getUserAward(awardInfo);
         PageHelper.startPage(page,size);
         PageInfo<AwardInfo> pageInfo=new PageInfo<> (list);
@@ -271,7 +320,7 @@ public class OfficeAdminController {
     }
 
     /**
-     * 补充获奖类信息并核审
+     * 补充修改获奖类信息并核审
      * @param header
      * @param awardInfo
      * @return
@@ -557,9 +606,6 @@ public class OfficeAdminController {
         }
         return JsonData.buildError("导入失败");
     }
-
-
-
 
 
 }
