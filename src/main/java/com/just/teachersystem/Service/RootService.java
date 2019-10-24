@@ -2,6 +2,8 @@ package com.just.teachersystem.Service;
 import	java.util.List;
 
 import com.just.teachersystem.Entity.Kind;
+import com.just.teachersystem.Entity.Performance;
+import com.just.teachersystem.VO.BonusInfo;
 import com.just.teachersystem.VO.PerformanceInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.stereotype.Service;
@@ -74,4 +76,39 @@ public interface RootService {
      * @return
      */
     List<PerformanceInfo> getPerfromanceList(PerformanceInfo info);
+
+    /**
+     * 更新业绩分信息表
+     * @param info
+     * @return
+     */
+    boolean updatePerformanceInfo(PerformanceInfo info);
+
+    /**
+     * 添加业绩分信息表
+     * @param info
+     * @return
+     */
+    boolean addPerformanceInfo(PerformanceInfo info);
+
+    /**
+     * 根据条件检索奖金信息表
+     * @param info
+     * @return
+     */
+    List<BonusInfo> getBonusList(BonusInfo info);
+
+    /**
+     * 更新奖金信息表
+     * @param info
+     * @return
+     */
+    boolean updateBonusInfo(BonusInfo info);
+
+    /**
+     * 添加奖金信息表
+     * @param info
+     * @return
+     */
+    boolean addBonusInfo(BonusInfo info);
 }

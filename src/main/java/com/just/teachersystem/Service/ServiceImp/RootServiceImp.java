@@ -1,12 +1,14 @@
 package com.just.teachersystem.Service.ServiceImp;
 
 import com.just.teachersystem.Entity.Kind;
+import com.just.teachersystem.Mapper.BonusMapper;
 import com.just.teachersystem.Mapper.CommonMapper;
 import com.just.teachersystem.Mapper.PerformanceMapper;
 import com.just.teachersystem.Mapper.TeacherMapper;
 import com.just.teachersystem.Service.RootService;
 import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.Utill.RedisUtils;
+import com.just.teachersystem.VO.BonusInfo;
 import com.just.teachersystem.VO.PerformanceInfo;
 import com.just.teachersystem.VO.UserInfo;
 
@@ -32,6 +34,8 @@ public class RootServiceImp implements RootService {
     CommonMapper common;
     @Autowired
     PerformanceMapper performance;
+    @Autowired
+    BonusMapper bonus;
 
     /**
      * 超管添加类别
@@ -151,11 +155,70 @@ public class RootServiceImp implements RootService {
         if(info==null){
             return null;
         }
+        info.setStatus(1);
         List < PerformanceInfo>list=performance.selectPerformanceList(info);
         if(list==null) return null;
         return list;
     }
 
+    /**
+     * 更新(删除 status置0)业绩分信息表
+     * @param info
+     * @return
+     */
+    public boolean updatePerformanceInfo(PerformanceInfo info){
+        if(info == null) return false;
+        int res=performance.updatePerformance(info);
+        return res ==0?false:true;
+    }
+
+    /**
+     * 添加业绩分信息表
+     * @param info
+     * @return
+     */
+    public boolean addPerformanceInfo(PerformanceInfo info){
+        if(info == null) return false;
+        int res=performance.insertToPerformance(info);
+        return res ==0?false:true;
+    }
+
+    /**
+     * 根据条件检索奖金信息表
+     * @param info
+     * @return
+     */
+    public List<BonusInfo> getBonusList(BonusInfo info){
+        if(info==null){
+            return null;
+        }
+        info.setStatus(1);
+        List < BonusInfo>list=bonus.selectBonusList(info);
+        if(list==null) return null;
+        return list;
+    }
+
+    /**
+     * 更新(删除 status置0)奖金信息表
+     * @param info
+     * @return
+     */
+    public boolean updateBonusInfo(BonusInfo info){
+        if(info == null) return false;
+        int res=bonus.updateBonus(info);
+        return res ==0?false:true;
+    }
+
+    /**
+     * 添加奖金信息表
+     * @param info
+     * @return
+     */
+    public boolean addBonusInfo(BonusInfo info){
+        if(info == null) return false;
+        int res=bonus.insertToBonus(info);
+        return res ==0?false:true;
+    }
 
 
 }
