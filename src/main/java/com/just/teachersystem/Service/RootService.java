@@ -1,6 +1,8 @@
 package com.just.teachersystem.Service;
+import	java.util.List;
 
 import com.just.teachersystem.Entity.Kind;
+import com.just.teachersystem.VO.PerformanceInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.stereotype.Service;
 
@@ -59,4 +61,17 @@ public interface RootService {
      */
     boolean deleteUser(String worknum);
 
+    /**
+     * 检索用户信息
+     * @param info
+     * @return
+     */
+    List<UserInfo> getUserInfo(UserInfo info);
+
+    /**
+     * 根据条件检索
+     * @param info
+     * @return
+     */
+    List<PerformanceInfo> getPerfromanceList(PerformanceInfo info);
 }

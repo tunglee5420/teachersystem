@@ -237,6 +237,7 @@ public class CollegeAdminController {
         aw.setYear(year);
         aw.setPrize(prize);
         aw.setDepartment(department);
+
         PageHelper.startPage(page,size);
         List list=collegeAdminService.getDptAwards(aw);
         PageInfo pageInfo=new PageInfo<>(list);
@@ -290,7 +291,7 @@ public class CollegeAdminController {
         performanceInfo.setStatus(1);
         List<PerformanceInfo>list=collegeAdminService.confirmPerformance(performanceInfo);
 
-//设置表格
+        //设置表格
         List<List<String[]>> data=new ArrayList<>();
         ExcelUtils excelUtils=ExcelUtils.initialization();
         //设置表头

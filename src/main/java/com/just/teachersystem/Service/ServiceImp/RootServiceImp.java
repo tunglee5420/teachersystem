@@ -2,15 +2,20 @@ package com.just.teachersystem.Service.ServiceImp;
 
 import com.just.teachersystem.Entity.Kind;
 import com.just.teachersystem.Mapper.CommonMapper;
+import com.just.teachersystem.Mapper.PerformanceMapper;
 import com.just.teachersystem.Mapper.TeacherMapper;
 import com.just.teachersystem.Service.RootService;
 import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.Utill.RedisUtils;
+import com.just.teachersystem.VO.PerformanceInfo;
 import com.just.teachersystem.VO.UserInfo;
-import org.omg.CORBA.UnknownUserException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 /**
  * 超级管理员服务实现层
  */
@@ -25,6 +30,8 @@ public class RootServiceImp implements RootService {
 
     @Autowired
     CommonMapper common;
+    @Autowired
+    PerformanceMapper performance;
 
     /**
      * 超管添加类别
@@ -123,6 +130,32 @@ public class RootServiceImp implements RootService {
         int res=teacher.deleteByWorknum(worknum);
         return res==1?true:false;
     }
+
+    /**
+     * 检索用户信息
+     * @param info
+     * @return
+     */
+    public List<UserInfo> getUserInfo(UserInfo info){
+        if(info==null) return null;
+        List<UserInfo> users = teacher.getUserInfoList(info);
+        return users;
+    }
+
+    /**
+     * 条件检索业绩类
+     * @param info
+     * @return
+     */
+    public List<PerformanceInfo> getPerfromanceList(PerformanceInfo info){
+        if(info==null){
+            return null;
+        }
+        List < PerformanceInfo>list=performance.selectPerformanceList(info);
+        if(list==null) return null;
+        return list;
+    }
+
 
 
 }

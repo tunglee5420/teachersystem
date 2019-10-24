@@ -1,4 +1,5 @@
 package com.just.teachersystem.Controller;
+import	java.awt.Desktop.Action;
 import java.util.*;
 
 
@@ -6,11 +7,9 @@ import com.github.andyczy.java.excel.ExcelUtils;
 import com.just.teachersystem.Exception.MyException;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Service.OfficeAdminService;
+import com.just.teachersystem.Service.RootService;
 import com.just.teachersystem.Utill.JwtUtils;
-import com.just.teachersystem.VO.AwardInfo;
-import com.just.teachersystem.VO.BonusInfo;
-import com.just.teachersystem.VO.ConstructionInfo;
-import com.just.teachersystem.VO.PerformanceInfo;
+import com.just.teachersystem.VO.*;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,8 @@ public class TestController {
     CollegeAdminService collegeAdminService;
     @Autowired
     OfficeAdminService officeAdminService;
+    @Autowired
+    RootService root;
     @RequestMapping("/b")
     public void get(HttpServletResponse response){
         String year ="2018";
@@ -241,4 +242,45 @@ public class TestController {
 //        excelUtils.exportForExcelsOptimize();
 //    }
 
+//    /**
+//     * 下载用户表
+//     */
+//    @GetMapping("/getUserExcel")
+//    public void getUserExcel(HttpServletResponse response) {
+//        UserInfo userInfo = new UserInfo();
+//        List<UserInfo>list=root.getUserInfo(userInfo);
+//
+//
+//
+//        List<List<String[]>> data=new ArrayList<>();
+//        ExcelUtils excelUtils=ExcelUtils.initialization();
+//        //设置表头/表名
+//        String[]labels ={"校区、苏理工教职工人信息表"};
+//        //excelUtils.setLabelName(labels);
+//        //设置字段
+//        String []params=new String [] {"部门","姓名","工号","性别","出生年月",
+//                "入校时间","电话","专业技术职称","最高学历","最高学位","授学位单位名称","获最高学位的专业名称","是否双师型",
+//                "是否具有行业背景","是否博硕士生导师"};
+//        excelUtils.setLabelName(labels);
+//        List<String[]> a=new ArrayList<> ();
+//        a.add(params);
+//
+//        String []values=null;
+//
+//        for (UserInfo p:list) {
+//
+//            values= new String[]{p.getDptname(), p.getName(),p.getWorknum(),p.getGender(), String.valueOf(p.getBirthday()),
+//                    String.valueOf(p.getEnterTime()),p.getPhone(),p.getTechTittle(),p.getEduBgd(),p.getDegree(),p.getSchool(),
+//                    p.getMajor(),p.getDoubleTeacher()==0?"不是":"是", p.getBackground()==0?"不是":"是", p.getTutor()==0?"不是":"是"};
+//
+//            a.add(values);
+//        }
+//
+//        data.add(a);
+//        excelUtils.setDataLists(data);
+//        excelUtils.setSheetName(labels);
+//        excelUtils.setFileName(labels[0]);
+//        excelUtils.setResponse( response);
+//        excelUtils.exportForExcelsOptimize();
+//    }
 }
