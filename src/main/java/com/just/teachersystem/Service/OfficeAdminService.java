@@ -50,4 +50,28 @@ public interface OfficeAdminService {
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
      boolean insertToBonusList(List list);
 
+    /**
+     * 插入到建设类表
+     * @param list
+     * @return
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    boolean insertToConstruction(List list);
+
+    /**
+     * 插入成果类表
+     * @param list
+     * @return
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    boolean insertToAchievement(List list);
+
+    /**
+     * 插入获奖类表
+     * @param list
+     * @return
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    boolean insertToAward(List list);
+
 }

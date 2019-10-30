@@ -54,7 +54,7 @@
             (select id from user where worknum=#{item.worknum}),
             #{item.teammate},
             #{item.production},
-            (select id from kind where class1=#{item.class1} and class2=#{item.class2} and  class3=#{item.class3}),
+            (select id from kind where class2=#{item.class2} and  class3=#{item.class3}),
             (select id from level where level =#{item.level}),
             #{item.unit},
             #{item.publishTime},

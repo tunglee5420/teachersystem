@@ -8,7 +8,9 @@ import com.just.teachersystem.Exception.MyException;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Service.OfficeAdminService;
 import com.just.teachersystem.Service.RootService;
+import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
+import com.just.teachersystem.Utill.MyExcelUtil;
 import com.just.teachersystem.VO.*;
 
 import io.jsonwebtoken.Claims;
@@ -187,31 +189,27 @@ public class TestController {
         excelUtils.exportForExcelsOptimize();
     }
 
-//    /**
-//     * 科室管理员获取模板
-//     * @param response
-//     */
-//    @GetMapping("/getPerformanceTemplate")
-//    public void getPerformanceTemplate(HttpServletResponse response){
-//        List<List<String[]>> data=new ArrayList<>();
-//        ExcelUtils excelUtils=ExcelUtils.initialization();
-//        //设置表头/表名
-//        String[]labels ={"校区、苏理工教学业绩分汇总表模板"};
-//
-//        //设置字段
-//        String []params=new String [] {"院部","业绩分计算科室","分类-类别","立项年度","项目名称","负责人","业绩分（分）"};
-//        String []demo = new String[] {"xx部门","xx科室","xx类别","2019","xxxxx","xxx","100"};
-////        excelUtils.setLabelName(labels);
-//        List<String[]> a=new ArrayList<> ();
-//        a.add(params);
-//        a.add(demo);
-//        data.add(a);
-//        excelUtils.setDataLists(data);
-//        excelUtils.setSheetName(labels);
-//        excelUtils.setFileName(labels[0]);
-//        excelUtils.setResponse( response);
-//        excelUtils.exportForExcelsOptimize();
-//    }
+    /**
+     * 科室管理员获取模板
+     * @param response
+     */
+    @GetMapping("/getPerformanceTemplate")
+    public void getPerformanceTemplate(HttpServletResponse response){
+        ExcelUtils excelUtils=ExcelUtils.initialization();
+        //设置表头/表名
+        String[]labels ={"校区、苏理工获奖类信息表模板"};
+        //设置字段
+        String []params=new String [] {"院部名称","获奖教师（排名第1）","工号","获奖成员","获奖内容","分类","类别","级别","奖项","颁奖部门","奖金计算年度","奖金（元）","证书","获奖时间","学年","年度"};
+        String []demo = new String[] {"XX学院","孟XX","999XXXXX979","方XX","第五届“浩辰杯”A华东区大学生CAD应用技能竞赛","教师获奖","教学成果奖","苏理工",
+                "特等奖","苏州理工学院","2018","2000","","获奖时间","2018-2019","2019"};
+        List<List<String[]>> data=MyExcelUtil.getExcelTempleData(labels,"提示：请严格按照这个模板填写，以免造成数据混乱出错!（使用时请删除）",params,demo,null);
+        excelUtils.setDataLists(data);
+        excelUtils.setSheetName(labels);
+        excelUtils.setFileName(labels[0]);
+        excelUtils.setResponse( response);
+        excelUtils.exportForExcelsOptimize();
+
+    }
     /**
      * 科室管理员获取模板
      * @param response

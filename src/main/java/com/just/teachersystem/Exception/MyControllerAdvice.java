@@ -22,6 +22,7 @@ public class MyControllerAdvice {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public Map errorHandler(Exception ex) {
+        
         Map map = new HashMap();
         map.put("code", 500);
         map.put("msg", ex.getMessage());

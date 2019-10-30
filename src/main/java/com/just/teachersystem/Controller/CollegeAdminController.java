@@ -124,6 +124,7 @@ public class CollegeAdminController {
     }
 
     /**
+     *暂时不需要
      * 根据部门条件选择查询建设类
      * @param header
      * @param worknum
@@ -149,7 +150,6 @@ public class CollegeAdminController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=( String) claims.get("department");
-
         ConstructionInfo info=new ConstructionInfo();
         info.setClass2(class2);
         info.setClass3(class3);
@@ -162,10 +162,10 @@ public class CollegeAdminController {
         List list=collegeAdminService.getDptConstructions(info);
         PageInfo pageInfo=new PageInfo<>(list);
         return JsonData.buildSuccess(pageInfo);
-
     }
 
     /**
+     *暂时不需要
      *根据部门条件选择查询成果类
      * @param header
      * @param worknum
@@ -203,6 +203,7 @@ public class CollegeAdminController {
     }
 
     /**
+     * 暂时不需要
      * 根据部门条件选择查询获奖类
      * @param header
      * @param worknum
@@ -245,6 +246,7 @@ public class CollegeAdminController {
     }
 
     /**
+     * 暂时不需要
      * 获取确认业绩名单
      * @param header
      * @param year
@@ -279,7 +281,6 @@ public class CollegeAdminController {
     @PostMapping("/getConfirmPerformanceExcel")
     public void getConfirmPerformanceExcel(@RequestHeader Map<String, String> header,
                                                @RequestParam("year") String year,
-
                                                HttpServletResponse response) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
@@ -385,7 +386,7 @@ public class CollegeAdminController {
         List <BonusInfo> list=collegeAdminService.confirmBonus(bonus);
 
 
-//设置表格
+        //设置表格
         List<List<String[]>> data=new ArrayList<>();
         ExcelUtils excelUtils=ExcelUtils.initialization();
         //设置表头

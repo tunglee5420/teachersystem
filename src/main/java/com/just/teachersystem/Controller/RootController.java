@@ -125,7 +125,6 @@ public class RootController {
         boolean is=root.deleteLevel(level);
         if(is){
             return JsonData.buildSuccess("删除成功");
-
         }
         return JsonData.buildError("删除失败");
     }

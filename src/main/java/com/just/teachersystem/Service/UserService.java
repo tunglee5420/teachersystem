@@ -3,6 +3,7 @@ package com.just.teachersystem.Service;
 import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
+import com.just.teachersystem.VO.UserInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,12 @@ public interface UserService {
      */
     boolean check(String worknum,String password);
 
+    /**
+     * 根据工号查个人信息
+     * @param worknum
+     * @return
+     */
+    UserInfo getUserInfo(String worknum);
     /**
      * 添加建设类信息
      * @param info

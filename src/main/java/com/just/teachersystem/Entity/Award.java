@@ -20,7 +20,7 @@ public class Award implements Serializable {
   private long level;//获奖级别ID
   private String prize;//奖项
   private double bonus;//奖金
-  private String awardYear;//获奖年度
+  private String awardYear;//奖金计算年度
   private String certificate;//证书
   private Date awardTime;//获奖时间
   private String schoolYear;//学年

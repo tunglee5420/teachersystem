@@ -27,9 +27,10 @@ public class CommonController {
      * 获取类型列表
      * @return
      */
-    @GetMapping("/getTypeList")
-    public JsonData getTypeList(@RequestParam("class") String class1){
-
+    @PostMapping("/getTypeList")
+    public JsonData getTypeList(@RequestBody Map<String, String> map){
+        String class1=map.get("class1");
+        System.out.println(class1);
         List list= (List) redisUtils.get("class:"+class1);
         if(list==null){
             list=service.getTypeList(class1);
@@ -44,7 +45,7 @@ public class CommonController {
      * 获取成就级别
      * @return
      */
-    @GetMapping("/getLevelSet")
+    @RequestMapping("/getLevelSet")
     public JsonData getLevelSet(){
         Set set= (Set) redisUtils.get("class:level");
         if(set==null){
@@ -61,8 +62,7 @@ public class CommonController {
      * 获取部门列表
      * @return
      */
-    @GetMapping("/getDepartmentList")
-
+    @RequestMapping("/getDepartmentList")
     public JsonData getDepartmentList(){
         List list= (List) redisUtils.get("department");
         if(list==null){
@@ -82,12 +82,11 @@ public class CommonController {
      * @return
      */
     @PostMapping("/getPanToken")
-    public JsonData getPanToken(FileInfo fileInfo ,@RequestHeader Map<String ,String>headers){
-
+    public JsonData getPanToken(@RequestBody FileInfo fileInfo ,@RequestHeader Map<String ,String>headers){
         Claims claims =JwtUtils.checkJWT(headers.get("token"));
         String worknum = (String) claims.get("worknum");
         Map map= (Map) redisUtils.get("file:login");
-        System.out.println(map);
+        System.out.println(fileInfo);
         if(map==null){
             map= (Map) fileService.filePanLogin().getContent();
         }
@@ -106,12 +105,13 @@ public class CommonController {
 
     /**
      * 证实文件上传状况
-     * @param uuid
+     * @param jsons
      * @return
      */
     @PostMapping("/confirmUploaded")
-    public JsonData confirmUploaded (@RequestParam("uuid") String uuid){
+    public JsonData confirmUploaded (@RequestBody Map<String, String> jsons){
 
+        String uuid=jsons.get("uuid");
         Map map= (Map) redisUtils.get("file:login");
         if(map==null){
             map= (Map) fileService.filePanLogin().getContent();
@@ -127,11 +127,12 @@ public class CommonController {
 
     /**
      * 获取下载 Token
-     * @param uuid
+     * @param jsons
      * @return
      */
     @PostMapping("/getDownloadToken")
-    public JsonData getDownloadToken(@RequestParam("uuid") String uuid){
+    public JsonData getDownloadToken(@RequestBody Map<String, String> jsons){
+        String uuid=jsons.get("uuid");
         Map map= (Map) redisUtils.get("file:login");
         if(map==null){
             map= (Map) fileService.filePanLogin().getContent();

@@ -15,6 +15,7 @@ import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import io.jsonwebtoken.Claims;
+import org.apache.coyote.http11.AbstractHttp11JsseProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,15 +37,17 @@ public class UserController {
     /**
      * 修改密码前验证身份
      * @param header
-     * @param password
+     * @param map
      * @return
      */
 
     @PostMapping("/check")
-    public JsonData check(@RequestHeader Map<String ,String> header,@RequestParam("password") String password){
+    public JsonData check(@RequestHeader Map<String ,String> header,@RequestBody Map<String, String> map){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
+        String password=map.get("password");
+        System.out.println(password);
         boolean res=userService.check(worknum, password);
         if(res){
             return JsonData.buildSuccess();
@@ -55,17 +58,18 @@ public class UserController {
     /**
      * 需改密码
      * @param header
-     * @param password
+     * @param map
      * @return
      */
     @PostMapping("/updatePassword")
-    public JsonData updatePassword(@RequestHeader Map<String ,String> header,@RequestParam("password") String password){
+    public JsonData updatePassword(@RequestHeader Map<String ,String> header,@RequestBody Map<String, String> map){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
         UserInfo userInfo=new UserInfo();
         userInfo.setWorknum(worknum);
-        userInfo.setPassword( EncryptUtil.getInstance().MD5(password));
+        String password=map.get("password");
+        userInfo.setPassword( password);
         boolean res=rootService.updateUserInfo(userInfo);
         if(res){
             redisUtils.del("login:"+worknum);//更换密码后需要重新登陆，删除缓存中的数据
@@ -75,12 +79,30 @@ public class UserController {
     }
 
     /**
+     * 获取个人信息
+     * @param header
+     * @return
+     */
+    @PostMapping("/getMyInfo")
+    public JsonData getMyInfo(@RequestHeader Map<String, String> header) {
+        String token=header.get("token");
+        Claims claims =JwtUtils.checkJWT(token);
+        String worknum=(String) claims.get("worknum");
+        UserInfo userInfo = userService.getUserInfo(worknum);
+        if(userInfo==null){
+            return JsonData.buildError("个人信息获取失败");
+        }
+        return JsonData.buildSuccess(userInfo);
+    }
+
+
+    /**
      * 提交建设类信息
      * @param info
      * @return
      */
-    @PostMapping("/addConstruction")
-    public JsonData addConstruction(@RequestHeader Map<String ,String> header,ConstructionInfo info){
+    @PostMapping(value = "/addConstruction",produces = "application/json;charset=utf-8")
+    public JsonData addConstruction(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo info){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");

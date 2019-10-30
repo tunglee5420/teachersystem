@@ -1,5 +1,4 @@
 package com.just.teachersystem.Service.ServiceImp;
-import	java.util.ArrayList;
 
 import com.just.teachersystem.Mapper.*;
 import com.just.teachersystem.Service.OfficeAdminService;
@@ -95,6 +94,50 @@ public class OfficeAdminServiceImp implements OfficeAdminService {
             return true;
         return false;
     }
+
+    /**
+     * 插入到建设类表
+     * @param list
+     * @return
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public boolean insertToConstruction(List list){
+        if(list==null) return false;
+        int res=construction.insertToConstructionList(list);
+        if(res>0)
+            return true;
+        return false;
+    }
+
+    /**
+     * 插入成果类表
+     * @param list
+     * @return
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public boolean insertToAchievement(List list){
+        if(list==null) return false;
+        int res=achievement.insertToAchievementList(list);
+        if(res>0)
+            return true;
+        return false;
+    }
+
+
+    /**
+     * 插入获奖类表
+     * @param list
+     * @return
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public boolean insertToAward(List list){
+        if(list==null) return false;
+        int res=award.insertToAwardList(list);
+        if(res>0)
+            return true;
+        return false;
+    }
+
 
 
 }

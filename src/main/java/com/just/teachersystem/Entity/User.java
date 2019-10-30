@@ -2,12 +2,14 @@ package com.just.teachersystem.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.sql.Date;
 
 @Getter
 @Setter
+@ToString
 public class User implements Serializable {
 
   private long id;

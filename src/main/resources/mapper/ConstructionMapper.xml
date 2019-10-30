@@ -72,7 +72,7 @@
             #{item.startTime},
             #{item.beginToEndTime},
             #{item.sponsor},
-            <if test="item.class1!=null and item.class2!=null and item.class3!=null">(select id from kind where class1=#{item.class1} and class2=#{item.class2} and  class3=#{item.class3}),</if>
+            <if test="item.class2!=null and item.class3!=null">(select id from kind where class2=#{item.class2} and  class3=#{item.class3}),</if>
             <if test="item.level!=null">(select id from level where level =#{item.level}),</if>
             #{item.testimonial},
             #{item.expenditure},

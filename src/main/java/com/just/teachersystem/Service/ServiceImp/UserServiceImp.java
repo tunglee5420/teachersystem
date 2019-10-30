@@ -44,6 +44,17 @@ public class UserServiceImp implements UserService {
     }
 
     /**
+     * 根据工号查个人信息
+     * @param worknum
+     * @return
+     */
+    public UserInfo getUserInfo(String worknum){
+        if(worknum==null) return null;
+        UserInfo user=teacherMapper.getInfo(worknum);
+        return user;
+    }
+
+    /**
      * 添加建设类信息
      * @param info
      * @return
