@@ -163,7 +163,7 @@ public class OfficeAdminController {
         }
         Map<String,Object> map = new HashMap<> ();
         for (ConstructionInfo a:list) {
-            map.put(a.getWorknum(),a.getTestimonial());
+            map.put(a.getName()+a.getProject(),a.getTestimonial());
         }
         return JsonData.buildSuccess(map);
     }
@@ -434,7 +434,7 @@ public class OfficeAdminController {
         }
         Map<String,Object> map = new HashMap<> ();
         for (AchievementInfo a:list) {
-            map.put(a.getWorknum(),a.getCertificate());
+            map.put(a.getName()+a.getProduction(),a.getCertificate());
         }
         return JsonData.buildSuccess(map);
     }
@@ -794,7 +794,7 @@ public class OfficeAdminController {
 
     }
     /**
-     * 获取成果类文件key
+     * 获取获奖类文件key
      * @param header
      * @param year
      * @param schoolYear
@@ -821,7 +821,7 @@ public class OfficeAdminController {
         }
         Map<String,Object> map = new HashMap<> ();
         for (AwardInfo a:list) {
-            map.put(a.getWorknum(),a.getCertificate());
+            map.put(a.getName()+a.getContent(),a.getCertificate());
         }
         return JsonData.buildSuccess(map);
     }
