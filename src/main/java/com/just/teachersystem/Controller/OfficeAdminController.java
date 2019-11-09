@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletResponse;
-
+import javax.swing.*;
 
 
 @RestController
@@ -36,22 +36,18 @@ public class OfficeAdminController {
     /**
      * 获取用户提交的建设类信息
      * @param header
-     * @param department
-     * @param class3
-     * @param level
-     * @param year
-     * @param schoolYear
-     * @param page
-     * @param size
+     * department 部门
+     * class3 类别
+     * level 级别
+     *  year 年度
+     * schoolYear 学年
+     * page
+     * size
      * @return
      */
     @PostMapping("/getUserConstruction")
     public JsonData getUserConstruction(@RequestHeader Map<String ,String> header,
-                                        @RequestParam(value = "department")String department,
-                                        @RequestParam("class3")String class3,
-                                        @RequestParam("level") String level,
-                                        @RequestParam("year") String year,
-                                        @RequestParam("schoolYear")String schoolYear,
+                                        @RequestBody ConstructionInfo construction,
                                         @RequestParam(value = "page",defaultValue = "1") int page,
                                         @RequestParam(value = "size",defaultValue = "30")int size
                                         ){
@@ -61,12 +57,9 @@ public class OfficeAdminController {
         if(!dpt.equals("质量建设与评估办公室")){
             return JsonData.buildError("你没有权限");
         }
-        ConstructionInfo construction=new ConstructionInfo();
-        construction.setSchoolyear(schoolYear);
-        construction.setYear(year);
-        construction.setLevel(level);
-        construction.setClass3(class3);
-        construction.setDepartment(department);
+        if(construction==null){
+            return JsonData.buildError("参数出错");
+        }
 
         List<ConstructionInfo> list=officeAdminService.getUserConstruction(construction);
         PageHelper.startPage(page,size);
@@ -78,15 +71,15 @@ public class OfficeAdminController {
 
     /**
      * 导出建设类excel
-     * @param header
-     * @param year
+     *  header
+     *  year 年度
+     *  schoolYear 学年
      * @param response
      */
 
     @PostMapping("/getConstructionExcel")
     public void getConstructionExcel(@RequestHeader Map<String, String> header,
-                                     @RequestParam("year") String year,
-                                     @RequestParam(value = "schoolYear")String schoolYear,
+                                     @RequestBody ConstructionInfo construction,
                                      HttpServletResponse response) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
@@ -94,19 +87,19 @@ public class OfficeAdminController {
         if(!department.equals("质量建设与评估办公室")){
             throw  new MyException("你没有权限");
         }
-        ConstructionInfo construction=new ConstructionInfo();
-        construction.setYear(year);
-        construction.setSchoolyear(schoolYear);
+        if(construction==null){
+            throw  new MyException("参数异常");
+        }
         List<ConstructionInfo> list=officeAdminService.getUserConstruction(construction);
 
         if(list==null){
-            throw new MyException("内部错误");
+            throw new MyException("内部异常");
         }
         //设置表格
         List<List<String[]>> data=new ArrayList<>();
         ExcelUtils excelUtils=ExcelUtils.initialization();
         //设置表头/表名
-        String[]labels ={year+"校区、苏理工教学建设各项业绩分表"};
+        String[]labels ={construction.getYear()+"校区、苏理工教学建设各项业绩分表"};
         //excelUtils.setLabelName(labels);
         //设置字段
         String []params=new String [] {"序号","项目编号","院部","项目名称","负责人","工号","课题组成员",
@@ -141,22 +134,22 @@ public class OfficeAdminController {
     /**
      * 导出建设类证明材料的key
      * @param header
-     * @param year
+     * year 年度
+     * schoolyear 学年
      */
 
     @PostMapping("/getConstructionFileKey")
     public JsonData getConstructionFileKey(@RequestHeader Map<String, String> header,
-                                     @RequestParam("year") String year,
-                                     @RequestParam(value = "schoolYear")String schoolYear) {
+                                           @RequestBody ConstructionInfo construction) {
         String token = header.get("token");
         Claims claims = JwtUtils.checkJWT(token);
         String department = (String) claims.get("department");
         if (!department.equals("质量建设与评估办公室")) {
             throw new MyException("你没有权限");
         }
-        ConstructionInfo construction = new ConstructionInfo();
-        construction.setYear(year);
-        construction.setSchoolyear(schoolYear);
+        if(construction==null){
+            throw  new MyException("参数异常");
+        }
         List<ConstructionInfo> list = officeAdminService.getUserConstruction(construction);
         if(list==null){
             return JsonData.buildError("数据错误");
@@ -290,7 +283,7 @@ public class OfficeAdminController {
      * @return
      */
     @PostMapping("/ConstructionSupplement")
-    public JsonData ConstructionSupplement(@RequestHeader Map<String ,String> header, ConstructionInfo construction){
+    public JsonData ConstructionSupplement(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo construction){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=(String) claims.get("department");
@@ -311,20 +304,18 @@ public class OfficeAdminController {
     /**
      * 获取用户提交的成果类信息
      * @param header
-     * @param department
-     * @param class3
-     * @param year
-     * @param schoolYear
+     *  department部门
+     *  class3 类别
+     *  year 年度
+     *  schoolYear 学年
      * @param page
      * @param size
      * @return
      */
     @PostMapping("/getUserAchievement")
     public JsonData getUserAchievement(@RequestHeader Map<String ,String> header,
-                                       @RequestParam(value = "department")String department,
-                                       @RequestParam("class3")String class3,
-                                       @RequestParam("year") String year,
-                                       @RequestParam("schoolYear")String schoolYear,
+                                       @RequestBody AchievementInfo achievement,
+
                                        @RequestParam(value = "page",defaultValue = "1") int page,
                                        @RequestParam(value = "size",defaultValue = "30")int size) {
         String token = header.get("token");
@@ -333,11 +324,7 @@ public class OfficeAdminController {
         if (!dpt.equals("质量建设与评估办公室")) {
             return JsonData.buildError("你没有权限");
         }
-        AchievementInfo achievement=new AchievementInfo();
-        achievement.setYear(year);
-        achievement.setClass3(class3);
-        achievement.setSchoolYear(schoolYear);
-        achievement.setDepartment(department);
+       if(achievement==null) return JsonData.buildError("参数异常");
         List<AchievementInfo> list=officeAdminService.getUserAchievement(achievement);
         PageHelper.startPage(page,size);
         PageInfo<AchievementInfo> pageInfo=new PageInfo<> (list);
@@ -349,13 +336,13 @@ public class OfficeAdminController {
     /**
      * 导出成果类excel
      * @param header
-     * @param year
-     * @param response
+     *  year 学年
+     *  schoolyear 年度
+     *  response
      */
     @PostMapping("/getAchievementExcel")
     public void getAchievementExcel(@RequestHeader Map<String, String> header,
-                                    @RequestParam("year") String year,
-                                    @RequestParam("schoolYear")String schoolYear,
+                                    @RequestBody AchievementInfo achievement,
                                     HttpServletResponse response) {
         String token = header.get("token");
         Claims claims = JwtUtils.checkJWT(token);
@@ -363,9 +350,7 @@ public class OfficeAdminController {
         if (!department.equals("质量建设与评估办公室")) {
             throw  new MyException("你没有权限");
         }
-        AchievementInfo achievement=new AchievementInfo();
-        achievement.setYear(year);
-        achievement.setSchoolYear(schoolYear);
+        if(achievement==null)  throw  new MyException("参数异常");
         List<AchievementInfo> list=officeAdminService.getUserAchievement(achievement);
 
         if(list==null){
@@ -375,7 +360,7 @@ public class OfficeAdminController {
         List<List<String[]>> data=new ArrayList<>();
         ExcelUtils excelUtils=ExcelUtils.initialization();
         //设置表头/表名
-        String[]labels ={year+"校区、苏理工成果类表"};
+        String[]labels ={achievement.getYear()+"校区、苏理工成果类表"};
         //excelUtils.setLabelName(labels);
         //设置字段
         String []params=new String [] {"序号","院部名称","第一作者","工号","组员","成果名称","成果类别","级别",
@@ -409,25 +394,22 @@ public class OfficeAdminController {
     /**
      * 获取成果类文件key
      * @param header
-     * @param year
-     * @param schoolYear
+     *  year 年度
+     *  schoolYear 学年
      * @return
      */
     @PostMapping("/getAchievementFileKey")
     public JsonData getAchievementFileKey(@RequestHeader Map<String, String> header,
-                                          @RequestParam("year") String year,
-                                          @RequestParam("schoolYear")String schoolYear){
+                                          @RequestBody AchievementInfo achievement){
 
         String token = header.get("token");
         Claims claims = JwtUtils.checkJWT(token);
         String department = (String) claims.get("department");
         if (!department.equals("质量建设与评估办公室")) {
-            throw  new MyException("你没有权限");
+            return JsonData.buildError("你没有权限");
         }
 
-        AchievementInfo achievement=new AchievementInfo();
-        achievement.setYear(year);
-        achievement.setSchoolYear(schoolYear);
+        if(achievement==null) return JsonData.buildError("参数异常");
         List<AchievementInfo> list=officeAdminService.getUserAchievement(achievement);
         if(list==null){
             return JsonData.buildError("数据错误");
@@ -549,7 +531,8 @@ public class OfficeAdminController {
      * @return
      */
     @PostMapping("/AchievementSupplement")
-    public JsonData AchievementSupplement(@RequestHeader Map<String, String> header, AchievementInfo info) {
+    public JsonData AchievementSupplement(@RequestHeader Map<String, String> header,
+                                          @RequestBody AchievementInfo info) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=(String) claims.get("department");
@@ -567,24 +550,20 @@ public class OfficeAdminController {
     /**
      * 获取用户提交的获奖类信息
      * @param header
-     * @param department
-     * @param class3
-     * @param level
-     * @param year
-     * @param prize
-     * @param schoolYear
+     * department 部门
+     * class3 类别
+     * level 级别
+     * year 年度
+     * prize 奖项
+     * schoolYear 学年
      * @param page
      * @param size
      * @return
      */
     @PostMapping("/getUserAward")
     public JsonData getUserAward(@RequestHeader Map<String ,String> header,
-                                 @RequestParam(value = "department")String department,
-                                 @RequestParam("class3")String class3,
-                                 @RequestParam("level") String level,
-                                 @RequestParam("year") String year,
-                                 @RequestParam("prize") String prize,
-                                 @RequestParam("schoolYear")String schoolYear,
+                                 @RequestBody  AwardInfo awardInfo,
+
                                  @RequestParam(value = "page",defaultValue = "1") int page,
                                  @RequestParam(value = "size",defaultValue = "30") int size ){
         String token = header.get("token");
@@ -593,13 +572,7 @@ public class OfficeAdminController {
         if (!dpt.equals("质量建设与评估办公室")) {
             return JsonData.buildError("你没有权限");
         }
-        AwardInfo awardInfo=new AwardInfo();
-        awardInfo.setSchoolYear(schoolYear);
-        awardInfo.setYear(year);
-        awardInfo.setPrize(prize);
-        awardInfo.setClass3(class3);
-        awardInfo.setDepartment(department);
-        awardInfo.setLevel(level);
+        if(awardInfo==null) return JsonData.buildError("参数异常");
         List<AwardInfo> list=officeAdminService.getUserAward(awardInfo);
         PageHelper.startPage(page,size);
         PageInfo<AwardInfo> pageInfo=new PageInfo<> (list);
@@ -719,7 +692,7 @@ public class OfficeAdminController {
      * @return
      */
     @PostMapping("/AwardSupplement")
-    public JsonData AwardSupplement(@RequestHeader Map<String, String> header, AwardInfo awardInfo) {
+    public JsonData AwardSupplement(@RequestHeader Map<String, String> header, @RequestBody AwardInfo awardInfo) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=(String) claims.get("department");
@@ -736,14 +709,13 @@ public class OfficeAdminController {
     /**
      * 获取获奖类excel
      * @param header
-     * @param year
-     * @param schoolYear
+     *  year 年度
+     *  schoolYear 学年
      * @param response
      */
     @PostMapping("/getAwardExcel")
     public void getAwardExcel(@RequestHeader Map<String ,String> header,
-                              @RequestParam("year") String year,
-                              @RequestParam("schoolYear")String schoolYear,
+                              @RequestBody AwardInfo awardInfo,
                               HttpServletResponse response){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
@@ -751,9 +723,7 @@ public class OfficeAdminController {
         if(!department.equals("质量建设与评估办公室")){
             throw new MyException("你暂无权限");
         }
-        AwardInfo awardInfo=new AwardInfo();
-        awardInfo.setYear(year);
-        awardInfo.setSchoolYear(schoolYear);
+
         List<AwardInfo>list=officeAdminService.getUserAward(awardInfo);
         if(list==null){
             throw new MyException("内部错误");
@@ -761,7 +731,7 @@ public class OfficeAdminController {
         List<List<String[]>> data=new ArrayList<>();
         ExcelUtils excelUtils=ExcelUtils.initialization();
         //设置表头/表名
-        String[]labels ={year+"校区、苏理工教学获奖表"};
+        String[]labels ={awardInfo.getYear()+"校区、苏理工教学获奖表"};
         //excelUtils.setLabelName(labels);
         //设置字段
         String []params=new String [] {"序号","	院部名称","	获奖教师（排名第1）","工号","获奖成员","获奖内容",
@@ -796,14 +766,13 @@ public class OfficeAdminController {
     /**
      * 获取获奖类文件key
      * @param header
-     * @param year
-     * @param schoolYear
+     * year 年度
+     * schoolYear 学年
      * @return
      */
     @PostMapping("/getAwardFileKey")
     public JsonData getAwardFileKey(@RequestHeader Map<String, String> header,
-                                          @RequestParam("year") String year,
-                                          @RequestParam("schoolYear")String schoolYear){
+                                    @RequestBody AwardInfo awardInfo){
 
         String token = header.get("token");
         Claims claims = JwtUtils.checkJWT(token);
@@ -812,9 +781,7 @@ public class OfficeAdminController {
             throw  new MyException("你没有权限");
         }
 
-        AwardInfo awardInfo=new AwardInfo();
-        awardInfo.setYear(year);
-        awardInfo.setSchoolYear(schoolYear);
+        if(awardInfo==null) return JsonData.buildError("参数异常");
         List<AwardInfo>list=officeAdminService.getUserAward(awardInfo);
         if(list==null){
             return JsonData.buildError("数据错误");

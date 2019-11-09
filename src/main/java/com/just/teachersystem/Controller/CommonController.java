@@ -144,6 +144,12 @@ public class CommonController {
         return JsonData.buildError(h.getContent().toString());
     }
 
+    /**
+     * 验证工号和token的一致性
+     * @param headers
+     * @param jsons
+     * @return
+     */
     @PostMapping("/validate")
     public JsonData validate(@RequestHeader Map<String ,String>headers, @RequestBody Map<String, String> jsons){
         Claims claims =JwtUtils.checkJWT(headers.get("token"));
