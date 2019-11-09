@@ -1,7 +1,6 @@
 package com.just.teachersystem.Controller;
 
 import java.util.ArrayList;
-import	java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
@@ -34,19 +33,12 @@ public class RootController {
 
     /**
      * 控制信息录入入口开关
-     * @param construction
-     * @param achievement
-     * @param award
+     * @param map
      * @return
      */
     @PostMapping("/manageUserEntrance")
-    public JsonData manageUserEntrance(@RequestParam(value="constructionEntrance" ,defaultValue ="false" ) boolean construction,
-                                       @RequestParam(value = "achievementEntrance" ,defaultValue ="false" ) boolean achievement,
-                                       @RequestParam(value = "awardEntrance" ,defaultValue = "false") boolean award){
-        Map<String,Object>map = new HashMap<> ();
-        map.put("construction", construction);
-        map.put("achievement ", achievement);
-        map.put("award", award);
+    public JsonData manageUserEntrance(@RequestBody Map<String, Object> map){
+
         boolean res=redisUtils.hmset("Entrance:user",map);
         if(res) return JsonData.buildSuccess("操作成功");
         return JsonData.buildError("操作失败");
@@ -55,16 +47,11 @@ public class RootController {
 
     /**
      * 控制管理员获取入口开关
-     * @param performance
-     * @param bonus
+     * @param map
      * @return
      */
     @PostMapping("/manageAdminEntrance")
-    public JsonData manageAdminEntrance(@RequestParam(value="performance" ,defaultValue ="false" ) boolean performance,
-                                        @RequestParam(value="bonus" ,defaultValue ="false" ) boolean bonus) {
-        Map<String,Object>map = new HashMap<> ();
-        map.put("performance", performance);
-        map.put("bonus", bonus);
+    public JsonData manageAdminEntrance(@RequestBody Map <String,Object> map) {
 
         boolean res=redisUtils.hmset("Entrance:admin",map);
         if(res) return JsonData.buildSuccess("操作成功");
@@ -78,7 +65,7 @@ public class RootController {
      * @return
      */
     @PostMapping("/addType")
-    public JsonData addType(Kind kind){
+    public JsonData addType(@RequestBody Kind kind){
 //        System.out.println(kind.toString());
         boolean is = root.addType(kind);
         if(is){
@@ -135,7 +122,7 @@ public class RootController {
      * @return
      */
     @PostMapping("/addUserInfo")
-    public JsonData addUserInfo(UserInfo userInfo) {
+    public JsonData addUserInfo(@RequestBody UserInfo userInfo) {
         if (userInfo==null||userInfo.getWorknum()==null) return JsonData.buildError("信息为空");
         boolean res=root.addUser(userInfo);
         if (res)
@@ -152,33 +139,37 @@ public class RootController {
      * @return
      */
     @PostMapping("/updateUserInfo")
-    public JsonData updateUserInfo( UserInfo userInfo){
+    public JsonData updateUserInfo( @RequestBody UserInfo userInfo){
         if (userInfo==null) return JsonData.buildError("信息为空");
         boolean res=root.updateUserInfo(userInfo);
-        return JsonData.buildSuccess(res);
+        if(res){
+            return JsonData.buildSuccess("设置成功");
+        }
+        return JsonData.buildError("设置失败");
     }
 
-    /**
-     * 设置用户权限
-     * @return
-     */
-    @PostMapping("/setPermission")
-    public JsonData setPermission(@RequestParam("permission") int permission){
-        if(permission<0||permission>3)
-            return JsonData.buildError("设置出错");
-        UserInfo userInfo=new UserInfo();
-        userInfo.setPermission(permission);
-        boolean res=root.updateUserInfo(userInfo);
-        return JsonData.buildSuccess(res);
-    }
+//    /**
+//     * 设置用户权限
+//     * @return
+//     */
+//    @PostMapping("/setPermission")
+//    public JsonData setPermission(@RequestParam("permission") int permission){
+//        if(permission<0||permission>3)
+//            return JsonData.buildError("设置出错");
+//        UserInfo userInfo=new UserInfo();
+//        userInfo.setPermission(permission);
+//        boolean res=root.updateUserInfo(userInfo);
+//        return JsonData.buildSuccess(res);
+//    }
 
     /**
      * 根据工号删除用户
-     * @param worknum
+     * 工号worknum
      * @return
      */
     @DeleteMapping("/deleteUser")
-    public JsonData deleteUser(@RequestParam("worknum") String worknum){
+    public JsonData deleteUser(@RequestBody Map<String, String> map){
+        String worknum=map.get("worknum");
         if(worknum==null || worknum.equals("")){
             return JsonData.buildError("工号为空");
         }
@@ -190,26 +181,16 @@ public class RootController {
 
     /**
      * 根据条件筛选信息
-     * @param department
-     * @param worknum
-     * @param name
      * @param page
      * @param size
      * @return
      */
     @PostMapping("/getUserList")
-    public JsonData getUserList(
-            @RequestParam(value = "department",defaultValue ="") String department,
-            @RequestParam(value = "worknum",defaultValue ="") String worknum ,
-            @RequestParam(value = "name",defaultValue ="") String name,
+    public JsonData getUserList(@RequestBody UserInfo userInfo,
             @RequestParam(value = "page",defaultValue = "1") int page,
             @RequestParam(value = "size",defaultValue = "30")int size){
-        UserInfo userInfo = new UserInfo();
-        PageHelper.startPage(page,size);
-        if(!(department==null || department.equals("")))  userInfo.setDptname(department);
-        if(!(worknum==null || worknum.equals("")))userInfo.setWorknum(worknum);
-        if(!(name==null || name.equals(""))) userInfo.setName(name);
 
+        PageHelper.startPage(page,size);
         List list=root.getUserInfo(userInfo);
         if(userInfo==null) return JsonData.buildError("服务器出错");
         PageInfo<UserInfo> pageInfo = new PageInfo<UserInfo> (list);
@@ -262,20 +243,21 @@ public class RootController {
 
     /**
      * 条件筛选选业绩分信息
+     * year 年度
+     * department 部门
+     * master  负责人
      * @return
      */
     @PostMapping("/getPerfromanceInfo")
     public JsonData getPerfromanceInfo(
-            @RequestParam(value = "department",defaultValue ="") String department,
-            @RequestParam(value = "year",defaultValue ="") String year ,
-            @RequestParam(value = "master",defaultValue ="") String master,
+            @RequestBody PerformanceInfo performanceInfo,
             @RequestParam(value = "page",defaultValue = "1") int page,
             @RequestParam(value = "size",defaultValue = "10")int size){
 
-        PerformanceInfo performanceInfo=new PerformanceInfo();
-        performanceInfo.setDepartment(department);
-        performanceInfo.setYear(year);
-        performanceInfo.setMaster(master);
+        if(performanceInfo==null){
+            return JsonData.buildError("参数错误");
+        }
+        performanceInfo.setStatus(1);
         List list=root.getPerfromanceList(performanceInfo);
 
         PageHelper.startPage(page,size);
@@ -288,19 +270,16 @@ public class RootController {
     /**
      * 条件导出业绩信息
      * @param response
-     * @param department
-     * @param year
-     * @param master
+     *
+     *  year 年度
+     *
      */
     @PostMapping("/getPerformanceExcel")
-    public void getPerformanceExcel(HttpServletResponse response,
-                                    @RequestParam(value = "department",defaultValue ="") String department,
-                                    @RequestParam(value = "year",defaultValue ="") String year ,
-                                    @RequestParam(value = "master",defaultValue ="") String master){
+    public void getPerformanceExcel(HttpServletResponse response,@RequestParam("year")String year){
+
         PerformanceInfo performanceInfo=new PerformanceInfo();
-        performanceInfo.setDepartment(department);
         performanceInfo.setYear(year);
-        performanceInfo.setMaster(master);
+        performanceInfo.setStatus(1);
         List<PerformanceInfo> list=root.getPerfromanceList(performanceInfo);
 
         List<List<String[]>> data=new ArrayList<>();
@@ -330,15 +309,14 @@ public class RootController {
 
 
     /**
-     * 根据id 删除业绩分信息
-     * @param id
-
+     * 根据id 删除业绩分信息(删除时status 置0)
+     *  id
      * @return
      */
     @DeleteMapping("/deletePerformance")
-    public JsonData deletePerformance(@RequestParam("id") int id){
-        PerformanceInfo p=new PerformanceInfo();
-        p.setId(id);
+    public JsonData deletePerformance(@RequestBody  PerformanceInfo p){
+
+        if(p.getId()<0) return JsonData.buildError("参数出错");
         p.setStatus(0);
         if(root.updatePerformanceInfo(p))
             return JsonData.buildSuccess("删除成功");
@@ -350,9 +328,10 @@ public class RootController {
      * @param performanceInfo
      * @return
      */
-    @PostMapping("/deletePerformance")
-    public JsonData updatePerformance(PerformanceInfo performanceInfo){
-        if(performanceInfo==null||performanceInfo.getStatus()==0) return JsonData.buildError("传过来的值为空");
+    @PostMapping("/updatePerformance")
+    public JsonData updatePerformance(@RequestBody PerformanceInfo performanceInfo){
+        if(performanceInfo==null) return JsonData.buildError("传过来的值为空");
+        performanceInfo.setStatus(1);
         if(root.updatePerformanceInfo(performanceInfo))
             return JsonData.buildSuccess("修改成功");
         return  JsonData.buildError("修改失败");
@@ -364,7 +343,7 @@ public class RootController {
      * @return
      */
     @PostMapping("/addPerformance")
-    public JsonData addPerformance(PerformanceInfo performance) {
+    public JsonData addPerformance(@RequestBody PerformanceInfo performance) {
         if(performance==null) return JsonData.buildError("传过来的值为空");
         if(root.addPerformanceInfo(performance))
             return JsonData.buildSuccess("添加成功");
@@ -373,21 +352,23 @@ public class RootController {
 
 
     /**
-     * 条件筛选奖金信息
+     *条件筛选奖金信息
+     * department 部门
+     * year 年度
+     * master 负责人
+     * @param page
+     * @param size
      * @return
      */
     @PostMapping("/getBonusInfo")
-    public JsonData getBonusInfo(
-            @RequestParam(value = "department",defaultValue ="") String department,
-            @RequestParam(value = "year",defaultValue ="") String year ,
-            @RequestParam(value = "master",defaultValue ="") String master,
+    public JsonData getBonusInfo( @RequestBody BonusInfo bonusInfo,
             @RequestParam(value = "page",defaultValue = "1") int page,
             @RequestParam(value = "size",defaultValue = "10")int size){
 
-        BonusInfo bonusInfo=new BonusInfo();
-        bonusInfo.setDepartment(department);
-        bonusInfo.setYear(year);
-        bonusInfo.setMaster(master);
+//        @RequestParam(value = "department",defaultValue ="") String department,
+//        @RequestParam(value = "year",defaultValue ="") String year ,
+//        @RequestParam(value = "master",defaultValue ="") String master,
+        if(bonusInfo==null) return JsonData.buildError("参数出错");
         List list=root.getBonusList(bonusInfo);
 
         PageHelper.startPage(page,size);
@@ -401,21 +382,13 @@ public class RootController {
     /**
      * 条件导出奖金信息
      * @param response
-     * @param department
      * @param year
-     * @param master
      */
     @PostMapping("/getBonusExcel")
-    public void getBonusExcel(HttpServletResponse response,
-                                    @RequestParam(value = "department",defaultValue ="") String department,
-                                    @RequestParam(value = "year",defaultValue ="") String year ,
-                                    @RequestParam(value = "master",defaultValue ="") String master){
+    public void getBonusExcel(HttpServletResponse response, @RequestParam(value = "year",defaultValue ="") String year ){
         BonusInfo bonusInfo=new BonusInfo();
-        bonusInfo.setDepartment(department);
         bonusInfo.setYear(year);
-        bonusInfo.setMaster(master);
         List<BonusInfo> list=root.getBonusList(bonusInfo);
-
         List<List<String[]>> data=new ArrayList<>();
         ExcelUtils excelUtils=ExcelUtils.initialization();
         //设置表头/表名
@@ -443,14 +416,11 @@ public class RootController {
 
     /**
      * 根据id 删除奖金信息
-     * @param id
-
-     * @return
+     * @return 将status置为0
      */
     @DeleteMapping("/deleteBonus")
-    public JsonData deleteBonus(@RequestParam("id") int id){
-        BonusInfo b=new BonusInfo();
-        b.setId(id);
+    public JsonData deleteBonus(@RequestBody  BonusInfo b){
+        if(b.getId()<0) return JsonData.buildError("参数出错");
         b.setStatus(0);
         if(root.updateBonusInfo(b))
             return JsonData.buildSuccess("删除成功");
@@ -462,9 +432,10 @@ public class RootController {
      * @param bonusInfo
      * @return
      */
-    @PostMapping("/deleteBonus")
-    public JsonData deleteBonus(BonusInfo bonusInfo){
-        if(bonusInfo==null||bonusInfo.getStatus()==0) return JsonData.buildError("传过来的值为空");
+    @PostMapping("/updateBonus")
+    public JsonData updateBonus(@RequestBody BonusInfo bonusInfo){
+        if(bonusInfo==null) return JsonData.buildError("传过来的值为空");
+        System.out.println(bonusInfo.getId());
         if(root.updateBonusInfo(bonusInfo))
             return JsonData.buildSuccess("修改成功");
         return  JsonData.buildError("修改失败");
@@ -476,7 +447,7 @@ public class RootController {
      * @return
      */
     @PostMapping("/addBonus")
-    public JsonData addBonus(BonusInfo bonusInfo) {
+    public JsonData addBonus(@RequestBody BonusInfo bonusInfo) {
         if(bonusInfo==null) return JsonData.buildError("传过来的值为空");
         if(root.addBonusInfo(bonusInfo))
             return JsonData.buildSuccess("添加成功");

@@ -30,7 +30,7 @@
         (select id from department where dptname=#{dptname}),
             #{name},
             #{worknum},
-            #{password},
+            (123456),
             #{gender},
             #{birthday},
             #{enterTime},

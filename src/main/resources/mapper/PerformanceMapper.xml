@@ -37,28 +37,28 @@
         update performance
         <trim prefix="set" suffixOverrides=",">
             <if test="status!=null and status!=''">
-                status=#{status}
+                status=#{status},
             </if>
             <if test="department!=null and department!=''">
-                department=#{department}
+                department=#{department},
             </if>
             <if test="computeoffice!=null and computeoffice!=''">
-                computeoffice=#{computeoffice}
+                computeoffice=#{computeoffice},
             </if>
             <if test="year !=null and year!=''">
-                year=#{year}
+                year=#{year},
             </if>
             <if test="type !=null and type!=''">
-                type =#{type}
+                type =#{type},
             </if>
             <if test="project!=null and project!=''">
-                project=#{project}
+                project=#{project},
             </if>
             <if test="master!=null and master!=''">
-                master=#{master}
+                master=#{master},
             </if>
             <if test="points!=null and points!=''">
-                points=#{points}
+                points=#{points},
             </if>
             lastTime=NOW()
         </trim>

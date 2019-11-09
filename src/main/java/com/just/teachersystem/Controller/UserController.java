@@ -3,6 +3,8 @@ package com.just.teachersystem.Controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import com.just.teachersystem.Entity.Achievement;
+import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Service.RootService;
 import com.just.teachersystem.Service.UserService;
@@ -33,6 +35,8 @@ public class UserController {
     RedisUtils redisUtils;
     @Autowired
     CommonService commonService;
+    @Autowired
+    CollegeAdminService collegeAdminService;
 
     /**
      * 修改密码前验证身份
@@ -68,7 +72,8 @@ public class UserController {
         String worknum=(String) claims.get("worknum");
         UserInfo userInfo=new UserInfo();
         userInfo.setWorknum(worknum);
-        String password=map.get("password");
+        String password=map.get("newPassword");
+        System.out.println(password);
         userInfo.setPassword( password);
         boolean res=rootService.updateUserInfo(userInfo);
         if(res){
@@ -103,13 +108,14 @@ public class UserController {
      */
     @PostMapping(value = "/addConstruction",produces = "application/json;charset=utf-8")
     public JsonData addConstruction(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo info){
+
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
+        System.out.println(info);
         if(!info.getWorknum().equals(worknum)){
             return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
         }
-
         info.setWorknum(worknum);
         info.setClass1("建设类");
         int res=userService.addConstruction(info);
@@ -126,7 +132,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/updateUserConstruction")
-    public JsonData updateUserConstruction(@RequestHeader Map<String ,String> header,ConstructionInfo info){
+    public JsonData updateUserConstruction(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo info){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
@@ -149,14 +155,22 @@ public class UserController {
      * @param header
      * @return
      */
-    @PostMapping("/getMyConstructionInfo")
-    public JsonData  getMyConstructionInfo(@RequestHeader Map<String ,String> header,
-                                           @RequestParam(value = "page",defaultValue = "1") int page,
-                                           @RequestParam(value = "size",defaultValue = "30")int size) {
+    @PostMapping("/getMyConstructions")
+    public JsonData  getMyConstructions(@RequestHeader Map<String ,String> header,
+                                           @RequestBody Map<String, String> map,
+                                            @RequestParam(value = "page") int page,
+                                            @RequestParam(value = "size")int size) {
+
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        List list=userService.getMyConstructionInfo(worknum);
+
+        ConstructionInfo construction=new ConstructionInfo();
+        construction.setStatus(Integer.parseInt(map.get("status")));
+        construction.setWorknum(worknum);
+        construction.setSchoolyear(map.get("schoolyear"));
+        construction.setYear(map.get("year"));
+        List list=userService.getMyConstructions(construction);
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
         }
@@ -173,7 +187,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/addAchievement")
-    public JsonData addAchievement(@RequestHeader Map<String ,String> header,AchievementInfo info){
+    public JsonData addAchievement(@RequestHeader Map<String ,String> header,@RequestBody AchievementInfo info){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
@@ -193,14 +207,20 @@ public class UserController {
      * @param header
      * @return
      */
-    @PostMapping("/getMyAchievementInfo")
-    public JsonData  getMyAchievementInfo(@RequestHeader Map<String ,String> header,
-                                          @RequestParam(value = "page",defaultValue = "1") int page,
-                                          @RequestParam(value = "size",defaultValue = "30")int size) {
+    @PostMapping("/getMyAchievements")
+    public JsonData  getMyAchievements(@RequestHeader Map<String ,String> header,
+                                       @RequestBody Map<String, String> map,
+                                       @RequestParam(value = "page") int page,
+                                       @RequestParam(value = "size")int size) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        List list=userService.getMyAchievementInfo(worknum);
+        AchievementInfo achievement= new AchievementInfo();
+        achievement.setWorknum(worknum);
+        achievement.setStatus(Integer.parseInt(map.get("status")));
+        achievement.setSchoolYear(map.get("schoolyear"));
+        achievement.setYear(map.get("year"));
+        List list=userService.getMyAchievements(achievement);
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
         }
@@ -217,7 +237,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/updateUserAchievement")
-    public JsonData updateUserAchievement(@RequestHeader Map<String ,String> header,AchievementInfo info){
+    public JsonData updateUserAchievement(@RequestHeader Map<String ,String> header,@RequestBody AchievementInfo info){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
@@ -233,8 +253,14 @@ public class UserController {
 
     }
 
+    /**
+     * 添加获奖类类信息
+     * @param header
+     * @param info
+     * @return
+     */
     @PostMapping("/addAward")
-    public JsonData addAward(@RequestHeader Map<String ,String> header,AwardInfo info){
+    public JsonData addAward(@RequestHeader Map<String ,String> header,@RequestBody AwardInfo info){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
@@ -255,14 +281,20 @@ public class UserController {
      * @param header
      * @return
      */
-    @PostMapping("/getMyAwardInfo")
-    public JsonData  getMyAwardInfo(@RequestHeader Map<String ,String> header,
+    @PostMapping("/getMyAwards")
+    public JsonData  getMyAwards(@RequestHeader Map<String ,String> header,
+                                    @RequestBody Map<String, String> map,
                                     @RequestParam(value = "page",defaultValue = "1") int page,
                                     @RequestParam(value = "size",defaultValue = "30")int size) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        List list=userService.getMyAwardInfo(worknum);
+
+        AwardInfo award=new AwardInfo();
+        award.setSchoolYear(map.get("schoolyear"));
+        award.setYear(map.get("year"));
+        award.setStatus(Integer.parseInt(map.get("status")));
+        List list=userService.getMyAwards(award);
 
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
@@ -281,7 +313,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/updateUserAward")
-    public JsonData updateUserAward(@RequestHeader Map<String ,String> header,AwardInfo info){
+    public JsonData updateUserAward(@RequestHeader Map<String ,String> header,@RequestBody AwardInfo info){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
@@ -304,10 +336,11 @@ public class UserController {
     @PostMapping("/getEntrancePermission")
     public JsonData getEntrancePermission() {
         Map<Object,Object> map=redisUtils.hmget("Entrance:user");
-        if (map!=null){
-            return JsonData.buildSuccess(map);
+        if (map==null ||map.isEmpty()){
+            return JsonData.buildError("获取出错");
         }
-        return JsonData.buildError("获取出错");
+        return JsonData.buildSuccess(map);
+
     }
 
 

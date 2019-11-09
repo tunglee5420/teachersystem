@@ -35,33 +35,32 @@ public class CollegeAdminController {
     @PostMapping("/getAdminEnterPermission")
     public JsonData getAdminPermission() {
         Map<Object,Object> map=redisUtils.hmget("Entrance:admin");
-        if (map!=null){
-            return JsonData.buildSuccess(map);
+        if (map==null ||map.isEmpty()){
+            return JsonData.buildError("获取出错");
         }
-        return JsonData.buildError("获取出错");
+        return JsonData.buildSuccess(map);
     }
 
 
     /**
      * 获取部门用户
      * @param header
-     * @param worknum
-     * @param name
-     * @param page
-     * @param size
+     * @param map//json 参数
+     * @param page  页号
+     * @param size 页大小
      * @return JsonData
      */
     @PostMapping("/getDptUserInfo")
     public JsonData getDptUserInfo(@RequestHeader Map<String ,String> header,
-                                   @RequestParam("worknum") String worknum ,
-                                   @RequestParam("name") String name,
+                                   @RequestBody Map<String,String> map,
                                    @RequestParam(value = "page",defaultValue = "1") int page,
                                    @RequestParam(value = "size",defaultValue = "30")int size){
 
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=(String) claims.get("department");
-
+        String worknum=map.get("department");
+        String name=map.get("name");
         UserInfo userInfo = new UserInfo();
         userInfo.setDptname(department);
         if (worknum!=null) userInfo.setWorknum(worknum);
@@ -77,18 +76,18 @@ public class CollegeAdminController {
     /**
      * 修改部门成员密码
      * @param headers
-     * @param worknum
-     * @param password
+     *  worknum 工号
+     *  password 密码
      * @return
      */
     @PostMapping("/updateUserPassword")
     public JsonData updateUserPassword(@RequestHeader Map<String, String> headers,
-                                       @RequestParam("worknum") String worknum,
-                                       @RequestParam("password") String password) {
+                                       @RequestBody Map<String,String> map) {
         String token=headers.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=( String) claims.get("department");
-
+        String worknum=map.get("worknum");
+        String password=map.get("password");
         int permissions = (Integer)claims.get("permission");
         if(permissions<1){
             return JsonData.buildError("你暂无权限");
@@ -103,18 +102,18 @@ public class CollegeAdminController {
     /**
      * 修改成员手机号码
      * @param headers
-     * @param worknum
-     * @param phone
+     *  worknum 工号
+     *  phone 新号码
      * @return
      */
     @PostMapping("/updateUserPhone")
     public JsonData updateUserPhone(@RequestHeader Map<String, String> headers,
-                                    @RequestParam("worknum") String worknum,
-                                    @RequestParam("phone") String phone){
+                                    @RequestBody Map<String,String> map){
         String token=headers.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=( String) claims.get("department");
-
+        String worknum=map.get("worknum");
+        String phone=map.get("phone");
         int permissions = (Integer)claims.get("permission");
         if(permissions<1){
             return JsonData.buildError("你暂无权限");
@@ -273,7 +272,7 @@ public class CollegeAdminController {
     }
 
     /**
-     * 导出业绩excel
+     * 导出业绩excel确认表
      * @param header
      * @param year
      * @param response
@@ -339,6 +338,7 @@ public class CollegeAdminController {
 
 
     /**
+     * 暂时不需要
      * 获取确认津贴名单
      * @param header
      * @param year
@@ -367,7 +367,7 @@ public class CollegeAdminController {
     }
 
     /**
-     * 导出业绩excel
+     * 导出业绩excel确认表
      * @param header
      * @param year
      * @param response

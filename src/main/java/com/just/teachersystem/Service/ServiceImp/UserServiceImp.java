@@ -55,6 +55,38 @@ public class UserServiceImp implements UserService {
     }
 
     /**
+     * 获取个人建设类信息
+     * @param info
+     * @return
+     */
+    public List getMyConstructions(ConstructionInfo info){
+        if (info==null) return null;
+        List list = construction.selectConstructions(info);
+        return list;
+    }
+
+    /**
+     * 获取个人成果类信息
+     * @param info
+     * @return
+     */
+    public List getMyAchievements(AchievementInfo info){
+        if (info==null) return null;
+        List list=achievement.selectAchievements(info);
+        return list;
+    }
+
+    /**
+     *获取个人获奖类信息
+     * @param info
+     * @return
+     */
+    public List getMyAwards(AwardInfo info){
+        if (info==null) return null;
+        List list=award.selectAwards(info);
+        return list;
+    }
+    /**
      * 添加建设类信息
      * @param info
      * @return

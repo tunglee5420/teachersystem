@@ -1,6 +1,4 @@
 package com.just.teachersystem.Controller;
-import java.text.SimpleDateFormat;
-import java.time.Year;
 import java.util.*;
 
 import com.just.teachersystem.Service.CommonService;
@@ -8,7 +6,7 @@ import com.just.teachersystem.Service.FileService;
 import com.just.teachersystem.Utill.*;
 import com.just.teachersystem.VO.FileInfo;
 import io.jsonwebtoken.Claims;
-import org.apache.ibatis.annotations.Param;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -146,6 +144,17 @@ public class CommonController {
         return JsonData.buildError(h.getContent().toString());
     }
 
+    @PostMapping("/validate")
+    public JsonData validate(@RequestHeader Map<String ,String>headers, @RequestBody Map<String, String> jsons){
+        Claims claims =JwtUtils.checkJWT(headers.get("token"));
+        String worknum = (String) claims.get("worknum");
+        String worknum1=jsons.get("worknum");
+        if(worknum1==null) return JsonData.buildError("工号为空");
+        if(worknum1.equals(worknum1)){
+            return JsonData.buildSuccess();
+        }
+        return JsonData.buildError("验证错误");
+    }
 
 
 

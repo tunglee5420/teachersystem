@@ -35,11 +35,32 @@ public interface UserService {
     int addConstruction(ConstructionInfo info);
 
     /**
-     * 获得用户个人建设类记录
+     * 获得用户个人工号建设类记录
      * @param worknum
      * @return
      */
     List getMyConstructionInfo(String worknum);
+
+    /**
+     * 获取个人成果类信息
+     * @param info
+     * @return
+     */
+    List getMyAchievements(AchievementInfo info);
+
+    /**
+     *获取个人获奖类信息
+     * @param info
+     * @return
+     */
+    List getMyAwards(AwardInfo info);
+
+    /**
+     * 获取我的建设类信息
+     * @param info
+     * @return
+     */
+     List getMyConstructions(ConstructionInfo info);
 
     /**
      * 添加成果类信息

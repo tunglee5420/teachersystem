@@ -80,7 +80,7 @@
     <update id="updateAward" parameterType="com.just.teachersystem.VO.AwardInfo">
         update award
         <trim prefix="set" suffixOverrides=",">
-            <if test="department!=null">dptId=(select id from department where dptname=#{department}),</if>
+            <if test="department!=null">dtpId=(select id from department where dptname=#{department}),</if>
             <if test="worknum!=null">userId=(select id from user where worknum=#{worknum}),</if>
             <if test="teammate!=null">teammate=#{teammate},</if>
             <if test="awardUnit!=null">awardUnit=#{awardUnit},</if>

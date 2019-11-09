@@ -26,7 +26,6 @@ public class TeachersystemApplication {
 
     @Bean
     public Object testBean(PlatformTransactionManager platformTransactionManager) {
-        System.out.println(">>>>>>>>>>" + platformTransactionManager.getClass().getName());
         return new Object();
     }
 
