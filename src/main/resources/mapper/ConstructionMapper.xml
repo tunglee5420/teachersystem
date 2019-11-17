@@ -36,11 +36,11 @@
 
     <select id="selectConstructionByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.ConstructionInfo">
         select cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3,
-        level, testimonial,schoolyear,year,status from constructionInfo where worknum=#{worknum}
+        level, testimonial,schoolyear,year,status,lastTime from constructionInfo where worknum=#{worknum}
     </select>
 
     <select id="selectConstructions" resultType="com.just.teachersystem.VO.ConstructionInfo" parameterType="com.just.teachersystem.VO.ConstructionInfo">
-        select cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3, level, testimonial,schoolyear,year,status
+        select cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3, level, testimonial,schoolyear,year,status,lastTime
         from constructionInfo
         <where>
             <if test="year!=null and year!=''">year=#{year}  </if>

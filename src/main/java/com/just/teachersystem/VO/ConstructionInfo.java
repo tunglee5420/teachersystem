@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -35,4 +36,5 @@ public class ConstructionInfo implements Serializable {
   private String year;
   private long status;
   private String reason;
+  private Date lastTime;
 }

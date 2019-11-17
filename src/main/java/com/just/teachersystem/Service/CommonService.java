@@ -1,5 +1,6 @@
 package com.just.teachersystem.Service;
 
+import com.just.teachersystem.Entity.UserLog;
 import com.just.teachersystem.VO.AchievementInfo;
 import com.just.teachersystem.VO.AwardInfo;
 import com.just.teachersystem.VO.ConstructionInfo;
@@ -58,4 +59,11 @@ public interface CommonService {
      * @return
      */
     boolean updateAwardServ(AwardInfo info);
+
+    /**
+     * 操作用户操作日志
+     * @param log
+     * @return
+     */
+    boolean insertUserLog(UserLog log);
 }

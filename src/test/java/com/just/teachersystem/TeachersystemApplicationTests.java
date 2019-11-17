@@ -7,6 +7,8 @@ import java.util.HashMap;
 import	java.util.Map;
 
 
+import com.just.teachersystem.Entity.UserLog;
+import com.just.teachersystem.Mapper.UserLogMapper;
 import com.just.teachersystem.Service.FileService;
 import com.just.teachersystem.Service.ServiceImp.FileServiceImp;
 import com.just.teachersystem.Utill.HttpClientResult;
@@ -25,6 +27,8 @@ public class TeachersystemApplicationTests {
 
     @Autowired
     FileService fileService;
+    @Autowired
+    UserLogMapper logMapper;
     @Test
     public void contextLoads() {
         HttpClientResult h=fileService.confirmed("_ak=7136904b-40ad-400c-5564-1f5de5eb9a61; Path=/; Expires=Wed, 06 Nov 2019 07:12:23 GMT","a2657677-18f1-46a0-5fd0-8b0b050c3dcb");
@@ -33,7 +37,16 @@ public class TeachersystemApplicationTests {
     }
     @Test
     public void Test1(){
-        fileService.filePanLogin();
+        UserLog u1=new UserLog();
+        u1.setWorknum("5163232032");
+        u1.setRole("科室管理员");
+
+        int i=logMapper.insertUserLog(u1);
+        if(i==0){
+            System.out.println("错误");
+
+        }
+        System.out.println("插入成功");
     }
     @Test
     public void Test2() throws Exception {

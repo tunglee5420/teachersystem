@@ -26,12 +26,12 @@
 
     <select id="selectAchievementByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.AchievementInfo">
         select aid, department,worknum, name, teammate,production, class1,class2,class3,
-        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason from achievementInfo where worknum=#{worknum}
+        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason ,lastTimefrom achievementInfo where worknum=#{worknum}
     </select>
 
     <select id="selectAchievements" parameterType="com.just.teachersystem.VO.AchievementInfo" resultType="com.just.teachersystem.VO.AchievementInfo">
       select aid, department,worknum, name, teammate,production, class1,class2,class3,
-        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason
+        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason,lastTime
         from achievementInfo
         <where>
             <if test="department!=null and department!=''"> department=#{department} </if>

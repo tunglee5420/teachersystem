@@ -27,5 +27,6 @@ public class AchievementInfo implements Serializable {
   private String year;
   private long status;
   private String reason;
+  private Date lastTime;
 
 }

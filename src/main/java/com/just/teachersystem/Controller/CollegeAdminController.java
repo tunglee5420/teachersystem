@@ -5,6 +5,7 @@ import com.github.andyczy.java.excel.ExcelUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import com.just.teachersystem.Annotation.Logs;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
@@ -32,6 +33,7 @@ public class CollegeAdminController {
      * 学院管理员获取确认表权限
      * @return
      */
+    @Logs(role="collegeAdmin",description = "学院管理员获取确认表权限")
     @PostMapping("/getAdminEnterPermission")
     public JsonData getAdminPermission() {
         Map<Object,Object> map=redisUtils.hmget("Entrance:admin");
@@ -50,6 +52,7 @@ public class CollegeAdminController {
      * @param size 页大小
      * @return JsonData
      */
+    @Logs(role="collegeAdmin",description = "获取部门用户")
     @PostMapping("/getDptUserInfo")
     public JsonData getDptUserInfo(@RequestHeader Map<String ,String> header,
                                    @RequestBody Map<String,String> map,
@@ -80,6 +83,7 @@ public class CollegeAdminController {
      *  password 密码
      * @return
      */
+    @Logs(role="collegeAdmin",description = "修改部门成员密码")
     @PostMapping("/updateUserPassword")
     public JsonData updateUserPassword(@RequestHeader Map<String, String> headers,
                                        @RequestBody Map<String,String> map) {
@@ -106,6 +110,7 @@ public class CollegeAdminController {
      *  phone 新号码
      * @return
      */
+    @Logs(role="collegeAdmin",description = "修改成员手机号码")
     @PostMapping("/updateUserPhone")
     public JsonData updateUserPhone(@RequestHeader Map<String, String> headers,
                                     @RequestBody Map<String,String> map){
@@ -277,6 +282,8 @@ public class CollegeAdminController {
      * @param year
      * @param response
      */
+
+    @Logs(role="collegeAdmin",description = "导出业绩excel确认表")
     @PostMapping("/getConfirmPerformanceExcel")
     public void getConfirmPerformanceExcel(@RequestHeader Map<String, String> header,
                                                @RequestParam("year") String year,
@@ -367,11 +374,12 @@ public class CollegeAdminController {
     }
 
     /**
-     * 导出业绩excel确认表
+     * 导出奖金excel确认表
      * @param header
      * @param year
      * @param response
      */
+    @Logs(role="collegeAdmin",description = "导出奖金excel确认表")
     @PostMapping("/getConfirmBonusExcel")
     public void getConfirmBonusExcel(@RequestHeader Map<String, String> header,
                                            @RequestParam("year") String year,

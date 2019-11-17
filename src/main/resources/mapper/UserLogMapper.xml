@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.just.teachersystem.Mapper.UserLogMapper">
+
+    <select id="getUserLogs" resultType="com.just.teachersystem.Entity.UserLog">
+        select id, worknum,ip,role,description,url,date from user_log
+    </select>
+
+    <insert id="insertUserLog" parameterType="com.just.teachersystem.Entity.UserLog">
+        INSERT  into user_log
+        (worknum,ip,role,description,url,date)
+        values
+        (
+            #{worknum},
+            #{ip},
+            #{role},
+            #{description},
+            #{url},
+            NOW()
+        )
+    </insert>
+
+
+</mapper>

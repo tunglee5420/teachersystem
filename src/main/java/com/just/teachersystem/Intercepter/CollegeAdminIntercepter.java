@@ -22,6 +22,8 @@ public class CollegeAdminIntercepter extends OnlineIntercepter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token= request.getHeader("token");
         int permission =(int)JwtUtils.checkJWT(token).get("permission");
+
+
         if(JwtUtils.checkJWT(token)!=null){
             if(permission==1|| permission ==3){
                 return true;

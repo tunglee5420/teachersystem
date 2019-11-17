@@ -1,6 +1,8 @@
 package com.just.teachersystem.Controller;
+
 import java.util.*;
 
+import com.just.teachersystem.Annotation.Logs;
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Service.FileService;
 import com.just.teachersystem.Utill.*;
@@ -25,6 +27,7 @@ public class CommonController {
      * 获取类型列表
      * @return
      */
+    @Logs(role = "all",description = "获取类型列表")
     @PostMapping("/getTypeList")
     public JsonData getTypeList(@RequestBody Map<String, String> map){
         String class1=map.get("class1");
@@ -43,6 +46,7 @@ public class CommonController {
      * 获取成就级别
      * @return
      */
+    @Logs(role="all",description = "获取成就级别")
     @RequestMapping("/getLevelSet")
     public JsonData getLevelSet(){
         Set set= (Set) redisUtils.get("class:level");
@@ -60,6 +64,7 @@ public class CommonController {
      * 获取部门列表
      * @return
      */
+    @Logs(role="all",description = "获取部门列表")
     @RequestMapping("/getDepartmentList")
     public JsonData getDepartmentList(){
         List list= (List) redisUtils.get("department");
@@ -79,6 +84,7 @@ public class CommonController {
      * @param headers
      * @return
      */
+    @Logs(role="all",description = "获得上传文件的token")
     @PostMapping("/getPanToken")
     public JsonData getPanToken(@RequestBody FileInfo fileInfo ,@RequestHeader Map<String ,String>headers){
         Claims claims =JwtUtils.checkJWT(headers.get("token"));
@@ -106,6 +112,7 @@ public class CommonController {
      * @param jsons
      * @return
      */
+    @Logs(role="all",description = "证实文件上传状况")
     @PostMapping("/confirmUploaded")
     public JsonData confirmUploaded (@RequestBody Map<String, String> jsons){
 
@@ -128,6 +135,7 @@ public class CommonController {
      * @param jsons
      * @return
      */
+    @Logs(role="all",description = "获取下载 Token")
     @PostMapping("/getDownloadToken")
     public JsonData getDownloadToken(@RequestBody Map<String, String> jsons){
         String uuid=jsons.get("uuid");
@@ -150,6 +158,7 @@ public class CommonController {
      * @param jsons
      * @return
      */
+    @Logs(role="all",description = "验证工号和token的一致性")
     @PostMapping("/validate")
     public JsonData validate(@RequestHeader Map<String ,String>headers, @RequestBody Map<String, String> jsons){
         Claims claims =JwtUtils.checkJWT(headers.get("token"));

@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSON;
 import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.JwtUtils;
 import com.just.teachersystem.Utill.RedisUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -29,11 +31,15 @@ public class OnlineIntercepter implements HandlerInterceptor {
 
     @Autowired
     RedisUtils redisUtils;
+
+
+    private static Logger logger = LogManager.getLogger(OnlineIntercepter.class);
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 
         String token= request.getHeader("token");
+
 //        System.out.println(token);
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -42,11 +48,16 @@ public class OnlineIntercepter implements HandlerInterceptor {
             printJson(response,-1,"token 为空，请登陆！");
             return false;
         }
+        String worknum= (String) JwtUtils.checkJWT(token).get("worknum");
+        logger.debug("工号："+worknum);
         if(JwtUtils.checkJWT(token)!=null){
-            String worknum= (String) JwtUtils.checkJWT(token).get("worknum");
             if(redisUtils.get("login:"+worknum)!=null){
                Map map= (Map)redisUtils.get("login:"+worknum);
-               return map.get("token").equals(token);
+               if(map.get("token").equals(token)){
+                   return true;
+               }
+               return false;
+
             }
             printJson(response,-1,"第三方登陆,token失效");
             return false;

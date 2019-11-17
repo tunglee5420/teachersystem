@@ -1,10 +1,10 @@
 package com.just.teachersystem.Service.ServiceImp;
-import	java.awt.Label;
 import java.util.*;
 
 import com.just.teachersystem.Entity.Department;
 import com.just.teachersystem.Entity.Kind;
-import com.just.teachersystem.Entity.Level;
+
+import com.just.teachersystem.Entity.UserLog;
 import com.just.teachersystem.Mapper.*;
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Utill.JwtUtils;
@@ -39,6 +39,9 @@ public class CommonServiceImp  implements CommonService {
     AwardMapper awardMapper;
     @Autowired
     TeacherMapper teacher;
+
+    @Autowired
+    UserLogMapper logMapper;
 
 
     /**
@@ -233,5 +236,19 @@ public class CommonServiceImp  implements CommonService {
             return true;
         }
         return  false;
+    }
+
+
+    /**
+     * 操作用户操作日志
+     * @param log
+     * @return
+     */
+    public boolean insertUserLog(UserLog log){
+        if(log==null){
+            throw new NullPointerException("日志信息异常");
+        }
+        int res= logMapper.insertUserLog(log);
+        return res>0?true:false;
     }
 }

@@ -5,6 +5,7 @@ import java.util.*;
 import com.github.andyczy.java.excel.ExcelUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.just.teachersystem.Annotation.Logs;
 import com.just.teachersystem.Exception.MyException;
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Service.OfficeAdminService;
@@ -45,6 +46,7 @@ public class OfficeAdminController {
      * size
      * @return
      */
+    @Logs(role="officeAdmin",description = "获取用户提交的建设类信息")
     @PostMapping("/getUserConstruction")
     public JsonData getUserConstruction(@RequestHeader Map<String ,String> header,
                                         @RequestBody ConstructionInfo construction,
@@ -76,7 +78,7 @@ public class OfficeAdminController {
      *  schoolYear 学年
      * @param response
      */
-
+    @Logs(role="officeAdmin",description = "导出建设类excel")
     @PostMapping("/getConstructionExcel")
     public void getConstructionExcel(@RequestHeader Map<String, String> header,
                                      @RequestBody ConstructionInfo construction,
@@ -137,7 +139,7 @@ public class OfficeAdminController {
      * year 年度
      * schoolyear 学年
      */
-
+    @Logs(role="officeAdmin",description = "导出建设类证明材料的key")
     @PostMapping("/getConstructionFileKey")
     public JsonData getConstructionFileKey(@RequestHeader Map<String, String> header,
                                            @RequestBody ConstructionInfo construction) {
@@ -166,6 +168,7 @@ public class OfficeAdminController {
      * 科室管理员获取建设类模板
      * @param response
      */
+    @Logs(role="officeAdmin",description = "科室管理员获取建设类模板")
     @PostMapping("/getConstructionTemplate")
     public void getConstructionTemplate(HttpServletResponse response,@RequestHeader Map<String, String> header){
 
@@ -199,6 +202,7 @@ public class OfficeAdminController {
      * @param index
      * @return
      */
+    @Logs(role="officeAdmin",description = "科室管理员按照模板来导入建设类数据")
     @PostMapping("/excelImportConstruction")
     public JsonData excelImportConstruction(@RequestHeader Map<String, String> header,@RequestParam("file") MultipartFile file,@RequestParam(value = "sheetIndex",defaultValue="1") int index){
         String token=header.get("token");
@@ -282,6 +286,7 @@ public class OfficeAdminController {
      * @param construction
      * @return
      */
+    @Logs(role="officeAdmin",description = "补充修改建设信息并核审")
     @PostMapping("/ConstructionSupplement")
     public JsonData ConstructionSupplement(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo construction){
         String token=header.get("token");
@@ -312,6 +317,7 @@ public class OfficeAdminController {
      * @param size
      * @return
      */
+    @Logs(role="officeAdmin",description = "获取用户提交的成果类信息")
     @PostMapping("/getUserAchievement")
     public JsonData getUserAchievement(@RequestHeader Map<String ,String> header,
                                        @RequestBody AchievementInfo achievement,
@@ -340,6 +346,7 @@ public class OfficeAdminController {
      *  schoolyear 年度
      *  response
      */
+    @Logs(role="officeAdmin",description = "导出成果类excel")
     @PostMapping("/getAchievementExcel")
     public void getAchievementExcel(@RequestHeader Map<String, String> header,
                                     @RequestBody AchievementInfo achievement,
@@ -398,6 +405,7 @@ public class OfficeAdminController {
      *  schoolYear 学年
      * @return
      */
+    @Logs(role="officeAdmin",description = "获取成果类文件key")
     @PostMapping("/getAchievementFileKey")
     public JsonData getAchievementFileKey(@RequestHeader Map<String, String> header,
                                           @RequestBody AchievementInfo achievement){
@@ -426,6 +434,7 @@ public class OfficeAdminController {
      * 科室管理员获取成果类模板
      * @param response
      */
+    @Logs(role="officeAdmin",description = "科室管理员获取成果类模板")
     @PostMapping("/getAchievementTemplate")
     public void getAchievementTemplate(HttpServletResponse response,@RequestHeader Map<String, String> header){
 
@@ -458,6 +467,7 @@ public class OfficeAdminController {
      * @param index
      * @return
      */
+    @Logs(role="officeAdmin",description = "科室管理员按照模板来导入成果类数据")
     @PostMapping("/excelImportAchievement")
     public JsonData excelImportAchievement(@RequestHeader Map<String, String> header,@RequestParam("file") MultipartFile file,@RequestParam(value = "sheetIndex",defaultValue="1") int index){
         //校验权限
@@ -530,6 +540,7 @@ public class OfficeAdminController {
      * @param info
      * @return
      */
+    @Logs(role="officeAdmin",description = "补充修改成果信息并核审")
     @PostMapping("/AchievementSupplement")
     public JsonData AchievementSupplement(@RequestHeader Map<String, String> header,
                                           @RequestBody AchievementInfo info) {
@@ -560,6 +571,7 @@ public class OfficeAdminController {
      * @param size
      * @return
      */
+    @Logs(role="officeAdmin",description = "获取用户提交的获奖类信息")
     @PostMapping("/getUserAward")
     public JsonData getUserAward(@RequestHeader Map<String ,String> header,
                                  @RequestBody  AwardInfo awardInfo,
@@ -585,6 +597,7 @@ public class OfficeAdminController {
      * 科室管理员获取获奖类模板
      * @param response
      */
+    @Logs(role="officeAdmin",description = "科室管理员获取获奖类模板")
     @PostMapping("/getAwardTemplate")
     public void getAwardTemplate(HttpServletResponse response,@RequestHeader Map<String, String> header){
         String token=header.get("token");
@@ -617,6 +630,7 @@ public class OfficeAdminController {
      * @param index
      * @return
      */
+    @Logs(role="officeAdmin",description = "科室管理员按照模板来导入获奖类数据")
     @PostMapping("/excelImportAward")
     public JsonData excelImportAward(@RequestHeader Map<String, String> header,@RequestParam("file") MultipartFile file,@RequestParam(value = "sheetIndex",defaultValue="1") int index){
         //校验权限
@@ -691,6 +705,7 @@ public class OfficeAdminController {
      * @param awardInfo
      * @return
      */
+    @Logs(role="officeAdmin",description = "补充修改获奖类信息并核审")
     @PostMapping("/AwardSupplement")
     public JsonData AwardSupplement(@RequestHeader Map<String, String> header, @RequestBody AwardInfo awardInfo) {
         String token=header.get("token");
@@ -713,6 +728,7 @@ public class OfficeAdminController {
      *  schoolYear 学年
      * @param response
      */
+    @Logs(role="officeAdmin",description = "获取获奖类excel")
     @PostMapping("/getAwardExcel")
     public void getAwardExcel(@RequestHeader Map<String ,String> header,
                               @RequestBody AwardInfo awardInfo,
@@ -770,6 +786,7 @@ public class OfficeAdminController {
      * schoolYear 学年
      * @return
      */
+    @Logs(role="officeAdmin",description = "获取获奖类文件key")
     @PostMapping("/getAwardFileKey")
     public JsonData getAwardFileKey(@RequestHeader Map<String, String> header,
                                     @RequestBody AwardInfo awardInfo){
@@ -800,6 +817,7 @@ public class OfficeAdminController {
      * @param index
      * @return
      */
+    @Logs(role="officeAdmin",description = "科室管理员按照模板来导入业绩分数据")
     @PostMapping("/excelImportPerformance")
     public JsonData excelImportPerformance(@RequestParam("file") MultipartFile file,@RequestParam(value = "sheetIndex",defaultValue="1") int index){
         ExcelUtils excelUtils=ExcelUtils.initialization();
@@ -852,6 +870,7 @@ public class OfficeAdminController {
      * 科室管理员获取业绩模板
      * @param response
      */
+    @Logs(role="officeAdmin",description = "科室管理员获取业绩模板")
     @PostMapping("/getPerformanceTemplate")
     public void getPerformanceTemplate(HttpServletResponse response){
 
@@ -873,6 +892,7 @@ public class OfficeAdminController {
      * 科室管理员获取奖金模板
      * @param response
      */
+    @Logs(role="officeAdmin",description = "科室管理员获取奖金模板")
     @PostMapping("/getBonusTemplate")
     public void getBonusTemplate(HttpServletResponse response){
         ExcelUtils excelUtils=ExcelUtils.initialization();
@@ -901,6 +921,7 @@ public class OfficeAdminController {
      * @param index
      * @return
      */
+    @Logs(role="officeAdmin",description = "科室管理员按照模板来导入奖金数据")
     @PostMapping("/excelImportBonus")
     public JsonData excelImportBonus(@RequestParam("file") MultipartFile file,@RequestParam(value = "sheetIndex",defaultValue="1") int index){
         ExcelUtils excelUtils=ExcelUtils.initialization();

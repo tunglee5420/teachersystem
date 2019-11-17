@@ -3,6 +3,7 @@ package com.just.teachersystem.Controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import com.just.teachersystem.Annotation.Logs;
 import com.just.teachersystem.Entity.Achievement;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Service.CommonService;
@@ -45,6 +46,7 @@ public class UserController {
      * @return
      */
 
+    @Logs(role = "all",description = "验证身份和密码")
     @PostMapping("/check")
     public JsonData check(@RequestHeader Map<String ,String> header,@RequestBody Map<String, String> map){
         String token=header.get("token");
@@ -65,6 +67,7 @@ public class UserController {
      * @param map
      * @return
      */
+    @Logs(role = "all",description = "修改密码")
     @PostMapping("/updatePassword")
     public JsonData updatePassword(@RequestHeader Map<String ,String> header,@RequestBody Map<String, String> map){
         String token=header.get("token");
@@ -88,6 +91,7 @@ public class UserController {
      * @param header
      * @return
      */
+    @Logs(role = "all",description = "获取个人信息")
     @PostMapping("/getMyInfo")
     public JsonData getMyInfo(@RequestHeader Map<String, String> header) {
         String token=header.get("token");
@@ -106,6 +110,7 @@ public class UserController {
      * @param info
      * @return
      */
+    @Logs(role = "user",description = "提交建设类信息")
     @PostMapping(value = "/addConstruction",produces = "application/json;charset=utf-8")
     public JsonData addConstruction(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo info){
 
@@ -131,6 +136,7 @@ public class UserController {
      * @param info
      * @return
      */
+    @Logs(role = "user",description = "更新建设类信息")
     @PostMapping("/updateUserConstruction")
     public JsonData updateUserConstruction(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo info){
         String token=header.get("token");
@@ -155,6 +161,7 @@ public class UserController {
      * @param header
      * @return
      */
+    @Logs(role = "user",description = "查看个人建设类信息")
     @PostMapping("/getMyConstructions")
     public JsonData  getMyConstructions(@RequestHeader Map<String ,String> header,
                                            @RequestBody Map<String, String> map,
@@ -186,6 +193,7 @@ public class UserController {
      * @param info
      * @return
      */
+    @Logs(role = "user",description = "添加成果类的信息")
     @PostMapping("/addAchievement")
     public JsonData addAchievement(@RequestHeader Map<String ,String> header,@RequestBody AchievementInfo info){
         String token=header.get("token");
@@ -207,6 +215,7 @@ public class UserController {
      * @param header
      * @return
      */
+    @Logs(role = "user",description = "用户查看成果类信息")
     @PostMapping("/getMyAchievements")
     public JsonData  getMyAchievements(@RequestHeader Map<String ,String> header,
                                        @RequestBody Map<String, String> map,
@@ -236,6 +245,7 @@ public class UserController {
      * @param info
      * @return
      */
+    @Logs(role = "user",description = "用户更新成果类类信息")
     @PostMapping("/updateUserAchievement")
     public JsonData updateUserAchievement(@RequestHeader Map<String ,String> header,@RequestBody AchievementInfo info){
         String token=header.get("token");
@@ -259,6 +269,7 @@ public class UserController {
      * @param info
      * @return
      */
+    @Logs(role = "user",description = "用户添加获奖类类信息")
     @PostMapping("/addAward")
     public JsonData addAward(@RequestHeader Map<String ,String> header,@RequestBody AwardInfo info){
         String token=header.get("token");
@@ -281,6 +292,7 @@ public class UserController {
      * @param header
      * @return
      */
+    @Logs(role = "user",description = "用户添加获奖类类信息")
     @PostMapping("/getMyAwards")
     public JsonData  getMyAwards(@RequestHeader Map<String ,String> header,
                                     @RequestBody Map<String, String> map,
@@ -312,6 +324,7 @@ public class UserController {
      * @param info
      * @return
      */
+    @Logs(role = "user",description = "用户更新获奖类信息")
     @PostMapping("/updateUserAward")
     public JsonData updateUserAward(@RequestHeader Map<String ,String> header,@RequestBody AwardInfo info){
         String token=header.get("token");
@@ -333,6 +346,7 @@ public class UserController {
      * 获取入口开放权限
      * @return
      */
+    @Logs(role = "user",description = "用户获取入口开放权限")
     @PostMapping("/getEntrancePermission")
     public JsonData getEntrancePermission() {
         Map<Object,Object> map=redisUtils.hmget("Entrance:user");

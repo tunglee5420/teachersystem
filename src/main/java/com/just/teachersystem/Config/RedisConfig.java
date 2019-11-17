@@ -21,6 +21,7 @@ import java.util.Set;
 
 @EnableCaching
 @Configuration
+
 public class RedisConfig extends CachingConfigurerSupport {
 
     @Bean(name="redisTemplate")

@@ -1,19 +1,16 @@
 package com.just.teachersystem.Controller;
-import	java.awt.Desktop.Action;
+
 import java.util.*;
 
 
 import com.github.andyczy.java.excel.ExcelUtils;
-import com.just.teachersystem.Exception.MyException;
+
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Service.OfficeAdminService;
 import com.just.teachersystem.Service.RootService;
-import com.just.teachersystem.Utill.JsonData;
-import com.just.teachersystem.Utill.JwtUtils;
 import com.just.teachersystem.Utill.MyExcelUtil;
 import com.just.teachersystem.VO.*;
 
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

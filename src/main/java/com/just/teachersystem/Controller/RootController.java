@@ -8,6 +8,7 @@ import java.util.Map;
 import com.github.andyczy.java.excel.ExcelUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.just.teachersystem.Annotation.Logs;
 import com.just.teachersystem.Entity.Kind;
 
 import com.just.teachersystem.Service.RootService;
@@ -36,6 +37,7 @@ public class RootController {
      * @param map
      * @return
      */
+    @Logs(role="root",description = "控制信息录入入口开关")
     @PostMapping("/manageUserEntrance")
     public JsonData manageUserEntrance(@RequestBody Map<String, Object> map){
 
@@ -50,6 +52,7 @@ public class RootController {
      * @param map
      * @return
      */
+    @Logs(role="root",description = "控制管理员获取入口开关")
     @PostMapping("/manageAdminEntrance")
     public JsonData manageAdminEntrance(@RequestBody Map <String,Object> map) {
 
@@ -64,6 +67,7 @@ public class RootController {
      * @param kind
      * @return
      */
+    @Logs(role="root",description = "root添加分类")
     @PostMapping("/addType")
     public JsonData addType(@RequestBody Kind kind){
 //        System.out.println(kind.toString());
@@ -80,6 +84,7 @@ public class RootController {
      * @param class3
      * @return
      */
+    @Logs(role="root",description = "root删除类别")
     @DeleteMapping("/deleteType")
     public JsonData deleteType(@RequestParam("class3") String class3){
         boolean is = root.deleteType(class3);
@@ -93,6 +98,7 @@ public class RootController {
      * @param level
      * @return
      */
+    @Logs(role="root",description = "root添加级别")
     @PostMapping("/addLevel")
     public JsonData addType(@RequestParam("level") String level) {
         boolean is = root.addLevel(level);
@@ -108,6 +114,7 @@ public class RootController {
      * @return
      */
     @DeleteMapping("/deleteLevel")
+    @Logs(role="root",description = "root删除级别")
     public JsonData deleteLevel(@RequestParam("level") String level){
         boolean is=root.deleteLevel(level);
         if(is){
@@ -121,6 +128,7 @@ public class RootController {
      * @param userInfo
      * @return
      */
+    @Logs(role="root",description = "root添加用户信息")
     @PostMapping("/addUserInfo")
     public JsonData addUserInfo(@RequestBody UserInfo userInfo) {
         if (userInfo==null||userInfo.getWorknum()==null) return JsonData.buildError("信息为空");
@@ -138,6 +146,7 @@ public class RootController {
      * @param userInfo
      * @return
      */
+    @Logs(role="root",description = "root更新用户信息(包括修改密码和权限)")
     @PostMapping("/updateUserInfo")
     public JsonData updateUserInfo( @RequestBody UserInfo userInfo){
         if (userInfo==null) return JsonData.buildError("信息为空");
@@ -167,6 +176,7 @@ public class RootController {
      * 工号worknum
      * @return
      */
+    @Logs(role="root",description = "root根据工号删除用户")
     @DeleteMapping("/deleteUser")
     public JsonData deleteUser(@RequestBody Map<String, String> map){
         String worknum=map.get("worknum");
@@ -185,6 +195,7 @@ public class RootController {
      * @param size
      * @return
      */
+    @Logs(role="root",description = "root根据条件筛选信息")
     @PostMapping("/getUserList")
     public JsonData getUserList(@RequestBody UserInfo userInfo,
             @RequestParam(value = "page",defaultValue = "1") int page,
@@ -200,13 +211,11 @@ public class RootController {
     /**
      * 下载用户表
      */
+    @Logs(role="root",description = "root下载用户表")
     @PostMapping("/getUserExcel")
     public void getUserExcel(HttpServletResponse response) {
         UserInfo userInfo = new UserInfo();
         List<UserInfo>list=root.getUserInfo(userInfo);
-
-
-
         List<List<String[]>> data=new ArrayList<>();
         ExcelUtils excelUtils=ExcelUtils.initialization();
         //设置表头/表名
@@ -248,6 +257,7 @@ public class RootController {
      * master  负责人
      * @return
      */
+    @Logs(role="root",description = "root条件筛选选业绩分信息")
     @PostMapping("/getPerfromanceInfo")
     public JsonData getPerfromanceInfo(
             @RequestBody PerformanceInfo performanceInfo,
@@ -274,6 +284,7 @@ public class RootController {
      *  year 年度
      *
      */
+    @Logs(role="root",description = "root条件导出业绩信息")
     @PostMapping("/getPerformanceExcel")
     public void getPerformanceExcel(HttpServletResponse response,@RequestParam("year")String year){
 
@@ -313,6 +324,7 @@ public class RootController {
      *  id
      * @return
      */
+    @Logs(role="root",description = "root根据id 删除业绩分信息(删除时status 置0)")
     @DeleteMapping("/deletePerformance")
     public JsonData deletePerformance(@RequestBody  PerformanceInfo p){
 
@@ -328,6 +340,7 @@ public class RootController {
      * @param performanceInfo
      * @return
      */
+    @Logs(role="root",description = "root修改业绩信息")
     @PostMapping("/updatePerformance")
     public JsonData updatePerformance(@RequestBody PerformanceInfo performanceInfo){
         if(performanceInfo==null) return JsonData.buildError("传过来的值为空");
@@ -342,6 +355,7 @@ public class RootController {
      * @param performance
      * @return
      */
+    @Logs(role="root",description = "root添加业绩信息")
     @PostMapping("/addPerformance")
     public JsonData addPerformance(@RequestBody PerformanceInfo performance) {
         if(performance==null) return JsonData.buildError("传过来的值为空");
@@ -360,6 +374,7 @@ public class RootController {
      * @param size
      * @return
      */
+    @Logs(role="root",description = "root条件筛选奖金信息")
     @PostMapping("/getBonusInfo")
     public JsonData getBonusInfo( @RequestBody BonusInfo bonusInfo,
             @RequestParam(value = "page",defaultValue = "1") int page,
@@ -384,6 +399,7 @@ public class RootController {
      * @param response
      * @param year
      */
+    @Logs(role="root",description = "root条件导出奖金信息")
     @PostMapping("/getBonusExcel")
     public void getBonusExcel(HttpServletResponse response, @RequestParam(value = "year",defaultValue ="") String year ){
         BonusInfo bonusInfo=new BonusInfo();
@@ -418,6 +434,7 @@ public class RootController {
      * 根据id 删除奖金信息
      * @return 将status置为0
      */
+    @Logs(role="root",description = "root根据id 删除奖金信息")
     @DeleteMapping("/deleteBonus")
     public JsonData deleteBonus(@RequestBody  BonusInfo b){
         if(b.getId()<0) return JsonData.buildError("参数出错");
@@ -432,6 +449,7 @@ public class RootController {
      * @param bonusInfo
      * @return
      */
+    @Logs(role="root",description = "root修改奖金信息")
     @PostMapping("/updateBonus")
     public JsonData updateBonus(@RequestBody BonusInfo bonusInfo){
         if(bonusInfo==null) return JsonData.buildError("传过来的值为空");
@@ -446,6 +464,7 @@ public class RootController {
      * @param bonusInfo
      * @return
      */
+    @Logs(role="root",description = "root添加奖金信息")
     @PostMapping("/addBonus")
     public JsonData addBonus(@RequestBody BonusInfo bonusInfo) {
         if(bonusInfo==null) return JsonData.buildError("传过来的值为空");
