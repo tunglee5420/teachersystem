@@ -36,6 +36,11 @@ public interface CommonService {
      */
     Set getLevelSet();
     /**
+     * 获取奖项服务
+     * @return
+     */
+    Set getPrizelSet();
+    /**
      * 获取部门
      * @return
      */

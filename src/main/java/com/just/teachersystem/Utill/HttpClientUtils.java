@@ -1,6 +1,7 @@
 package com.just.teachersystem.Utill;
 import	java.net.CookieStore;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -301,7 +302,7 @@ public class HttpClientUtils {
         // 执行请求
         httpResponse = httpClient.execute(httpMethod);
 
-        Map<String,String>map=new HashMap<> ();
+        Map<String,Object>map=new HashMap<> ();
         // 获取返回结果
         if (httpResponse != null && httpResponse.getStatusLine() != null) {
             String content = "",cookie="";
@@ -313,6 +314,7 @@ public class HttpClientUtils {
 
             if (httpResponse.getEntity() != null) {
                 content = EntityUtils.toString(httpResponse.getEntity(), ENCODING);
+
                 map.put("body",content);
             }
             if (!cookie.equals("")){

@@ -18,12 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 常见通用服务实现层
  */
 @Service
 @Component
+@Transactional(rollbackFor = Exception.class)
 public class CommonServiceImp  implements CommonService {
     @Autowired
     CommonMapper mapper;
@@ -169,6 +171,37 @@ public class CommonServiceImp  implements CommonService {
             throw new MyException("缓存异常");
 
     }
+
+    /**
+     * 获取奖项服务
+     * @return
+     */
+
+    public Set getPrizelSet() {
+        Set<String> set=mapper.getPrizeSet();
+
+        Set<Map < String, Object>>sets=new HashSet<> ();
+        boolean res;
+        int f=1;
+        if(set==null&&set.isEmpty()){
+            return null;
+        }else {
+            for (String s1 : set) {
+                Map<String, Object> map1 = new HashMap<> ();
+                map1.put("label",s1);
+                map1.put("value", f++);
+                sets.add(map1);
+            }
+
+            res=redisUtils.set("class:prize",sets,60*60*24*7);
+        }
+        if(res)
+            return sets;
+        else
+
+            throw new MyException("缓存异常");
+    }
+
 
     /**
      * 获取部门

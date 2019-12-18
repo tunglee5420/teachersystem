@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -15,7 +16,9 @@ public class User implements Serializable {
   private long id;
   private long dptId; //关联部门编号
   private String name; //姓名
-  private String worknum; //工号
+  @Size(min = 11,max = 12,message ="工号必须是12位")
+  private String worknum;//工号
+  @Size(max = 10,min =6 ,message ="密码必须是6到8位")
   private String password;//密码
   private String gender;//性别
   private Date birthday;//出生年月
@@ -26,6 +29,7 @@ public class User implements Serializable {
   private String degree;//最高学位
   private String school;//授学位单位名称
   private String major;//获最高学位的专业名称
+
   private long doubleTeacher;//是否双师型 0表示不是，1 表示是
   private long background;//是否具有行业背景 0表示不是，1 表示是
   private long tutor;//是否博硕士生导师 0表示不是，1 表示是

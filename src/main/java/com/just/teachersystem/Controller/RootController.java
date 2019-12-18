@@ -70,7 +70,6 @@ public class RootController {
     @Logs(role="root",description = "root添加分类")
     @PostMapping("/addType")
     public JsonData addType(@RequestBody Kind kind){
-//        System.out.println(kind.toString());
         boolean is = root.addType(kind);
         if(is){
             return JsonData.buildSuccess("添加成功");
@@ -81,18 +80,22 @@ public class RootController {
 
     /**
      * 删除类别
-     * @param class3
+     * @param kind
      * @return
      */
     @Logs(role="root",description = "root删除类别")
-    @DeleteMapping("/deleteType")
-    public JsonData deleteType(@RequestParam("class3") String class3){
-        boolean is = root.deleteType(class3);
+    @PostMapping("/deleteType")
+    public JsonData deleteType(@RequestBody Kind kind){
+//        System.out.println(kind);
+        boolean is = root.deleteType(kind);
         if(is){
             return JsonData.buildSuccess("删除成功");
         }
         return JsonData.buildError("删除失败");
     }
+
+
+
     /**
      * 添加级别
      * @param level
@@ -113,10 +116,40 @@ public class RootController {
      * @param level
      * @return
      */
-    @DeleteMapping("/deleteLevel")
+    @PostMapping("/deleteLevel")
     @Logs(role="root",description = "root删除级别")
     public JsonData deleteLevel(@RequestParam("level") String level){
         boolean is=root.deleteLevel(level);
+        if(is){
+            return JsonData.buildSuccess("删除成功");
+        }
+        return JsonData.buildError("删除失败");
+    }
+
+    /**
+     * 添加奖项
+     * @param prize
+     * @return
+     */
+    @Logs(role="root",description = "root添加奖项")
+    @PostMapping("/addPrize")
+    public JsonData addPrize(@RequestParam("prize") String prize) {
+        boolean is = root.addPrize(prize);
+        if(is){
+            return JsonData.buildSuccess("添加成功");
+        }
+        return JsonData.buildError("添加失败");
+    }
+
+    /**
+     * 删除奖项
+     * @param prize
+     * @return
+     */
+    @PostMapping("/deletePrize")
+    @Logs(role="root",description = "root删除奖项")
+    public JsonData deletePrize(@RequestParam("prize") String prize){
+        boolean is=root.deletePrize(prize);
         if(is){
             return JsonData.buildSuccess("删除成功");
         }
@@ -177,9 +210,10 @@ public class RootController {
      * @return
      */
     @Logs(role="root",description = "root根据工号删除用户")
-    @DeleteMapping("/deleteUser")
+    @PostMapping("/deleteUser")
     public JsonData deleteUser(@RequestBody Map<String, String> map){
         String worknum=map.get("worknum");
+
         if(worknum==null || worknum.equals("")){
             return JsonData.buildError("工号为空");
         }
@@ -235,7 +269,7 @@ public class RootController {
 
             values= new String[]{p.getDptname(), p.getName(),p.getWorknum(),p.getGender(), String.valueOf(p.getBirthday()),
                     String.valueOf(p.getEnterTime()),p.getPhone(),p.getTechTittle(),p.getEduBgd(),p.getDegree(),p.getSchool(),
-                    p.getMajor(),p.getDoubleTeacher()==0?"不是":"是", p.getBackground()==0?"不是":"是", p.getTutor()==0?"不是":"是"};
+                    p.getMajor(),p.getDoubleTeacher()==0?"否":"是", p.getBackground()==0?"否":"是", p.getTutor()==0?"否":"是"};
 
             a.add(values);
         }
@@ -325,7 +359,7 @@ public class RootController {
      * @return
      */
     @Logs(role="root",description = "root根据id 删除业绩分信息(删除时status 置0)")
-    @DeleteMapping("/deletePerformance")
+    @PostMapping("/deletePerformance")
     public JsonData deletePerformance(@RequestBody  PerformanceInfo p){
 
         if(p.getId()<0) return JsonData.buildError("参数出错");
@@ -435,7 +469,7 @@ public class RootController {
      * @return 将status置为0
      */
     @Logs(role="root",description = "root根据id 删除奖金信息")
-    @DeleteMapping("/deleteBonus")
+    @PostMapping("/deleteBonus")
     public JsonData deleteBonus(@RequestBody  BonusInfo b){
         if(b.getId()<0) return JsonData.buildError("参数出错");
         b.setStatus(0);

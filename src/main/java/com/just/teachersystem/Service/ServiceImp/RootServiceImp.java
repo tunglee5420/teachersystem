@@ -15,6 +15,7 @@ import com.just.teachersystem.VO.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @Service
 @Component
+@Transactional(rollbackFor = Exception.class)
 public class RootServiceImp implements RootService {
 
     @Autowired
@@ -47,22 +49,26 @@ public class RootServiceImp implements RootService {
             return false;
         boolean res=common.addType(kind);
         if(res){
-            redisUtils.del("class:class");
+            redisUtils.del("class:"+kind.getClass1());
         }
         return res;
     }
 
     /**
      * 超管删除类别(仅限class3)
-     * @param class3
+     * @param kind
      * @return
      */
-    public boolean deleteType(String class3) {
+    public boolean deleteType(Kind kind) {
+        String class3=kind.getClass3();
         if(class3.equals("")||class3==null)
             return false;
-        boolean res = common.deleteType(class3);
+        boolean res = common.deleteType(kind);
+
+        System.out.println(res);
+        System.out.println("class:"+kind.getClass1());
         if(res)
-            redisUtils.del("class:class");
+            redisUtils.del("class:"+kind.getClass1());
         return res;
     }
 
@@ -83,6 +89,21 @@ public class RootServiceImp implements RootService {
     }
 
     /**
+     * 添加获奖分类
+     * @param prize
+     * @return
+     */
+    public boolean addPrize(String prize) {
+        if(prize==null || prize.equals(""))
+            return false;
+        boolean res=common.addPrize(prize);
+        if(res){
+            redisUtils.del("class:prize");
+        }
+        return res;
+    }
+
+    /**
      * 删除级别
      * @param level
      * @return
@@ -98,12 +119,27 @@ public class RootServiceImp implements RootService {
     }
 
     /**
+     * 删除获奖分类
+     * @param prize
+     * @return
+     */
+    public boolean deletePrize(String prize) {
+        if(prize==null || prize.equals(""))
+            return false;
+        boolean res = common.deletePrize(prize);
+        if(res){
+            redisUtils.del("class:prize");
+        }
+        return res;
+    }
+
+    /**
      *添加新的用户成员
      * @param user
      * @return
      */
     public boolean addUser(UserInfo user){
-        user.setPassword(EncryptUtil.getInstance().MD5(user.getPassword()));
+        user.setPassword(EncryptUtil.getInstance().MD5("123456"));
         if(user==null)
             return false;
         int res = teacher.insertUser(user);
@@ -131,6 +167,7 @@ public class RootServiceImp implements RootService {
         if(worknum.equals("")||worknum==null ){
             return false;
         }
+//        System.out.println(worknum);
         int res=teacher.deleteByWorknum(worknum);
         return res==1?true:false;
     }

@@ -26,13 +26,14 @@ public class ConstructionInfo implements Serializable {
   private String level;
   private String sponsor;
   private String testimonial;
+
   private double expenditure;
   private long point;
   private String computeYear;
   private double bonus;
   private String fileNumber;
   private long isEnd;
-  private String schoolyear;
+  private String schoolYear;
   private String year;
   private long status;
   private String reason;

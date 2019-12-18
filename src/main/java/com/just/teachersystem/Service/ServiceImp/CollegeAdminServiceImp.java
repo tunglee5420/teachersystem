@@ -1,13 +1,12 @@
 package com.just.teachersystem.Service.ServiceImp;
-import	java.util.ArrayList;
 
-import com.just.teachersystem.Entity.User;
 import com.just.teachersystem.Mapper.*;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Utill.EncryptUtil;
 import com.just.teachersystem.VO.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +14,7 @@ import java.util.List;
  * 学院管理员服务实现层
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CollegeAdminServiceImp implements CollegeAdminService {
 
     @Autowired

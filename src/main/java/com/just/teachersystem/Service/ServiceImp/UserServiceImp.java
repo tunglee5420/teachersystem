@@ -10,6 +10,7 @@ import com.just.teachersystem.VO.ConstructionInfo;
 import com.just.teachersystem.VO.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  * 普通用户服务实现层
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImp implements UserService {
 
     @Autowired
@@ -94,7 +96,7 @@ public class UserServiceImp implements UserService {
     public int addConstruction(ConstructionInfo info){
         info.setStatus(0);
         info.setClass1("建设类");
-        info.setSchoolyear(YearUtils.getSchoolYear(info.getStartTime()));
+        info.setSchoolYear(YearUtils.getSchoolYear(info.getStartTime()));
         info.setIsEnd(0);
         info.setYear(YearUtils.getYears(info.getStartTime()));
 

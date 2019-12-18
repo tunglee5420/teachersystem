@@ -2,14 +2,12 @@ package com.just.teachersystem.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import java.io.Serializable;
 
-@Setter
 @Getter
-public class Level implements Serializable {
+@Setter
 
-  private long id;
-  private String level;//级别
-
+public class Prize implements Serializable {
+    int id;
+    String prize;
 }

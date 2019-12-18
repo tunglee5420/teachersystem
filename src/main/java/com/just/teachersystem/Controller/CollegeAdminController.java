@@ -134,7 +134,7 @@ public class CollegeAdminController {
      * @param worknum
      * @param class2
      * @param class3
-     * @param schoolyear
+     * @param schoolYear
      * @param year
      * @param page
      * @param size
@@ -146,7 +146,7 @@ public class CollegeAdminController {
                                         @RequestParam("class2") String class2,
                                         @RequestParam("class3") String class3,
                                         @RequestParam("level") String level,
-                                        @RequestParam("schoolyear") String schoolyear,
+                                        @RequestParam("schoolYear") String schoolYear,
                                         @RequestParam("year") String year,
                                         @RequestParam(value = "page",defaultValue = "1") int page,
                                         @RequestParam(value = "size",defaultValue = "30")int size){
@@ -157,7 +157,7 @@ public class CollegeAdminController {
         ConstructionInfo info=new ConstructionInfo();
         info.setClass2(class2);
         info.setClass3(class3);
-        info.setSchoolyear(schoolyear);
+        info.setSchoolYear(schoolYear);
         info.setYear(year);
         info.setWorknum(worknum);
         info.setDepartment(department);
@@ -175,7 +175,7 @@ public class CollegeAdminController {
      * @param worknum
      * @param class2
      * @param class3
-     * @param schoolyear
+     * @param schoolYear
      * @param year
      * @param page
      * @param size
@@ -186,7 +186,7 @@ public class CollegeAdminController {
                                         @RequestParam("worknum") String worknum ,
                                         @RequestParam("class2") String class2,
                                         @RequestParam("class3") String class3,
-                                        @RequestParam("schoolyear") String schoolyear,
+                                        @RequestParam("schoolYear") String schoolYear,
                                         @RequestParam("year") String year,
                                         @RequestParam(value = "page",defaultValue = "1") int page,
                                         @RequestParam(value = "size",defaultValue = "30")int size) {
@@ -194,7 +194,7 @@ public class CollegeAdminController {
         Claims claims =JwtUtils.checkJWT(token);
         String department=( String) claims.get("department");
         AchievementInfo achievementInfo=new AchievementInfo();
-        achievementInfo.setSchoolYear(schoolyear);
+        achievementInfo.setSchoolYear(schoolYear);
         achievementInfo.setClass2(class2);
         achievementInfo.setClass3(class3);
         achievementInfo.setWorknum(worknum);
@@ -214,7 +214,7 @@ public class CollegeAdminController {
      * @param level
      * @param class3
      * @param prize
-     * @param schoolyear
+     * @param schoolYear
      * @param year
      * @param page
      * @param size
@@ -226,7 +226,7 @@ public class CollegeAdminController {
                               @RequestParam("level") String level,
                               @RequestParam("class3") String class3,
                               @RequestParam("prize") String prize,
-                              @RequestParam("schoolyear") String schoolyear,
+                              @RequestParam("schoolYear") String schoolYear,
                               @RequestParam("year") String year,
                               @RequestParam(value = "page",defaultValue = "1") int page,
                               @RequestParam(value = "size",defaultValue = "30")int size
@@ -238,7 +238,7 @@ public class CollegeAdminController {
         aw.setClass3(class3);
         aw.setWorknum(worknum);
         aw.setLevel(level);
-        aw.setSchoolYear(schoolyear);
+        aw.setSchoolYear(schoolYear);
         aw.setYear(year);
         aw.setPrize(prize);
         aw.setDepartment(department);

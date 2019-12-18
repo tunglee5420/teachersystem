@@ -98,6 +98,7 @@ public class UserController {
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
         UserInfo userInfo = userService.getUserInfo(worknum);
+        System.out.println(userInfo);
         if(userInfo==null){
             return JsonData.buildError("个人信息获取失败");
         }
@@ -117,12 +118,9 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        System.out.println(info);
-        if(!info.getWorknum().equals(worknum)){
-            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
-        }
         info.setWorknum(worknum);
         info.setClass1("建设类");
+        System.out.println(info);
         int res=userService.addConstruction(info);
         if(res>0){
             return JsonData.buildSuccess("提交成功");
@@ -145,7 +143,9 @@ public class UserController {
         if(!info.getWorknum().equals(worknum)){
             return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
         }
-
+        if(info.getStatus()>1){
+            return JsonData.buildError("信息已经核审通过，不可修改");
+        }
         info.setWorknum(worknum);
         info.setClass1("建设类");
         boolean res = commonService.updateConstructionServ(info);
@@ -159,12 +159,13 @@ public class UserController {
     /**
      * 获取用户建设类信息
      * @param header
+     * worknum,status,schoolYear,year
      * @return
      */
     @Logs(role = "user",description = "查看个人建设类信息")
     @PostMapping("/getMyConstructions")
     public JsonData  getMyConstructions(@RequestHeader Map<String ,String> header,
-                                           @RequestBody Map<String, String> map,
+                                           @RequestBody ConstructionInfo construction,
                                             @RequestParam(value = "page") int page,
                                             @RequestParam(value = "size")int size) {
 
@@ -172,11 +173,7 @@ public class UserController {
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
 
-        ConstructionInfo construction=new ConstructionInfo();
-        construction.setStatus(Integer.parseInt(map.get("status")));
         construction.setWorknum(worknum);
-        construction.setSchoolyear(map.get("schoolyear"));
-        construction.setYear(map.get("year"));
         List list=userService.getMyConstructions(construction);
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
@@ -213,22 +210,21 @@ public class UserController {
     /**
      * 获取用户成果类信息
      * @param header
+     * worknum,status,schoolYear,year
      * @return
      */
     @Logs(role = "user",description = "用户查看成果类信息")
     @PostMapping("/getMyAchievements")
     public JsonData  getMyAchievements(@RequestHeader Map<String ,String> header,
-                                       @RequestBody Map<String, String> map,
+                                       @RequestBody AchievementInfo achievement,
                                        @RequestParam(value = "page") int page,
                                        @RequestParam(value = "size")int size) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        AchievementInfo achievement= new AchievementInfo();
+
         achievement.setWorknum(worknum);
-        achievement.setStatus(Integer.parseInt(map.get("status")));
-        achievement.setSchoolYear(map.get("schoolyear"));
-        achievement.setYear(map.get("year"));
+
         List list=userService.getMyAchievements(achievement);
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
@@ -253,6 +249,9 @@ public class UserController {
         String worknum=(String) claims.get("worknum");
         if(!info.getWorknum().equals(worknum)){
             return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
+        }
+        if(info.getStatus()>1){
+            return JsonData.buildError("信息已经核审通过，不可修改");
         }
         info.setWorknum(worknum);
         boolean res = commonService.updateAchievementServ(info);
@@ -290,22 +289,20 @@ public class UserController {
     /**
      * 获取用户提交的获奖类信息
      * @param header
+     * worknum,status,schoolYear,year
      * @return
      */
     @Logs(role = "user",description = "用户添加获奖类类信息")
     @PostMapping("/getMyAwards")
     public JsonData  getMyAwards(@RequestHeader Map<String ,String> header,
-                                    @RequestBody Map<String, String> map,
+                                    @RequestBody   AwardInfo award,
                                     @RequestParam(value = "page",defaultValue = "1") int page,
                                     @RequestParam(value = "size",defaultValue = "30")int size) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
 
-        AwardInfo award=new AwardInfo();
-        award.setSchoolYear(map.get("schoolyear"));
-        award.setYear(map.get("year"));
-        award.setStatus(Integer.parseInt(map.get("status")));
+        award.setWorknum(worknum);
         List list=userService.getMyAwards(award);
 
         if(list==null){
@@ -333,6 +330,9 @@ public class UserController {
         if(!info.getWorknum().equals(worknum)){
             return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
         }
+        if(info.getStatus()>1){
+            return JsonData.buildError("信息已经核审通过，不可修改");
+        }
         info.setWorknum(worknum);
         boolean res = commonService.updateAwardServ(info);
         if(res){
@@ -356,7 +356,5 @@ public class UserController {
         return JsonData.buildSuccess(map);
 
     }
-
-
 
 }

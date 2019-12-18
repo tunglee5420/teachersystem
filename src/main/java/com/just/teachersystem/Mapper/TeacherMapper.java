@@ -1,6 +1,7 @@
 package com.just.teachersystem.Mapper;
 
 import com.just.teachersystem.VO.UserInfo;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
@@ -58,5 +59,6 @@ public interface TeacherMapper {
      * @param worknum
      * @return
      */
+    @Delete("delete from user where worknum=#{worknum}")
     int deleteByWorknum(String worknum);
 }

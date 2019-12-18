@@ -4,11 +4,13 @@ import	java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 import java.sql.Date;
 
 @Setter
 @Getter
+
 public class Achievement implements Serializable {
 
   private long id;

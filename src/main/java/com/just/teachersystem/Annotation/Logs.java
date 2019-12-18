@@ -10,5 +10,4 @@ import java.lang.annotation.Target;
 public @interface Logs {
     String role() default "";//角色
     String description() default"";//描述
-
 }

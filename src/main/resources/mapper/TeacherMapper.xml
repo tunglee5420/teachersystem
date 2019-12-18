@@ -3,18 +3,18 @@
 <mapper namespace="com.just.teachersystem.Mapper.TeacherMapper">
 
     <select id="getUserInfoList" parameterType="com.just.teachersystem.VO.UserInfo" resultType="com.just.teachersystem.VO.UserInfo">
-        select
-        dptname,name,worknum,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission
+        select  dptname,name,worknum,gender,birthday,enterTime,phone,techTittle,eduBgd,degree,school,major,doubleTeacher,background,tutor,permission
         from userInfo
         <where>
+
             <if test="name!=null and name!=''">
-                name = #{name} and
+                and name = #{name}
             </if>
             <if test="worknum!=null and worknum!=''">
-                worknum = #{worknum} and
+                and worknum = #{worknum}
             </if>
             <if test="dptname!=null and dptname!=''">
-                dptname = #{dptname}
+               and dptname = #{dptname}
             </if>
         </where>
     </select>
@@ -30,7 +30,7 @@
         (select id from department where dptname=#{dptname}),
             #{name},
             #{worknum},
-            (123456),
+            #{password},
             #{gender},
             #{birthday},
             #{enterTime},

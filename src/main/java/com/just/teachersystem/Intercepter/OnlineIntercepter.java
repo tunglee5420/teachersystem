@@ -36,10 +36,7 @@ public class OnlineIntercepter implements HandlerInterceptor {
     private static Logger logger = LogManager.getLogger(OnlineIntercepter.class);
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-
         String token= request.getHeader("token");
-
 //        System.out.println(token);
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -56,10 +53,11 @@ public class OnlineIntercepter implements HandlerInterceptor {
                if(map.get("token").equals(token)){
                    return true;
                }
+               printJson(response,-1,"第三方登陆,token失效");
                return false;
 
             }
-            printJson(response,-1,"第三方登陆,token失效");
+            printJson(response,-1,"token解析验证失败");
             return false;
         }
 

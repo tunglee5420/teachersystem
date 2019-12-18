@@ -37,8 +37,8 @@ public interface CommonMapper {
     @Insert("insert into kind (class1,class2,class3,computeDptId) values(#{class1},#{class2},#{class3},#{computeDptId}) ")
     boolean addType(Kind kind);
 
-    @Delete("delete from kind where class3=#{class3}")
-    boolean deleteType(String class3);
+    @Delete("delete from kind where class2=#{class2} and class3=#{class3}")
+    boolean deleteType(Kind kind);
 
     //添加级别
     @Insert("insert into level (level) value(#{level})")
@@ -47,4 +47,17 @@ public interface CommonMapper {
     //删除级别
     @Delete("delete from level where level=#{level}")
     boolean deleteLevel(String level);
+
+
+    //查询奖项
+    @Select("select prize from prize")
+    Set<String> getPrizeSet();
+    //添加奖项
+    @Insert("insert into prize (prize) value(#{prize})")
+    boolean addPrize(String prize);
+
+    //删除奖项
+    @Delete("delete from prize where prize=#{prize}")
+    boolean deletePrize(String prize);
+
 }

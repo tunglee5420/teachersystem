@@ -6,6 +6,7 @@ import com.github.andyczy.java.excel.ExcelUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.just.teachersystem.Annotation.Logs;
+import com.just.teachersystem.Entity.Award;
 import com.just.teachersystem.Exception.MyException;
 import com.just.teachersystem.Service.CommonService;
 import com.just.teachersystem.Service.OfficeAdminService;
@@ -51,7 +52,7 @@ public class OfficeAdminController {
     public JsonData getUserConstruction(@RequestHeader Map<String ,String> header,
                                         @RequestBody ConstructionInfo construction,
                                         @RequestParam(value = "page",defaultValue = "1") int page,
-                                        @RequestParam(value = "size",defaultValue = "30")int size
+                                        @RequestParam(value = "size",defaultValue = "20")int size
                                         ){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
@@ -118,7 +119,7 @@ public class OfficeAdminController {
             values= new String[]{String.valueOf(p.getCid()), p.getProjectNum(),p.getDepartment(),p.getProject(),p.getName(),p.getWorknum(),
                     p.getTeammate(),p.getStartTime(),p.getBeginToEndTime(),p.getSponsor(),p.getClass2(),p.getClass3(),
                     p.getLevel(),String.valueOf(p.getExpenditure()),String.valueOf(p.getPoint()),p.getComputeYear(),String.valueOf(p.getBonus()),p.getFileNumber(),
-                    p.getIsEnd()==0?"否":"是",p.getSchoolyear(),p.getYear()};
+                    p.getIsEnd()==0?"否":"是",p.getSchoolYear(),p.getYear()};
 
             a.add(values);
         }
@@ -137,7 +138,7 @@ public class OfficeAdminController {
      * 导出建设类证明材料的key
      * @param header
      * year 年度
-     * schoolyear 学年
+     * schoolYear 学年
      */
     @Logs(role="officeAdmin",description = "导出建设类证明材料的key")
     @PostMapping("/getConstructionFileKey")
@@ -156,11 +157,16 @@ public class OfficeAdminController {
         if(list==null){
             return JsonData.buildError("数据错误");
         }
-        Map<String,Object> map = new HashMap<> ();
+        Map<String,String> map ;
+        List<Map> fileList=new ArrayList<>();
         for (ConstructionInfo a:list) {
-            map.put(a.getName()+a.getProject(),a.getTestimonial());
+            map = new HashMap<> ();
+            map.put("name" ,a.getName()+"-"+a.getProject());
+            map.put("files",a.getTestimonial());
+            fileList.add(map);
+
         }
-        return JsonData.buildSuccess(map);
+        return JsonData.buildSuccess(fileList);
     }
 
 
@@ -257,9 +263,7 @@ public class OfficeAdminController {
             con.setClass3(map.get(String.valueOf(k++)));//类别
             con.setLevel(map.get(String.valueOf(k++)));//级别
             con.setTestimonial(map.get(String.valueOf(k++)));//佐证材料
-
             con.setExpenditure(Double.parseDouble(map.get(String.valueOf(k++)).isEmpty() ?"0":rowList.get(i).get(String.valueOf(k-1))));//建设经费（元）
-
             con.setPoint(Long.parseLong(map.get(String.valueOf(k++)).isEmpty()  ?"0":rowList.get(i).get(String.valueOf(k-1))));//业绩分
 
             con.setComputeYear(map.get(String.valueOf(k++)));//业绩分计算年度
@@ -270,7 +274,7 @@ public class OfficeAdminController {
             con.setStatus(0);
             con.setIsEnd(0);
             con.setYear(YearUtils.getYears(con.getStartTime()));
-            con.setSchoolyear(YearUtils.getSchoolYear(con.getStartTime()));
+            con.setSchoolYear(YearUtils.getSchoolYear(con.getStartTime()));
             constructionInfoList.add(con);
         }
         boolean res=officeAdminService.insertToConstruction(constructionInfoList);
@@ -281,14 +285,14 @@ public class OfficeAdminController {
     }
 
     /**
-     * 补充修改建设信息并核审
+     *核审 ,补充,修改建设信息
      * @param header
      * @param construction
      * @return
      */
     @Logs(role="officeAdmin",description = "补充修改建设信息并核审")
-    @PostMapping("/ConstructionSupplement")
-    public JsonData ConstructionSupplement(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo construction){
+    @PostMapping("/constructionSupplement")
+    public JsonData constructionSupplement(@RequestHeader Map<String ,String> header,@RequestBody ConstructionInfo construction){
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=(String) claims.get("department");
@@ -343,7 +347,7 @@ public class OfficeAdminController {
      * 导出成果类excel
      * @param header
      *  year 学年
-     *  schoolyear 年度
+     *  schoolYear 年度
      *  response
      */
     @Logs(role="officeAdmin",description = "导出成果类excel")
@@ -422,11 +426,19 @@ public class OfficeAdminController {
         if(list==null){
             return JsonData.buildError("数据错误");
         }
-        Map<String,Object> map = new HashMap<> ();
+
+
+
+        Map<String,String> map ;
+        List<Map> fileList=new ArrayList<>();
+
         for (AchievementInfo a:list) {
-            map.put(a.getName()+a.getProduction(),a.getCertificate());
+            map = new HashMap<> ();
+            map.put("name" ,a.getName()+"-"+a.getProduction());
+            map.put("files",a.getCertificate());
+            fileList.add(map);
         }
-        return JsonData.buildSuccess(map);
+        return JsonData.buildSuccess(fileList);
     }
 
 
@@ -535,7 +547,7 @@ public class OfficeAdminController {
 
 
     /**
-     * 补充修改成果信息并核审
+     * 核审,补充,修改成果信息
      * @param header
      * @param info
      * @return
@@ -700,7 +712,7 @@ public class OfficeAdminController {
 
 
     /**
-     * 补充修改获奖类信息并核审
+     *核审,补充,修改获奖类信息
      * @param header
      * @param awardInfo
      * @return
@@ -803,11 +815,16 @@ public class OfficeAdminController {
         if(list==null){
             return JsonData.buildError("数据错误");
         }
-        Map<String,Object> map = new HashMap<> ();
+
+        Map<String,String> map ;
+        List<Map> fileList=new ArrayList<>();
         for (AwardInfo a:list) {
-            map.put(a.getName()+a.getContent(),a.getCertificate());
+            map = new HashMap<> ();
+            map.put("name" ,a.getName()+"-"+a.getContent());
+            map.put("files",a.getCertificate());
+            fileList.add(map);
         }
-        return JsonData.buildSuccess(map);
+        return JsonData.buildSuccess(fileList);
     }
 
 
@@ -837,7 +854,7 @@ public class OfficeAdminController {
         List<LinkedHashMap<String, String>> rowList =sheetList.get(index-1);
         LinkedHashMap<String,String>rows=rowList.get(0);
 //        System.out.println(rows);
-        if(!(rows.get("0").equals("院部")&&rows.get("1").equals("业绩分计算科室")&&rows.get("2").equals("分类—类别")
+        if(!(rows.get("0").equals("院部")&&rows.get("1").equals("业绩分计算科室")&&rows.get("2").equals("分类-类别")
                 &&rows.get("3").equals("立项年度")&&rows.get("4").equals("项目名称")&&rows.get("5").equals("负责人")
                 &&rows.get("6").equals("业绩分（分）"))){
 
@@ -855,7 +872,7 @@ public class OfficeAdminController {
             p.setYear(map.get(String.valueOf(k++)));
             p.setProject(map.get(String.valueOf(k++)));
             p.setMaster(map.get(String.valueOf(k++)));
-            p.setPoints(Integer.parseInt(map.get(String.valueOf(k++).isEmpty()?"0":map.get(String.valueOf(k-1)))));
+            p.setPoints(Integer.parseInt(map.get(String.valueOf(k++)).isEmpty()?"0":map.get(String.valueOf(k-1))));
             performanceInfoList.add(p);
         }
         boolean res=officeAdminService.insertToPerformanceList(performanceInfoList);
@@ -936,17 +953,21 @@ public class OfficeAdminController {
         List<List<LinkedHashMap<String, String>>> sheetList= ExcelUtils.importForExcelData(wb,sheets,hashMap,null);
         List<LinkedHashMap<String, String>> rowList =sheetList.get(index-1);
         LinkedHashMap<String, String>rows=rowList.get(0);
-        System.out.println(rows);
-        if(!(rows.get("0").trim().equals("院部")&&rows.get("1").trim().equals("奖金计算科室（内置）")&&rows.get("2").trim().equals("分类—类别")
+//        System.out.println(rows);
+
+        if(!(rows.get("0").trim().equals("院部")&&rows.get("1").trim().equals("奖金计算科室（内置）")&&rows.get("2").trim().equals("分类-类别")
                 &&rows.get("3").trim().equals("立项年度")&&rows.get("4").trim().equals("项目名称")&&rows.get("5").trim().equals("负责人")
                 &&rows.get("6").trim().equals("奖金（元）"))){
             return JsonData.buildError("请严格按照表表模板导入");
         }
         List<BonusInfo> bonusInfoList=new ArrayList<>();
         BonusInfo p=null;
+        System.out.println(rowList.size());
         for (int i=1;i<rowList.size(); i++) {
             int k=0;
             p=new BonusInfo();
+
+
             Map<String,String> map= rowList.get(i);//获取第几行表格
             p.setDepartment(map.get(String.valueOf(k++)));
             p.setComputeoffice(map.get(String.valueOf(k++)));
@@ -954,7 +975,9 @@ public class OfficeAdminController {
             p.setYear(map.get(String.valueOf(k++)));
             p.setProject(map.get(String.valueOf(k++)));
             p.setMaster(map.get(String.valueOf(k++)));
-            p.setBonus(Double.parseDouble(map.get(String.valueOf(k++).isEmpty()?"0":map.get(String.valueOf(k-1)))));
+
+            p.setBonus(Double.parseDouble(map.get(String.valueOf(k++)).isEmpty()?"0":map.get(String.valueOf(k-1))));
+            System.out.println(p.getBonus());
             bonusInfoList.add(p);
         }
         boolean res=officeAdminService.insertToBonusList(bonusInfoList);

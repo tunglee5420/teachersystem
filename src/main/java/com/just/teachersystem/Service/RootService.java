@@ -29,11 +29,18 @@ public interface RootService {
     boolean addLevel(String level);
 
     /**
-     * 超管添加类别(仅限class3)
-     * @param class3
+     * 添加获奖分类
+     * @param prize
      * @return
      */
-    boolean deleteType(String class3);
+    boolean addPrize(String prize);
+
+    /**
+     * 超管添加类别(仅限class3)
+     * @param kind
+     * @return
+     */
+    boolean deleteType(Kind kind);
 
     /**
      * 删除级别
@@ -41,6 +48,13 @@ public interface RootService {
      * @return
      */
     boolean deleteLevel(String level);
+
+    /**
+     * 删除获奖分类
+     * @param prize
+     * @return
+     */
+    boolean deletePrize(String prize);
 
     /**
      *添加新的用户成员

@@ -16,6 +16,7 @@ import java.util.List;
  * 科室管理员服务实现层
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class OfficeAdminServiceImp implements OfficeAdminService {
 
     @Autowired

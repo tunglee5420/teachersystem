@@ -1,6 +1,7 @@
 package com.just.teachersystem.Service.ServiceImp;
 
 
+
 import com.just.teachersystem.Service.FileService;
 import com.just.teachersystem.Utill.*;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.Year;
@@ -19,7 +21,7 @@ import java.util.Map;
 
 @Service
 @Component
-
+@Transactional(rollbackFor = Exception.class)
 @PropertySource("classpath:config.properties")
 public class FileServiceImp implements FileService {
     @Autowired
@@ -49,6 +51,12 @@ public class FileServiceImp implements FileService {
         map.put("password",this.password);
         try {
             HttpClientResult h1=HttpClientUtils.doPost(this.loginUrl,map);
+//            System.out.println(h1);
+//            String ss=JsonUtil.entityToMap(h1.getContent()).get("entrySet").toString();
+//            System.out.println(ss);
+//            String data= (String) JsonUtil.jsonToMap(ss.substring(ss.indexOf("=")+1,ss.lastIndexOf("]"))).get("data");
+//
+//            System.out.println(data);
             if(h1.getContent()!=null){
                 redisUtils.set("file:login",h1.getContent(),60*60*24*30);
             }
@@ -70,7 +78,7 @@ public class FileServiceImp implements FileService {
      */
     public HttpClientResult getTgetToken(String cookie,FileInfo fileInfo,String worknum){
         Map<String ,String >header=new HashMap<> ();
-        Map<String,String> body =new HashMap<>();
+        Map<String ,String >body =new HashMap<>();
 
         header.put("Cookie", cookie);
 //        System.out.println(cookie);
@@ -82,6 +90,7 @@ public class FileServiceImp implements FileService {
 //        System.out.println(body);
         try {
             HttpClientResult h1 = HttpClientUtils.doPost(getTokenUrl,header,body);
+
 
             return h1;
         } catch (Exception e) {
@@ -113,6 +122,7 @@ public class FileServiceImp implements FileService {
         body.put("expireTime", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()+1000*120)));
         try {
             HttpClientResult h1 = HttpClientUtils.doPost(downloadUrl,header,body);
+
             return h1;
         } catch (Exception e) {
             e.printStackTrace();
