@@ -5,9 +5,12 @@ import java.util.*;
 
 import com.github.andyczy.java.excel.ExcelUtils;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.just.teachersystem.Service.CollegeAdminService;
 import com.just.teachersystem.Service.OfficeAdminService;
 import com.just.teachersystem.Service.RootService;
+import com.just.teachersystem.Utill.JsonData;
 import com.just.teachersystem.Utill.MyExcelUtil;
 import com.just.teachersystem.VO.*;
 
@@ -25,64 +28,87 @@ public class TestController {
     OfficeAdminService officeAdminService;
     @Autowired
     RootService root;
-    @RequestMapping("/b")
-    public void get(HttpServletResponse response){
-        String year ="2018";
-        String department ="教务处";
+
+    @PostMapping("/getPer")
+    public JsonData getPerformanceInfo(
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "size" )int size ){
+        System.out.println();
+        System.out.println(page+"  " +size);
+        System.out.println();
+        PageHelper.startPage(page,size);
         PerformanceInfo performanceInfo=new PerformanceInfo();
-        performanceInfo.setYear(year);
-        performanceInfo.setDepartment(department);
-        performanceInfo.setStatus(1);
-        List<PerformanceInfo>list=collegeAdminService.confirmPerformance(performanceInfo);
-
-
-        List<List<String[]>> data=new ArrayList<>();
-
-        ExcelUtils excelUtils=ExcelUtils.initialization();
-        String[]labels ={year+"校区、苏理工（"+department+"）教学建设各项业绩分补贴复核表"};
-        excelUtils.setLabelName(labels);
-        String []params=new String [] {"部门	","所属科室","类别","立项年度","名称","负责人","业绩分","签字确认"};
-        String []confirmed = new String[] {"部门领导："," "," ","经办人： "," "," 日期："," ","  "};
-        excelUtils.setLabelName(labels);
-
-
-        List<String[]> a=new ArrayList<> ();
-        a.add(params);
-
-        data.add(a);
-
-        String []values=null;
-        int sum=0;
-        for (PerformanceInfo p:list) {
-            sum+=p.getPoints();
-            values= new String[]{p.getDepartment(), p.getComputeoffice(),p.getType(),p.getYear(),p.getProject(),p.getMaster(),String.valueOf(p.getPoints())," "};
-
-            a.add(values);
+        if(performanceInfo==null){
+            return JsonData.buildError("参数错误");
         }
-        String[]all=new String [] {department+"汇总","","","","","",String.valueOf(sum),""};
+        performanceInfo.setStatus(1);
+        List list=root.getPerfromanceList(performanceInfo);
 
-        a.add(all);
-        a.add(confirmed);
 
-        HashMap<Integer,Object>regionMap=new HashMap<> () ;
-        ArrayList<Integer[]>arrayList = new ArrayList <> ();
-        arrayList.add(new Integer[]{list.size()+2,list.size()+2,0,2});
-        arrayList.add(new Integer[]{list.size()+3,list.size()+3,0,2});
-        arrayList.add(new Integer[]{list.size()+3,list.size()+3,3,4});
-        arrayList.add(new Integer[]{list.size()+3,list.size()+3,5,7});
-        regionMap.put(1,arrayList);
-
-        excelUtils.setRegionMap(regionMap);
-        excelUtils.setDataLists(data);
-
-        excelUtils.setSheetName(labels);
-        excelUtils.setFileName(year+"校区、苏理工（"+department+"）教学建设各项业绩分补贴复核表");
-
-        excelUtils.setResponse( response);
-
-        excelUtils.exportForExcelsOptimize();
+        if(list==null) return JsonData.buildError("服务器错误");
+        PageInfo pageInfo=new PageInfo(list);
+        System.out.println();
+        return JsonData.buildSuccess(pageInfo);
 
     }
+//    @RequestMapping("/b")
+//    public void get(HttpServletResponse response){
+//        String year ="2018";
+//        String department ="教务处";
+//        PerformanceInfo performanceInfo=new PerformanceInfo();
+//        performanceInfo.setYear(year);
+//        performanceInfo.setDepartment(department);
+//        performanceInfo.setStatus(1);
+//        List<PerformanceInfo>list=collegeAdminService.confirmPerformance(performanceInfo);
+//
+//
+//        List<List<String[]>> data=new ArrayList<>();
+//
+//        ExcelUtils excelUtils=ExcelUtils.initialization();
+//        String[]labels ={year+"校区、苏理工（"+department+"）教学建设各项业绩分补贴复核表"};
+//        excelUtils.setLabelName(labels);
+//        String []params=new String [] {"部门	","所属科室","类别","立项年度","名称","负责人","业绩分","签字确认"};
+//        String []confirmed = new String[] {"部门领导："," "," ","经办人： "," "," 日期："," ","  "};
+//        excelUtils.setLabelName(labels);
+//
+//
+//        List<String[]> a=new ArrayList<> ();
+//        a.add(params);
+//
+//        data.add(a);
+//
+//        String []values=null;
+//        int sum=0;
+//        for (PerformanceInfo p:list) {
+//            sum+=p.getPoints();
+//            values= new String[]{p.getDepartment(), p.getComputeoffice(),p.getType(),p.getYear(),p.getProject(),p.getMaster(),String.valueOf(p.getPoints())," "};
+//
+//            a.add(values);
+//        }
+//        String[]all=new String [] {department+"汇总","","","","","",String.valueOf(sum),""};
+//
+//        a.add(all);
+//        a.add(confirmed);
+//
+//        HashMap<Integer,Object>regionMap=new HashMap<> () ;
+//        ArrayList<Integer[]>arrayList = new ArrayList <> ();
+//        arrayList.add(new Integer[]{list.size()+2,list.size()+2,0,2});
+//        arrayList.add(new Integer[]{list.size()+3,list.size()+3,0,2});
+//        arrayList.add(new Integer[]{list.size()+3,list.size()+3,3,4});
+//        arrayList.add(new Integer[]{list.size()+3,list.size()+3,5,7});
+//        regionMap.put(1,arrayList);
+//
+//        excelUtils.setRegionMap(regionMap);
+//        excelUtils.setDataLists(data);
+//
+//        excelUtils.setSheetName(labels);
+//        excelUtils.setFileName(year+"校区、苏理工（"+department+"）教学建设各项业绩分补贴复核表");
+//
+//        excelUtils.setResponse( response);
+//
+//        excelUtils.exportForExcelsOptimize();
+//
+//    }
 
 
     @RequestMapping("/c")

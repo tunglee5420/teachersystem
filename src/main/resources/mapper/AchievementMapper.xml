@@ -26,7 +26,8 @@
 
     <select id="selectAchievementByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.AchievementInfo">
         select aid, department,worknum, name, teammate,production, class1,class2,class3,
-        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason ,lastTimefrom achievementInfo where worknum=#{worknum}
+        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason ,lastTime from achievementInfo where worknum=#{worknum}
+        order by lastTime desc
     </select>
 
     <select id="selectAchievements" parameterType="com.just.teachersystem.VO.AchievementInfo" resultType="com.just.teachersystem.VO.AchievementInfo">
@@ -41,6 +42,7 @@
             <if test="year!=null and year!=''"> and year=#{year}  </if>
             <if test="worknum!=null and worknum!=''"> and  worknum=#{worknum}</if>
         </where>
+        order by lastTime desc
     </select>
 
 
@@ -84,7 +86,7 @@
             <if test="certificate!=null">certificate=#{certificate},</if>
             <if test="schoolYear!=null">schoolYear=#{schoolYear},</if>
             <if test="year!=null">year=#{year},</if>
-            <if test="status!=null and status!=''">status=#{status},</if>
+            <if test="status!=null">status=#{status},</if>
             <if test="reason!=null">reason=#{reason},</if>
             lastTime=NOW()
         </trim>

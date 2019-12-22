@@ -35,25 +35,27 @@
 
 
     <select id="selectConstructionByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.ConstructionInfo">
-        select cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3,
-        level, testimonial,schoolYear,year,status,lastTime from constructionInfo where worknum=#{worknum}
+        select  cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3, level, testimonial,expenditure,point,
+        computeYear,fileNumber,isEnd,schoolYear,year,status,lastTime,reason
+        from constructionInfo where worknum=#{worknum} order by lastTime desc
     </select>
 
     <select id="selectConstructions" resultType="com.just.teachersystem.VO.ConstructionInfo" parameterType="com.just.teachersystem.VO.ConstructionInfo">
-        select cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3, level, testimonial,schoolYear,year,status,lastTime
+        select cid, department,worknum,projectNum, project, name, teammate,startTime , beginToEndTime,sponsor, class1,class2,class3, level, testimonial,expenditure,point,
+        computeYear,fileNumber,isEnd,schoolYear,year,status,lastTime,reason
         from constructionInfo
         <where>
-
             <if test="year!=null and year!=''"> year=#{year}  </if>
             <if test="department!=null and department!=''"> and  department=#{department} </if>
             <if test="class2!=null and class2!=''"> and class2=#{class2}  </if>
             <if test="class3!=null and class3!=''"> and class3=#{class3}  </if>
             <if test="level!=null and level!=''"> and level=#{level}  </if>
             <if test="schoolYear!=null and schoolYear!=''"> and schoolYear=#{schoolYear}  </if>
-            <if test="isEnd!=null and isEnd!='' "> and isEnd=#{isEnd}</if>
-            <if test="status!=null and status=''">and status=#{status}</if>
+            <if test="isEnd!=null "> and isEnd=#{isEnd}</if>
+            <if test="status!=null ">and status=#{status}</if>
             <if test="worknum!=null and worknum!=''"> and  worknum=#{worknum}</if>
         </where>
+        order by lastTime desc
     </select>
 
 
@@ -111,10 +113,10 @@
             <if test="computeYear!=null">computeYear=#{computeYear},</if>
             <if test="bonus!=null and bonus !=''">bonus=#{bonus},</if>
             <if test="fileNumber!=null">fileNumber=#{fileNumber},</if>
-            <if test="isEnd!=null and isEnd!=''">isEnd=#{isEnd},</if>
+            <if test="isEnd!=null">isEnd=#{isEnd},</if>
             <if test="schoolYear!=null">schoolYear=#{schoolYear},</if>
             <if test="year!=null">year=#{year},</if>
-            <if test="status!=null and status!=''">status=#{status},</if>
+            <if test="status!=null ">status=#{status},</if>
             <if test="reason!=null">reason=#{reason},</if>
             lastTime=NOW()
         </trim>

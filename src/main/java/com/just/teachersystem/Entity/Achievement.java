@@ -21,7 +21,7 @@ public class Achievement implements Serializable {
   private long kindId;//管理类别id
   private long levelId;//级别id
   private String unit;//出版/授权单位
-  private Date publishTime;//发表时间
+  private String publishTime;//发表时间
   private long patent;//是否被转让或采用（仅限于专利）是否被转让或采用（仅限于专利）
   private String certificate;//证书
   private String schoolYear;//学年

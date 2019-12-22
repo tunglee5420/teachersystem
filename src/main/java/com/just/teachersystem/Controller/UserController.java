@@ -76,7 +76,6 @@ public class UserController {
         UserInfo userInfo=new UserInfo();
         userInfo.setWorknum(worknum);
         String password=map.get("newPassword");
-        System.out.println(password);
         userInfo.setPassword( password);
         boolean res=rootService.updateUserInfo(userInfo);
         if(res){
@@ -120,7 +119,7 @@ public class UserController {
         String worknum=(String) claims.get("worknum");
         info.setWorknum(worknum);
         info.setClass1("建设类");
-        System.out.println(info);
+
         int res=userService.addConstruction(info);
         if(res>0){
             return JsonData.buildSuccess("提交成功");
@@ -148,6 +147,8 @@ public class UserController {
         }
         info.setWorknum(worknum);
         info.setClass1("建设类");
+        info.setStatus(0);
+
         boolean res = commonService.updateConstructionServ(info);
         if(res){
             return  JsonData.buildSuccess("修改成功");
@@ -172,13 +173,15 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-
+        PageHelper.startPage(page,size);
         construction.setWorknum(worknum);
+
         List list=userService.getMyConstructions(construction);
+
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
         }
-        PageHelper.startPage(page,size);
+
         PageInfo<AchievementInfo> pageInfo=new PageInfo<> (list);
         return JsonData.buildSuccess(pageInfo);
 
@@ -196,15 +199,15 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        if(!info.getWorknum().equals(worknum)){
-            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
-        }
+        System.out.println("===========================================");
+        System.out.println(info);
+        System.out.println("===========================================");
         info.setWorknum(worknum);
         boolean res=userService.addAchievement(info);
         if (res){
             return JsonData.buildSuccess("添加成功");
         }
-        return JsonData.   buildError("添加失败");
+        return JsonData.buildError("添加失败");
     }
 
     /**
@@ -222,14 +225,14 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-
+        PageHelper.startPage(page,size);
         achievement.setWorknum(worknum);
 
         List list=userService.getMyAchievements(achievement);
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
         }
-        PageHelper.startPage(page,size);
+
         PageInfo<AchievementInfo> pageInfo=new PageInfo<> (list);
         return JsonData.buildSuccess(pageInfo);
     }
@@ -274,10 +277,6 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-
-        if(!info.getWorknum().equals(worknum)){
-            return JsonData.buildError("输入工号与当前工号不符合，请录入本人账号信息");
-        }
         info.setWorknum(worknum);
         boolean res = userService.addAward(info);
         if (res){
@@ -301,14 +300,14 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-
+        PageHelper.startPage(page,size);
         award.setWorknum(worknum);
         List list=userService.getMyAwards(award);
 
         if(list==null){
             return JsonData.buildSuccess("暂无数据");
         }
-        PageHelper.startPage(page,size);
+
         PageInfo<AwardInfo> pageInfo=new PageInfo<> (list);
 
         return JsonData.buildSuccess(pageInfo);

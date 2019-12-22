@@ -26,7 +26,7 @@ public class AwardInfo implements Serializable {
   private double bonus;
   private String awardYear;
   private String certificate;
-  private Date awardTime;
+  private String awardTime;
   private String schoolYear;
   private String year;
   private long status;

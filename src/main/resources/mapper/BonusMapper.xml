@@ -30,13 +30,14 @@
                 and bonus=#{bonus}
             </if>
         </where>
+        order by lastTime desc
     </select>
 
 
     <update id="updateBonus" parameterType="com.just.teachersystem.VO.BonusInfo">
         update bonus
         <trim prefix="set" suffixOverrides=",">
-            <if test="status!=null and status!=''">
+            <if test="status!=null ">
                 status=#{status},
             </if>
             <if test="department!=null and department!=''">
@@ -57,7 +58,7 @@
             <if test="master!=null and master!=''">
                 master=#{master},
             </if>
-            <if test="bonus!=null and bonus!=''">
+            <if test="bonus!=null and bonus!='' ">
                 bonus=#{bonus},
             </if>
             lastTime=NOW()
@@ -67,7 +68,7 @@
 
     <insert id="insertToBonusList" parameterType="java.util.List">
         insert into bonus
-        (department, computeoffice, type, year, project, master, bonus, lastTime) values
+        (department, computeoffice, type, year, project, master, bonus,status, lastTime) values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.department},
             #{item.computeoffice},
@@ -76,6 +77,7 @@
             #{item.project},
             #{item.master},
             #{item.bonus},
+            #{item.status},
             NOW()
             )
         </foreach>
@@ -92,6 +94,7 @@
             #{project},
             #{master},
             #{bonus},
+            #{status},
             NOW()
         )
     </insert>

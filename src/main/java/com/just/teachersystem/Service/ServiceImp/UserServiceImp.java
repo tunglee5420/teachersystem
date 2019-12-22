@@ -64,6 +64,7 @@ public class UserServiceImp implements UserService {
     public List getMyConstructions(ConstructionInfo info){
         if (info==null) return null;
         List list = construction.selectConstructions(info);
+
         return list;
     }
 

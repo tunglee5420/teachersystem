@@ -42,6 +42,7 @@ public class OnlineIntercepter implements HandlerInterceptor {
             return true;
         }
         if(token==null||token.equals("")){
+            System.out.println("=====================================================================");
             printJson(response,-1,"token 为空，请登陆！");
             return false;
         }

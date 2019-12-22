@@ -30,13 +30,14 @@
             and points=#{points}
         </if>
       </where>
+        order by lastTime desc
     </select>
     
     
     <update id="updatePerformance" parameterType="com.just.teachersystem.VO.PerformanceInfo">
         update performance
         <trim prefix="set" suffixOverrides=",">
-            <if test="status!=null and status!=''">
+            <if test="status !=null ">
                 status=#{status},
             </if>
             <if test="department!=null and department!=''">

@@ -31,6 +31,7 @@
         schoolYear,year,status,reason,lastTime
         from awardInfo
         where worknum=#{worknum}
+        order by lastTime desc
     </select>
 
     <select id="selectAwards" parameterType="com.just.teachersystem.VO.AwardInfo" resultType="com.just.teachersystem.VO.AwardInfo">
@@ -47,7 +48,7 @@
             <if test="year!=null and year!=''"> and year=#{year}  </if>
             <if test="worknum!=null and worknum!=''"> and  worknum=#{worknum}</if>
         </where>
-
+        order by lastTime desc
 
     </select>
 
@@ -95,7 +96,7 @@
             <if test="awardTime!=null">awardTime=#{awardTime},</if>
             <if test="schoolYear!=null">schoolYear=#{schoolYear},</if>
             <if test="year!=null">year=#{year},</if>
-            <if test="status!=null and status!=''">status=#{status},</if>
+            <if test="status!=null">status=#{status},</if>
             <if test="reason!=null">reason=#{reason},</if>
             lastTime=NOW()
         </trim>

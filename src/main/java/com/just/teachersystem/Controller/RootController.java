@@ -229,7 +229,7 @@ public class RootController {
      * @param size
      * @return
      */
-    @Logs(role="root",description = "root根据条件筛选信息")
+    @Logs(role="root",description = "root根据条件筛选用户信息")
     @PostMapping("/getUserList")
     public JsonData getUserList(@RequestBody UserInfo userInfo,
             @RequestParam(value = "page",defaultValue = "1") int page,
@@ -292,11 +292,12 @@ public class RootController {
      * @return
      */
     @Logs(role="root",description = "root条件筛选选业绩分信息")
-    @PostMapping("/getPerfromanceInfo")
-    public JsonData getPerfromanceInfo(
+    @PostMapping("/getPerformanceInfo")
+    public JsonData getPerformanceInfo(
             @RequestBody PerformanceInfo performanceInfo,
             @RequestParam(value = "page",defaultValue = "1") int page,
-            @RequestParam(value = "size",defaultValue = "10")int size){
+            @RequestParam(value = "size" ,defaultValue ="10")int size ){
+        PageHelper.startPage(page,size);
 
         if(performanceInfo==null){
             return JsonData.buildError("参数错误");
@@ -304,9 +305,10 @@ public class RootController {
         performanceInfo.setStatus(1);
         List list=root.getPerfromanceList(performanceInfo);
 
-        PageHelper.startPage(page,size);
+
         if(list==null) return JsonData.buildError("服务器错误");
         PageInfo pageInfo=new PageInfo(list);
+
         return JsonData.buildSuccess(pageInfo);
 
     }
@@ -413,14 +415,12 @@ public class RootController {
     public JsonData getBonusInfo( @RequestBody BonusInfo bonusInfo,
             @RequestParam(value = "page",defaultValue = "1") int page,
             @RequestParam(value = "size",defaultValue = "10")int size){
+            PageHelper.startPage(page,size);
 
-//        @RequestParam(value = "department",defaultValue ="") String department,
-//        @RequestParam(value = "year",defaultValue ="") String year ,
-//        @RequestParam(value = "master",defaultValue ="") String master,
         if(bonusInfo==null) return JsonData.buildError("参数出错");
         List list=root.getBonusList(bonusInfo);
 
-        PageHelper.startPage(page,size);
+
         if(list==null) return JsonData.buildError("服务器错误");
         PageInfo pageInfo=new PageInfo(list);
         return JsonData.buildSuccess(pageInfo);

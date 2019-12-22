@@ -54,6 +54,7 @@ public class OfficeAdminController {
                                         @RequestParam(value = "page",defaultValue = "1") int page,
                                         @RequestParam(value = "size",defaultValue = "20")int size
                                         ){
+        PageHelper.startPage(page,size);
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String dpt=(String) claims.get("department");
@@ -65,7 +66,7 @@ public class OfficeAdminController {
         }
 
         List<ConstructionInfo> list=officeAdminService.getUserConstruction(construction);
-        PageHelper.startPage(page,size);
+
         PageInfo<ConstructionInfo> pageInfo=new PageInfo<> (list);
 
         return JsonData.buildSuccess(pageInfo);
@@ -328,6 +329,7 @@ public class OfficeAdminController {
 
                                        @RequestParam(value = "page",defaultValue = "1") int page,
                                        @RequestParam(value = "size",defaultValue = "30")int size) {
+        PageHelper.startPage(page,size);
         String token = header.get("token");
         Claims claims = JwtUtils.checkJWT(token);
         String dpt = (String) claims.get("department");
@@ -336,7 +338,7 @@ public class OfficeAdminController {
         }
        if(achievement==null) return JsonData.buildError("参数异常");
         List<AchievementInfo> list=officeAdminService.getUserAchievement(achievement);
-        PageHelper.startPage(page,size);
+
         PageInfo<AchievementInfo> pageInfo=new PageInfo<> (list);
 
         return JsonData.buildSuccess(pageInfo);
@@ -529,7 +531,7 @@ public class OfficeAdminController {
             ach.setClass2(map.get(String.valueOf(k++)));//成果类别
             ach.setClass3(map.get(String.valueOf(k++)));//级别
             ach.setUnit(map.get(String.valueOf(k++)));//出版单位
-            ach.setPublishTime(Date.valueOf(map.get(String.valueOf(k++))));//发表时间/出版时间/授权时间（年/月）
+            ach.setPublishTime(map.get(String.valueOf(k++)));//发表时间/出版时间/授权时间（年/月）
             ach.setPatent(map.get(String.valueOf(k++)).equals("是")?1:0);//是否被转让或采用（仅限于专利）
             ach.setCertificate(map.get(String.valueOf(k++)));
             ach.setStatus(0);
@@ -553,8 +555,8 @@ public class OfficeAdminController {
      * @return
      */
     @Logs(role="officeAdmin",description = "补充修改成果信息并核审")
-    @PostMapping("/AchievementSupplement")
-    public JsonData AchievementSupplement(@RequestHeader Map<String, String> header,
+    @PostMapping("/achievementSupplement")
+    public JsonData achievementSupplement(@RequestHeader Map<String, String> header,
                                           @RequestBody AchievementInfo info) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
@@ -590,6 +592,7 @@ public class OfficeAdminController {
 
                                  @RequestParam(value = "page",defaultValue = "1") int page,
                                  @RequestParam(value = "size",defaultValue = "30") int size ){
+        PageHelper.startPage(page,size);
         String token = header.get("token");
         Claims claims = JwtUtils.checkJWT(token);
         String dpt = (String) claims.get("department");
@@ -598,7 +601,7 @@ public class OfficeAdminController {
         }
         if(awardInfo==null) return JsonData.buildError("参数异常");
         List<AwardInfo> list=officeAdminService.getUserAward(awardInfo);
-        PageHelper.startPage(page,size);
+
         PageInfo<AwardInfo> pageInfo=new PageInfo<> (list);
 
         return JsonData.buildSuccess(pageInfo);
@@ -697,7 +700,7 @@ public class OfficeAdminController {
             awd.setAwardYear(map.get(String.valueOf(k++)));//奖金计算年度
             awd.setBonus(Double.parseDouble(map.get(String.valueOf(k++))));//奖金（元）
             awd.setCertificate(map.get(String.valueOf(k++)));//证书
-            awd.setAwardTime(Date.valueOf(map.get(String.valueOf(k++))));//获奖时间
+            awd.setAwardTime(map.get(String.valueOf(k++)));//获奖时间
             awd.setSchoolYear(YearUtils.getSchoolYear(String.valueOf(awd.getAwardTime())));//学年
             awd.setYear(YearUtils.getYears(String.valueOf(awd.getAwardTime())));//年度
             awardInfoList.add(awd);
@@ -718,8 +721,8 @@ public class OfficeAdminController {
      * @return
      */
     @Logs(role="officeAdmin",description = "补充修改获奖类信息并核审")
-    @PostMapping("/AwardSupplement")
-    public JsonData AwardSupplement(@RequestHeader Map<String, String> header, @RequestBody AwardInfo awardInfo) {
+    @PostMapping("/awardSupplement")
+    public JsonData awardSupplement(@RequestHeader Map<String, String> header, @RequestBody AwardInfo awardInfo) {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=(String) claims.get("department");

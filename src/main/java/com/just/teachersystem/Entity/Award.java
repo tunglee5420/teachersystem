@@ -22,7 +22,7 @@ public class Award implements Serializable {
   private double bonus;//奖金
   private String awardYear;//奖金计算年度
   private String certificate;//证书
-  private Date awardTime;//获奖时间
+  private String awardTime;//获奖时间
   private String schoolYear;//学年
   private String year;//年度
   private long status;//状态 -1表示通过，0表示核审中，1表示通过

@@ -58,7 +58,7 @@ public class CollegeAdminController {
                                    @RequestBody Map<String,String> map,
                                    @RequestParam(value = "page",defaultValue = "1") int page,
                                    @RequestParam(value = "size",defaultValue = "30")int size){
-
+        PageHelper.startPage(page,size);
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=(String) claims.get("department");
@@ -69,7 +69,7 @@ public class CollegeAdminController {
         if (worknum!=null) userInfo.setWorknum(worknum);
         if(name != null) userInfo.setName(name);
 
-        PageHelper.startPage(page,size);
+
         List list=collegeAdminService.getUserInfo(userInfo);
         PageInfo<UserInfo> pageInfo = new PageInfo<> (list);
         return JsonData.buildSuccess(pageInfo);
@@ -150,7 +150,7 @@ public class CollegeAdminController {
                                         @RequestParam("year") String year,
                                         @RequestParam(value = "page",defaultValue = "1") int page,
                                         @RequestParam(value = "size",defaultValue = "30")int size){
-
+        PageHelper.startPage(page,size);
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=( String) claims.get("department");
@@ -162,7 +162,7 @@ public class CollegeAdminController {
         info.setWorknum(worknum);
         info.setDepartment(department);
         info.setLevel(level);
-        PageHelper.startPage(page,size);
+
         List list=collegeAdminService.getDptConstructions(info);
         PageInfo pageInfo=new PageInfo<>(list);
         return JsonData.buildSuccess(pageInfo);
@@ -190,6 +190,7 @@ public class CollegeAdminController {
                                         @RequestParam("year") String year,
                                         @RequestParam(value = "page",defaultValue = "1") int page,
                                         @RequestParam(value = "size",defaultValue = "30")int size) {
+        PageHelper.startPage(page,size);
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=( String) claims.get("department");
@@ -200,7 +201,7 @@ public class CollegeAdminController {
         achievementInfo.setWorknum(worknum);
         achievementInfo.setYear(year);
         achievementInfo.setDepartment(department);
-        PageHelper.startPage(page,size);
+
         List list=collegeAdminService.getDptAchievements(achievementInfo);
         PageInfo pageInfo=new PageInfo<>(list);
         return JsonData.buildSuccess(pageInfo);

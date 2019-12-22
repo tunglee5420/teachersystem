@@ -20,7 +20,7 @@ public class AchievementInfo implements Serializable {
   private String class3;
   private String level;
   private String unit;
-  private Date publishTime;
+  private String publishTime;
   private long patent;
   private String certificate;
   private String schoolYear;
