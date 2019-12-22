@@ -5,7 +5,7 @@
       select id ,department,computeoffice,type,year,project,master,points,status,lastTime
       from performance
       <where>
-        <if test="status!=null and status!=''">
+        <if test="status!=null and status!=-2">
             status=#{status}
         </if>
         <if test="department!=null and department!=''">
@@ -37,7 +37,7 @@
     <update id="updatePerformance" parameterType="com.just.teachersystem.VO.PerformanceInfo">
         update performance
         <trim prefix="set" suffixOverrides=",">
-            <if test="status !=null ">
+            <if test="status!=null and status !=-2 ">
                 status=#{status},
             </if>
             <if test="department!=null and department!=''">

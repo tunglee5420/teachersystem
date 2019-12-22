@@ -19,20 +19,12 @@ public interface CollegeAdminService {
     List getUserInfo(UserInfo info);
 
     /**
-     * 修改用户密码
-     * @param worknum
-     * @param password
+     * 修改部门成员信息
+     * @param userInfo
      * @return
      */
-    int updateUserPassword(String worknum,String password,String department);
+    boolean updateUserInfo(UserInfo userInfo);
 
-    /**
-     * 修改用户电话
-     * @param worknum
-     * @param phone
-     * @return
-     */
-    int uodateUserPhone(String worknum,String phone,String departemnt);
 
     /**
      * 获取部门建设类信息

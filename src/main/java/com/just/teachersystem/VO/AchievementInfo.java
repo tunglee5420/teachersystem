@@ -21,11 +21,11 @@ public class AchievementInfo implements Serializable {
   private String level;
   private String unit;
   private String publishTime;
-  private long patent;
+  private long patent=-2;
   private String certificate;
   private String schoolYear;
   private String year;
-  private long status;
+  private long status=-2;
   private String reason;
   private Date lastTime;
 

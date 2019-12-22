@@ -83,49 +83,24 @@ public class CollegeAdminController {
      *  password 密码
      * @return
      */
-    @Logs(role="collegeAdmin",description = "修改部门成员密码")
-    @PostMapping("/updateUserPassword")
-    public JsonData updateUserPassword(@RequestHeader Map<String, String> headers,
-                                       @RequestBody Map<String,String> map) {
+    @Logs(role="collegeAdmin",description = "修改部门成员信息")
+    @PostMapping("/updateDptUserInfo")
+    public JsonData updateDptUserInfo(@RequestHeader Map<String, String> headers,
+                                       @RequestBody UserInfo userInfo) {
         String token=headers.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String department=( String) claims.get("department");
-        String worknum=map.get("worknum");
-        String password=map.get("password");
         int permissions = (Integer)claims.get("permission");
         if(permissions<1){
             return JsonData.buildError("你暂无权限");
         }
-        int k=collegeAdminService.updateUserPassword(worknum,password,department);
-        if(k>0){
-            redisUtils.del("login:"+worknum);//更换密码后需要重新登陆，删除缓存中的数据
+        if(userInfo.getDptname().equals(department)){
+            boolean res=collegeAdminService.updateUserInfo(userInfo);
+            return res?JsonData.buildSuccess():JsonData.buildError("修改失败");
         }
-        return k>0?JsonData.buildSuccess():JsonData.buildError("修改失败");
+        return JsonData.buildError("你暂无权限修改其他部门信息");
     }
 
-    /**
-     * 修改成员手机号码
-     * @param headers
-     *  worknum 工号
-     *  phone 新号码
-     * @return
-     */
-    @Logs(role="collegeAdmin",description = "修改成员手机号码")
-    @PostMapping("/updateUserPhone")
-    public JsonData updateUserPhone(@RequestHeader Map<String, String> headers,
-                                    @RequestBody Map<String,String> map){
-        String token=headers.get("token");
-        Claims claims =JwtUtils.checkJWT(token);
-        String department=( String) claims.get("department");
-        String worknum=map.get("worknum");
-        String phone=map.get("phone");
-        int permissions = (Integer)claims.get("permission");
-        if(permissions<1){
-            return JsonData.buildError("你暂无权限");
-        }
-        int k=collegeAdminService.uodateUserPhone(worknum,phone,department);
-        return k>0?JsonData.buildSuccess():JsonData.buildError("修改失败");
-    }
 
     /**
      *暂时不需要

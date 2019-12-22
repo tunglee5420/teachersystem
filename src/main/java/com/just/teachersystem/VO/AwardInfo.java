@@ -29,7 +29,7 @@ public class AwardInfo implements Serializable {
   private String awardTime;
   private String schoolYear;
   private String year;
-  private long status;
+  private long status=-2;
   private String reason;
   private Date lastTime;
 }

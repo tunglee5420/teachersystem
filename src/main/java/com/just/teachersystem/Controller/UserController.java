@@ -77,6 +77,7 @@ public class UserController {
         userInfo.setWorknum(worknum);
         String password=map.get("newPassword");
         userInfo.setPassword( password);
+        System.out.println(userInfo);
         boolean res=rootService.updateUserInfo(userInfo);
         if(res){
             redisUtils.del("login:"+worknum);//更换密码后需要重新登陆，删除缓存中的数据

@@ -25,7 +25,7 @@ public class Award implements Serializable {
   private String awardTime;//获奖时间
   private String schoolYear;//学年
   private String year;//年度
-  private long status;//状态 -1表示通过，0表示核审中，1表示通过
+  private long status=-2;//状态 -1表示通过，0表示核审中，1表示通过
   private String reason;//原因
   private Date lastTime;//最后操作时间
   private String null1;//空字段

@@ -27,10 +27,10 @@ public class Construction implements Serializable {
   private String computeYear;//业绩分计算年度
   private double bonus;//奖金
   private String fileNumber;//归档文件盒编号
-  private long isEnd;//是否结束
+  private long isEnd=-2;//是否结束
   private String schoolYear;//学年
   private String year;//年度
-  private long status;//状态：-1表示为通过，0表示正在核审，1表示学院通过，2表示科室审核通过
+  private long status=-2;//状态：-1表示为通过，0表示正在核审，1表示学院通过，2表示科室审核通过
   private Date lastTime;//最后操作时间
   private String reason;//原因
   private String null1;//

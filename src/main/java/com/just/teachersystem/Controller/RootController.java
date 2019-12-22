@@ -182,6 +182,7 @@ public class RootController {
     @Logs(role="root",description = "root更新用户信息(包括修改密码和权限)")
     @PostMapping("/updateUserInfo")
     public JsonData updateUserInfo( @RequestBody UserInfo userInfo){
+        System.out.println(userInfo);
         if (userInfo==null) return JsonData.buildError("信息为空");
         boolean res=root.updateUserInfo(userInfo);
         if(res){
@@ -190,19 +191,25 @@ public class RootController {
         return JsonData.buildError("设置失败");
     }
 
-//    /**
-//     * 设置用户权限
-//     * @return
-//     */
-//    @PostMapping("/setPermission")
-//    public JsonData setPermission(@RequestParam("permission") int permission){
-//        if(permission<0||permission>3)
-//            return JsonData.buildError("设置出错");
-//        UserInfo userInfo=new UserInfo();
-//        userInfo.setPermission(permission);
-//        boolean res=root.updateUserInfo(userInfo);
-//        return JsonData.buildSuccess(res);
-//    }
+    /**
+     * 设置用户权限
+     * @return
+     */
+    @Logs(role="root",description = "root修改密码")
+    @PostMapping("/updateUserPassword")
+    public JsonData updateUserPassword(@RequestBody Map <String,String> map){
+        String worknum=map.get("worknum");
+        String password = map.get("password");
+        if(worknum==null || password == null){
+            return JsonData.buildError("参数有误");
+        }
+        UserInfo userInfo=new UserInfo();
+        userInfo.setWorknum(worknum);
+        userInfo.setPassword(password);
+        System.out.println(userInfo);
+        boolean res=root.updateUserInfo(userInfo);
+        return JsonData.buildSuccess(res);
+    }
 
     /**
      * 根据工号删除用户
@@ -363,7 +370,6 @@ public class RootController {
     @Logs(role="root",description = "root根据id 删除业绩分信息(删除时status 置0)")
     @PostMapping("/deletePerformance")
     public JsonData deletePerformance(@RequestBody  PerformanceInfo p){
-
         if(p.getId()<0) return JsonData.buildError("参数出错");
         p.setStatus(0);
         if(root.updatePerformanceInfo(p))

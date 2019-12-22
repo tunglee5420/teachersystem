@@ -205,7 +205,6 @@ public class RootServiceImp implements RootService {
      */
     public boolean updatePerformanceInfo(PerformanceInfo info){
         if(info == null) return false;
-        System.out.println("======================"+info+"==========================================");
         int res=performance.updatePerformance(info);
         return res ==0?false:true;
     }

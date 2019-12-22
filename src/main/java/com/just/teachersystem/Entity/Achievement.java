@@ -4,6 +4,7 @@ import	java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 
 import java.sql.Date;
@@ -22,12 +23,13 @@ public class Achievement implements Serializable {
   private long levelId;//级别id
   private String unit;//出版/授权单位
   private String publishTime;//发表时间
-  private long patent;//是否被转让或采用（仅限于专利）是否被转让或采用（仅限于专利）
+
+  private long patent=-2;//是否被转让或采用（仅限于专利）是否被转让或采用（仅限于专利）(-2表示默认初值)
   private String certificate;//证书
   private String schoolYear;//学年
   private String year;//年度
   private Date lastTime;//最后操作时间
-  private long status;//审批状态-1表示未通过  ，0 表示核审中，1表示已通过
+  private long status=-2;//审批状态-1表示未通过  ，0 表示核审中，1表示已通过(-2表示默认初值)
   private String reason;//描述
   private String null2;//预留空字段
   private String null3;

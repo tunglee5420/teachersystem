@@ -5,7 +5,7 @@
         select id ,department,computeoffice,type,year,project,master,bonus,status,lastTime
         from bonus
         <where>
-            <if test="status!=null and status!=''">
+            <if test=" status!=-2">
                 status=#{status}
             </if>
             <if test="department!=null and department!=''">
@@ -37,7 +37,7 @@
     <update id="updateBonus" parameterType="com.just.teachersystem.VO.BonusInfo">
         update bonus
         <trim prefix="set" suffixOverrides=",">
-            <if test="status!=null ">
+            <if test="status!=-2 ">
                 status=#{status},
             </if>
             <if test="department!=null and department!=''">

@@ -44,40 +44,15 @@ public class CollegeAdminServiceImp implements CollegeAdminService {
     }
 
     /**
-     * 修改用户密码
-     * @param worknum
-     * @param password
+     *
+     * @param userInfo
      * @return
      */
-    public int updateUserPassword(String worknum,String password,String department){
-        if(worknum==null || password == null || department == null){
-            return 0;
-        }
-        UserInfo userInfo=new UserInfo();
-        userInfo.setWorknum(worknum);
-        userInfo.setPassword(EncryptUtil.getInstance().MD5(password));
-        UserInfo u= new UserInfo();
-        String dptname=u.getDptname();
-        int permissions = u.getPermission();
-        if(dptname.equals(department)&&permissions<3) return teacherMapper.updateUserInfo(userInfo);
-        return 0;
-    }
-
-    /**
-     * 修改用户电话
-     * @param worknum
-     * @param phone
-     * @return
-     */
-    public int uodateUserPhone(String worknum,String phone,String department){
-        if(worknum == null || phone == null || department == null) return 0;
-        UserInfo userInfo=new UserInfo();
-        userInfo.setWorknum(worknum);
-        userInfo.setPhone(phone);
-        String dptname=teacherMapper.getInfo(worknum).getDptname();
-        if(dptname.equals(department))
-            return teacherMapper.updateUserInfo(userInfo);
-        return 0;
+    public boolean updateUserInfo(UserInfo userInfo){
+        if (userInfo==null) return false;
+        if(userInfo.getPassword()!=null )  userInfo.setPassword(EncryptUtil.getInstance().MD5(userInfo.getPassword()));
+        int res= teacherMapper.updateUserInfo(userInfo);
+        return res==1?true:false;
     }
 
     /**

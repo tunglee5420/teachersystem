@@ -18,7 +18,7 @@ public class Bonus implements Serializable {
   private String project;//项目名称
   private String master;//项目负责人
   private double bonus;//奖金
-  private int status;//1表示可用，0表示禁用
+  private int status=-2;//1表示可用，0表示禁用
   private Date lastTime;
   private String null3;
 

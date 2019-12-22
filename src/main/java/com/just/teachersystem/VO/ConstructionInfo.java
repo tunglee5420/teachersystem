@@ -32,10 +32,10 @@ public class ConstructionInfo implements Serializable {
   private String computeYear;
   private double bonus;
   private String fileNumber;
-  private long isEnd;
+  private long isEnd=-2;
   private String schoolYear;
   private String year;
-  private long status;
+  private long status=-2;
   private String reason;
   private Date lastTime;
 }

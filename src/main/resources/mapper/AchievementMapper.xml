@@ -82,11 +82,11 @@
             <if test="level!=null">levelId=(select id from level where level =#{level}),</if>
             <if test="unit!=null">unit=#{unit},</if>
             <if test="publishTime!=null ">publishTime=#{publishTime},</if>
-            <if test="patent!=null and patent!=''">patent=#{patent},</if>
+            <if test=" patent!=-2">patent=#{patent},</if>
             <if test="certificate!=null">certificate=#{certificate},</if>
             <if test="schoolYear!=null">schoolYear=#{schoolYear},</if>
             <if test="year!=null">year=#{year},</if>
-            <if test="status!=null">status=#{status},</if>
+            <if test="status!=-2">status=#{status},</if>
             <if test="reason!=null">reason=#{reason},</if>
             lastTime=NOW()
         </trim>

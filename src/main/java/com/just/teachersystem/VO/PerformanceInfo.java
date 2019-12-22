@@ -19,6 +19,6 @@ public class PerformanceInfo implements Serializable {
     private String project;
     private String master;
     private long points;
-    private int status;
+    private int status=-2;
     private Date lastTime;
 }

@@ -96,7 +96,7 @@
             <if test="awardTime!=null">awardTime=#{awardTime},</if>
             <if test="schoolYear!=null">schoolYear=#{schoolYear},</if>
             <if test="year!=null">year=#{year},</if>
-            <if test="status!=null">status=#{status},</if>
+            <if test="status!=-2">status=#{status},</if>
             <if test="reason!=null">reason=#{reason},</if>
             lastTime=NOW()
         </trim>

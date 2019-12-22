@@ -43,11 +43,11 @@ public class UserInfo implements Serializable {
 
 
 
-    private int doubleTeacher;//是否双师型 0表示不是 1表示是
+    private int doubleTeacher=-2;//是否双师型 0表示不是 1表示是
 
-    private int background;//是否有行业背景 0表示不是 1表示是
+    private int background=-2;//是否有行业背景 0表示不是 1表示是
 
-    private int tutor;//是否博硕士导师 0表示不是 1表示是
+    private int tutor=-2;//是否博硕士导师 0表示不是 1表示是
     private int permission;//权限等级 1表示普通用户 2表示院系负责人 3表示科室负责人 4表示超级管理员
 
 }

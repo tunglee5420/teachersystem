@@ -62,10 +62,10 @@
             <if test="eduBgd!=null">eduBgd=#{eduBgd},</if>
             <if test="degree!=null">degree=#{degree},</if>
             <if test="school!=null">school=#{school},</if>
-            <if test="doubleTeacher!=null and doubleTeacher!=''">doubleTeacher=#{doubleTeacher},</if>
-            <if test="background!=null and background!=''">background=#{background},</if>
+            <if test="doubleTeacher!=null and doubleTeacher!=-2">doubleTeacher=#{doubleTeacher},</if>
+            <if test="background!=null and background!=-2">background=#{background},</if>
             <if test="major!=null">major=#{major},</if>
-            <if test="tutor!=null and tutor!=''">tutor=#{tutor},</if>
+            <if test="tutor!=null and tutor!=-2">tutor=#{tutor},</if>
             <if test="permission!=null and permission!=''">permission=#{permission}</if>
         </trim>
         WHERE worknum=#{worknum}
