@@ -164,7 +164,7 @@ public class UserServiceImp implements UserService {
         info.setAwardYear(YearUtils.getYears(time));
         info.setSchoolYear(YearUtils.getSchoolYear(time));
         info.setYear(YearUtils.getYears(time));
-        System.out.println(info);
+//        System.out.println(info);
         int res = award.insertToAward(info);
         if(res ==0){
             return false;

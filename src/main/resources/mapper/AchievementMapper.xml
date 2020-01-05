@@ -3,14 +3,13 @@
 <mapper namespace="com.just.teachersystem.Mapper.AchievementMapper">
     <insert id="insertToAchievement" parameterType="com.just.teachersystem.VO.AchievementInfo">
         insert into achievement(
-        dptId, authorId, teammate, production, kindId, levelId, unit, publishTime, patent, certificate, schoolYear, year, lastTime, status, reason
+        dptId, authorId, teammate, production, kindId, unit, publishTime, patent, certificate, schoolYear, year, lastTime, status, reason
         )values (
             (select id from department where dptname=#{department}),
             (select id from user where worknum=#{worknum}),
             #{teammate},
             #{production},
             (select id from kind where class1=#{class1} and class2=#{class2} and class3=#{class3}),
-            (select id from level where level =#{level}),
             #{unit},
             #{publishTime},
             #{patent},
@@ -26,13 +25,14 @@
 
     <select id="selectAchievementByWorknum" parameterType="String" resultType="com.just.teachersystem.VO.AchievementInfo">
         select aid, department,worknum, name, teammate,production, class1,class2,class3,
-        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason ,lastTime from achievementInfo where worknum=#{worknum}
+        unit,publishTime,patent,certificate,schoolYear,year,status ,reason ,lastTime
+        from achievementInfo where worknum=#{worknum}
         order by lastTime desc
     </select>
 
     <select id="selectAchievements" parameterType="com.just.teachersystem.VO.AchievementInfo" resultType="com.just.teachersystem.VO.AchievementInfo">
-      select aid, department,worknum, name, teammate,production, class1,class2,class3,
-        level, unit,publishTime,patent,certificate,schoolYear,year,status ,reason,lastTime
+      select aid, department,worknum, name, teammate,production, class1,class2,class3
+        ,unit,publishTime,patent,certificate,schoolYear,year,status ,reason,lastTime
         from achievementInfo
         <where>
             <if test="department!=null and department!=''"> department=#{department} </if>
@@ -48,7 +48,7 @@
 
     <insert id="insertToAchievementList" parameterType="java.util.List">
         insert into achievement(
-        dptId, authorId, teammate, production, kindId, levelId, unit, publishTime, patent, certificate, schoolYear, year, lastTime, status, reason
+        dptId, authorId, teammate, production, kindId, unit, publishTime, patent, certificate, schoolYear, year, lastTime, status, reason
         )values
         <foreach collection="list" item="item" index="index" separator=",">
             (
@@ -57,7 +57,6 @@
             #{item.teammate},
             #{item.production},
             (select id from kind where class2=#{item.class2} and  class3=#{item.class3}),
-            (select id from level where level =#{item.level}),
             #{item.unit},
             #{item.publishTime},
             #{item.patent},
@@ -79,7 +78,6 @@
             <if test="production!=null">production=#{production},</if>
             <if test="teammate!=null">teammate=#{teammate},</if>
             <if test="class1!=null and class2!=null and class3!=null">kindId=(select id from kind where class1=#{class1} and class2=#{class2} and  class3=#{class3}),</if>
-            <if test="level!=null">levelId=(select id from level where level =#{level}),</if>
             <if test="unit!=null">unit=#{unit},</if>
             <if test="publishTime!=null ">publishTime=#{publishTime},</if>
             <if test=" patent!=-2">patent=#{patent},</if>

@@ -112,7 +112,6 @@ public class CommonController {
             map= (Map) fileService.filePanLogin().getContent();
         }
         String cookie= (String) map.get("cookie");
-//
         try {
             HttpClientResult h=fileService.getTgetToken(cookie,fileInfo,worknum);
             if (h!=null&&h.getCode()==200){

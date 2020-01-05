@@ -23,7 +23,6 @@ public class Achievement implements Serializable {
   private long levelId;//级别id
   private String unit;//出版/授权单位
   private String publishTime;//发表时间
-
   private long patent=-2;//是否被转让或采用（仅限于专利）是否被转让或采用（仅限于专利）(-2表示默认初值)
   private String certificate;//证书
   private String schoolYear;//学年
@@ -34,8 +33,4 @@ public class Achievement implements Serializable {
   private String null2;//预留空字段
   private String null3;
   private String null4;
-
-
-
-
 }

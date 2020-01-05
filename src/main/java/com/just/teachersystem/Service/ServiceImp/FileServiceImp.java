@@ -22,7 +22,7 @@ import java.util.Map;
 @Service
 @Component
 @Transactional(rollbackFor = Exception.class)
-@PropertySource("classpath:config2.properties")
+@PropertySource("classpath:config.properties")
 public class FileServiceImp implements FileService {
     @Autowired
     RedisUtils redisUtils;
@@ -51,12 +51,7 @@ public class FileServiceImp implements FileService {
         map.put("password",this.password);
         try {
             HttpClientResult h1=HttpClientUtils.doPost(this.loginUrl,map);
-//            System.out.println(h1);
-//            String ss=JsonUtil.entityToMap(h1.getContent()).get("entrySet").toString();
-//            System.out.println(ss);
-//            String data= (String) JsonUtil.jsonToMap(ss.substring(ss.indexOf("=")+1,ss.lastIndexOf("]"))).get("data");
-//
-//            System.out.println(data);
+
             if(h1.getContent()!=null){
                 redisUtils.set("file:login",h1.getContent(),60*60*24*30);
             }

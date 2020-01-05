@@ -68,8 +68,6 @@ public class CollegeAdminController {
         userInfo.setDptname(department);
         if (worknum!=null) userInfo.setWorknum(worknum);
         if(name != null) userInfo.setName(name);
-
-
         List list=collegeAdminService.getUserInfo(userInfo);
         PageInfo<UserInfo> pageInfo = new PageInfo<> (list);
         return JsonData.buildSuccess(pageInfo);
@@ -377,7 +375,7 @@ public class CollegeAdminController {
         String[]labels ={year+"校区、苏理工专业负责人津贴、高水平教学成果及改革建设立项奖励明细复核表("+department+")"};
         excelUtils.setLabelName(labels);
         //设置字段
-        String []params=new String [] {"部门	","所属科室","类别","立项年度","名称","负责人","汇总（元）","签字确认"};
+        String []params=new String [] {"部门	","所属科室","类别","立项年度","名称","负责人","汇总(元)","签字确认"};
         String []confirmed = new String[] {"部门领导："," "," ","经办人： "," "," 日期："," ","  "};
         excelUtils.setLabelName(labels);
         List<String[]> a=new ArrayList<> ();
@@ -389,7 +387,6 @@ public class CollegeAdminController {
         for (BonusInfo b:list) {
             sum+=b.getBonus();
             values= new String[]{b.getDepartment(), b.getComputeoffice(),b.getType(),b.getYear(),b.getProject(),b.getMaster(),String.valueOf(b.getClass())," "};
-
             a.add(values);
         }
         String[]all=new String [] {department+"汇总","","","","","",String.valueOf(sum),""};

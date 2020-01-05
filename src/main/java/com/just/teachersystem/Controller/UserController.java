@@ -52,8 +52,12 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
+
         String password=map.get("password");
-        System.out.println(password);
+        if(worknum==null && password == null){
+            JsonData.buildError("验证错误");
+        }
+//        System.out.println(password);
         boolean res=userService.check(worknum, password);
         if(res){
             return JsonData.buildSuccess();
@@ -75,13 +79,19 @@ public class UserController {
         String worknum=(String) claims.get("worknum");
         UserInfo userInfo=new UserInfo();
         userInfo.setWorknum(worknum);
-        String password=map.get("newPassword");
-        userInfo.setPassword( password);
-        System.out.println(userInfo);
-        boolean res=rootService.updateUserInfo(userInfo);
-        if(res){
-            redisUtils.del("login:"+worknum);//更换密码后需要重新登陆，删除缓存中的数据
-            return JsonData.buildSuccess();
+        try {
+            String password=map.get("newPassword");
+            userInfo.setPassword( password);
+//        System.out.println(userInfo);
+            boolean res=rootService.updateUserInfo(userInfo);
+            if(res){
+                redisUtils.del("login:"+worknum);//更换密码后需要重新登陆，删除缓存中的数据
+                return JsonData.buildSuccess();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonData.buildError("参数异常");
         }
         return JsonData.buildError("修改失败");
     }
@@ -98,7 +108,6 @@ public class UserController {
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
         UserInfo userInfo = userService.getUserInfo(worknum);
-        System.out.println(userInfo);
         if(userInfo==null){
             return JsonData.buildError("个人信息获取失败");
         }
@@ -120,7 +129,10 @@ public class UserController {
         String worknum=(String) claims.get("worknum");
         info.setWorknum(worknum);
         info.setClass1("建设类");
-
+        info.setStatus(0);
+        if(info==null||info.getWorknum()==null||info.getDepartment()==null){
+            return JsonData.buildError("参数错误");
+        }
         int res=userService.addConstruction(info);
         if(res>0){
             return JsonData.buildSuccess("提交成功");
@@ -200,10 +212,8 @@ public class UserController {
         String token=header.get("token");
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
-        System.out.println("===========================================");
-        System.out.println(info);
-        System.out.println("===========================================");
         info.setWorknum(worknum);
+        info.setStatus(0);
         boolean res=userService.addAchievement(info);
         if (res){
             return JsonData.buildSuccess("添加成功");
@@ -279,6 +289,7 @@ public class UserController {
         Claims claims =JwtUtils.checkJWT(token);
         String worknum=(String) claims.get("worknum");
         info.setWorknum(worknum);
+        info.setStatus(0);
         boolean res = userService.addAward(info);
         if (res){
             return JsonData.buildSuccess("添加成功");

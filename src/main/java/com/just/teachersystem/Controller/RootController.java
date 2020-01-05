@@ -164,7 +164,7 @@ public class RootController {
     @Logs(role="root",description = "root添加用户信息")
     @PostMapping("/addUserInfo")
     public JsonData addUserInfo(@RequestBody UserInfo userInfo) {
-        if (userInfo==null||userInfo.getWorknum()==null) return JsonData.buildError("信息为空");
+        if (userInfo==null||userInfo.getWorknum()==null||userInfo.getDptname()!=null) return JsonData.buildError("信息填写不完整");
         boolean res=root.addUser(userInfo);
         if (res)
             return JsonData.buildSuccess("添加成功");
@@ -182,8 +182,8 @@ public class RootController {
     @Logs(role="root",description = "root更新用户信息(包括修改密码和权限)")
     @PostMapping("/updateUserInfo")
     public JsonData updateUserInfo( @RequestBody UserInfo userInfo){
-        System.out.println(userInfo);
-        if (userInfo==null) return JsonData.buildError("信息为空");
+//        System.out.println(userInfo);
+        if (userInfo==null ||userInfo.getWorknum()==null ) return JsonData.buildError("信息填写不完整");
         boolean res=root.updateUserInfo(userInfo);
         if(res){
             return JsonData.buildSuccess("设置成功");
@@ -285,11 +285,9 @@ public class RootController {
         excelUtils.setDataLists(data);
         excelUtils.setSheetName(labels);
         excelUtils.setFileName(labels[0]);
-        excelUtils.setResponse( response);
-
+        excelUtils.setResponse(response);
         excelUtils.exportForExcelsOptimize();
     }
-
 
     /**
      * 条件筛选选业绩分信息
@@ -342,7 +340,7 @@ public class RootController {
         String[]labels ={year+"校区、苏理工教师业绩信息表"};
         //excelUtils.setLabelName(labels);
         //设置字段
-        String []params=new String [] {"院部","业绩分计算科室","分类—类别","立项年度","项目名称", "负责人","业绩分（分）"};
+        String []params=new String [] {"院部","业绩分计算科室","分类—类别","立项年度","项目名称", "负责人","业绩分(分)"};
         excelUtils.setLabelName(labels);
         List<String[]> a=new ArrayList<> ();
         a.add(params);
@@ -451,7 +449,7 @@ public class RootController {
         String[]labels ={year+"校区、苏理工教师奖金信息表"};
         //excelUtils.setLabelName(labels);
         //设置字段
-        String []params=new String [] {"院部","奖金计算科室（内置）","分类—类别","立项年度","项目名称", "负责人","奖金（元）"};
+        String []params=new String [] {"院部","奖金计算科室(内置)","分类—类别","立项年度","项目名称", "负责人","奖金(元)"};
         excelUtils.setLabelName(labels);
         List<String[]> a=new ArrayList<> ();
         a.add(params);

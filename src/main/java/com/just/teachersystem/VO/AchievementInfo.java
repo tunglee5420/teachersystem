@@ -18,7 +18,7 @@ public class AchievementInfo implements Serializable {
   private String class1;
   private String class2;
   private String class3;
-  private String level;
+//  private String level;
   private String unit;
   private String publishTime;
   private long patent=-2;
