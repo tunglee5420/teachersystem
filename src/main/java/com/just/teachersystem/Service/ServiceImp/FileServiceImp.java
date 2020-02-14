@@ -22,7 +22,7 @@ import java.util.Map;
 @Service
 @Component
 @Transactional(rollbackFor = Exception.class)
-@PropertySource("classpath:config.properties")
+@PropertySource("classpath:config2.properties")
 public class FileServiceImp implements FileService {
     @Autowired
     RedisUtils redisUtils;

@@ -36,6 +36,8 @@
         from achievementInfo
         <where>
             <if test="department!=null and department!=''"> department=#{department} </if>
+            <if test="production!=null and production!=''"> production=#{production} </if>
+            <if test="name!=null and name!=''"> name=#{name} </if>
             <if test="class2!=null and class2!=''"> and class2=#{class2}  </if>
             <if test="class3!=null and class3!=''"> and class3=#{class3}  </if>
             <if test="schoolYear!=null and schoolYear!=''"> and schoolYear=#{schoolYear}  </if>

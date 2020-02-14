@@ -38,6 +38,7 @@ public class OfficeAdminServiceImp implements OfficeAdminService {
         if (constructionInfo==null)
             return null;
         List list=construction.selectConstructions(constructionInfo);
+        System.out.println(list.toArray());
         return list;
     }
 

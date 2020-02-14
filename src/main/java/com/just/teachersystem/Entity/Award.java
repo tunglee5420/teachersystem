@@ -15,7 +15,7 @@ public class Award implements Serializable {
   private long userId;//第一获奖者ID
   private String teammate;//获奖成员
   private String awardUnit;//颁奖单位
-  private String content;//获奖成员
+  private String content;//获奖名称
   private long kindId;//获奖类别ID
   private long level;//获奖级别ID
   private String prize;//奖项
